@@ -1,0 +1,35 @@
+# Configuration for Medium Instance (300 Students x 150 Alumni)
+# NOTICE: ARTIFICIAL - FOR TESTING ONLY
+
+instance:
+  name: "medium_300x150"
+  n_students: 300
+  n_alumni: 150
+  k_matches: 2
+  q_min: 0.25
+  theta_min_quality: 0.70
+  delta_branch_parity: 0.35
+  max_company_share: 1
+  consent_rate: 0.95
+  avg_capacity: 5.0
+  seed: 42
+  file_path: "data/medium_300x150.json"
+
+algorithms:
+  nsga2:
+    pop_size: 35
+    n_gen: 30
+    seed: 42
+  spea2:
+    pop_size: 35
+    n_gen: 30
+    seed: 42
+  moead:
+    n_partitions: 6
+    n_gen: 30
+    seed: 42
+  hybrid_memetic:
+    pop_size: 35
+    n_gen: 30
+    seed: 42
+    apply_local_search: true

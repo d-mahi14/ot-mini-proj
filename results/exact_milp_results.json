@@ -1,0 +1,204 @@
+{
+  "num_exact_pareto_points": 15,
+  "exact_points": [
+    {
+      "Z1_total_quality": 73.1377,
+      "avg_student_quality": 1.4628,
+      "Z2_worst_quality": 1.023,
+      "Z3_max_load": 8,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2836,
+      "company_entropy": 3.0542
+    },
+    {
+      "Z1_total_quality": 72.9954,
+      "avg_student_quality": 1.4599,
+      "Z2_worst_quality": 1.1624,
+      "Z3_max_load": 8,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2725,
+      "company_entropy": 3.0318
+    },
+    {
+      "Z1_total_quality": 71.0318,
+      "avg_student_quality": 1.4206,
+      "Z2_worst_quality": 1.0125,
+      "Z3_max_load": 4,
+      "active_alumni": 27,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.28,
+      "company_entropy": 3.1267
+    },
+    {
+      "Z1_total_quality": 41.0368,
+      "avg_student_quality": 0.8207,
+      "Z2_worst_quality": 0.7011,
+      "Z3_max_load": 4,
+      "active_alumni": 28,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.1516,
+      "company_entropy": 3.2918
+    },
+    {
+      "Z1_total_quality": 62.9156,
+      "avg_student_quality": 1.2583,
+      "Z2_worst_quality": 1.1828,
+      "Z3_max_load": 4,
+      "active_alumni": 28,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.1436,
+      "company_entropy": 3.226
+    },
+    {
+      "Z1_total_quality": 62.4814,
+      "avg_student_quality": 1.2496,
+      "Z2_worst_quality": 1.1828,
+      "Z3_max_load": 4,
+      "active_alumni": 28,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.1132,
+      "company_entropy": 3.1984
+    },
+    {
+      "Z1_total_quality": 62.432,
+      "avg_student_quality": 1.2486,
+      "Z2_worst_quality": 1.1828,
+      "Z3_max_load": 4,
+      "active_alumni": 28,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.1128,
+      "company_entropy": 3.242
+    },
+    {
+      "Z1_total_quality": 63.0277,
+      "avg_student_quality": 1.2606,
+      "Z2_worst_quality": 1.1828,
+      "Z3_max_load": 7,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.0656,
+      "company_entropy": 3.1606
+    },
+    {
+      "Z1_total_quality": 71.0638,
+      "avg_student_quality": 1.4213,
+      "Z2_worst_quality": 0.9292,
+      "Z3_max_load": 4,
+      "active_alumni": 27,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.28,
+      "company_entropy": 3.1267
+    },
+    {
+      "Z1_total_quality": 72.4578,
+      "avg_student_quality": 1.4492,
+      "Z2_worst_quality": 1.118,
+      "Z3_max_load": 5,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2953,
+      "company_entropy": 3.1439
+    },
+    {
+      "Z1_total_quality": 72.4809,
+      "avg_student_quality": 1.4496,
+      "Z2_worst_quality": 1.078,
+      "Z3_max_load": 5,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2953,
+      "company_entropy": 3.1439
+    },
+    {
+      "Z1_total_quality": 73.1314,
+      "avg_student_quality": 1.4626,
+      "Z2_worst_quality": 1.0804,
+      "Z3_max_load": 8,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2836,
+      "company_entropy": 3.0551
+    },
+    {
+      "Z1_total_quality": 72.4898,
+      "avg_student_quality": 1.4498,
+      "Z2_worst_quality": 1.023,
+      "Z3_max_load": 5,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2953,
+      "company_entropy": 3.1439
+    },
+    {
+      "Z1_total_quality": 72.9939,
+      "avg_student_quality": 1.4599,
+      "Z2_worst_quality": 1.0804,
+      "Z3_max_load": 6,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2859,
+      "company_entropy": 3.0889
+    },
+    {
+      "Z1_total_quality": 73.0002,
+      "avg_student_quality": 1.46,
+      "Z2_worst_quality": 1.023,
+      "Z3_max_load": 6,
+      "active_alumni": 26,
+      "is_feasible": true,
+      "total_constraint_violation": 0.0,
+      "branch_disparity": 0.2859,
+      "company_entropy": 3.0873
+    }
+  ],
+  "secondary_alumni_minimization": [
+    {
+      "min_quality_ratio": 0.8,
+      "active_alumni": 15,
+      "total_quality_z1": 59.037,
+      "worst_quality_z2": 0.747,
+      "max_load_z3": 8,
+      "company_entropy": 2.749
+    },
+    {
+      "min_quality_ratio": 0.85,
+      "active_alumni": 15,
+      "total_quality_z1": 62.216,
+      "worst_quality_z2": 0.708,
+      "max_load_z3": 8,
+      "company_entropy": 2.739
+    },
+    {
+      "min_quality_ratio": 0.9,
+      "active_alumni": 15,
+      "total_quality_z1": 66.021,
+      "worst_quality_z2": 0.717,
+      "max_load_z3": 8,
+      "company_entropy": 2.599
+    },
+    {
+      "min_quality_ratio": 0.95,
+      "active_alumni": 16,
+      "total_quality_z1": 69.526,
+      "worst_quality_z2": 1.023,
+      "max_load_z3": 8,
+      "company_entropy": 2.852
+    }
+  ]
+}

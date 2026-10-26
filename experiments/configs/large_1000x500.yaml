@@ -1,0 +1,35 @@
+# Configuration for Large Instance (1000 Students x 500 Alumni)
+# NOTICE: ARTIFICIAL - FOR TESTING ONLY
+
+instance:
+  name: "large_1000x500"
+  n_students: 1000
+  n_alumni: 500
+  k_matches: 2
+  q_min: 0.25
+  theta_min_quality: 0.70
+  delta_branch_parity: 0.35
+  max_company_share: 1
+  consent_rate: 0.95
+  avg_capacity: 5.0
+  seed: 42
+  file_path: "data/large_1000x500.json"
+
+algorithms:
+  nsga2:
+    pop_size: 25
+    n_gen: 15
+    seed: 42
+  spea2:
+    pop_size: 25
+    n_gen: 15
+    seed: 42
+  moead:
+    n_partitions: 5
+    n_gen: 15
+    seed: 42
+  hybrid_memetic:
+    pop_size: 25
+    n_gen: 15
+    seed: 42
+    apply_local_search: true

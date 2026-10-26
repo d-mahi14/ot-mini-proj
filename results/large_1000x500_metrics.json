@@ -1,0 +1,74 @@
+{
+  "Random": {
+    "runtime_seconds": 2.06317780027166,
+    "Z1_total_quality": 916.4425,
+    "avg_student_quality": 0.9164,
+    "Z2_worst_quality": 0.5196,
+    "Z3_max_load": 10,
+    "active_alumni": 472,
+    "is_feasible": false,
+    "total_constraint_violation": 84.6628,
+    "branch_disparity": 0.1288,
+    "company_entropy": 3.562
+  },
+  "Greedy": {
+    "runtime_seconds": 0.7358196000568569,
+    "Z1_total_quality": 1792.913,
+    "avg_student_quality": 1.7929,
+    "Z2_worst_quality": 1.3211,
+    "Z3_max_load": 10,
+    "active_alumni": 407,
+    "is_feasible": true,
+    "total_constraint_violation": 0.0,
+    "branch_disparity": 0.2386,
+    "company_entropy": 3.563
+  },
+  "Min-Cost Flow": {
+    "runtime_seconds": 14.675364200025797,
+    "Z1_total_quality": 1802.16,
+    "avg_student_quality": 1.8022,
+    "Z2_worst_quality": 1.3784,
+    "Z3_max_load": 10,
+    "active_alumni": 397,
+    "is_feasible": false,
+    "total_constraint_violation": 94.0,
+    "branch_disparity": 0.2288,
+    "company_entropy": 3.566
+  },
+  "NSGA-II": {
+    "num_total_solutions": 25,
+    "num_non_dominated": 4,
+    "spacing": 4.835598856656733,
+    "hypervolume": 845.9454562199999,
+    "avg_gini_quality": 0.15237240032851568,
+    "min_gini_quality": 0.14959739523632784,
+    "avg_max_load": 10.0,
+    "avg_alumni_used": 464.75,
+    "min_alumni_used": 462,
+    "runtime_seconds": 20.01167770009488
+  },
+  "SPEA2": {
+    "num_total_solutions": 25,
+    "num_non_dominated": 4,
+    "spacing": 4.835598856656733,
+    "hypervolume": 845.9454562199999,
+    "avg_gini_quality": 0.15237240032851568,
+    "min_gini_quality": 0.14959739523632784,
+    "avg_max_load": 10.0,
+    "avg_alumni_used": 464.75,
+    "min_alumni_used": 462,
+    "runtime_seconds": 24.12559080030769
+  },
+  "Hybrid-Memetic-NSGA-II": {
+    "num_total_solutions": 1,
+    "num_non_dominated": 1,
+    "spacing": 0.0,
+    "hypervolume": 2297.347598940001,
+    "avg_gini_quality": 0.04350242187323007,
+    "min_gini_quality": 0.04350242187323007,
+    "avg_max_load": 10.0,
+    "avg_alumni_used": 399.0,
+    "min_alumni_used": 399,
+    "runtime_seconds": 43.852781699970365
+  }
+}

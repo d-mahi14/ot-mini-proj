@@ -1,0 +1,25 @@
+# Master Experiment Suite Configuration
+# Governs full comparative study across baselines, exact methods, MOEAs, and hybrid.
+
+experiment_suite:
+  name: "vjti_student_alumni_matching_benchmark"
+  description: "Multi-objective capacitated student-alumni assignment evaluating efficiency, Rawlsian fairness, and workload balancing."
+  seeds: [42, 123, 999]
+  instances:
+    - "experiments/configs/small_50x30.yaml"
+    - "experiments/configs/medium_300x150.yaml"
+    - "experiments/configs/large_1000x500.yaml"
+  baselines:
+    - "random"
+    - "greedy"
+    - "min_cost_flow"
+  exact:
+    enabled_on: ["small_50x30"]
+  metaheuristics:
+    - "nsga2"
+    - "spea2"
+    - "moead"
+    - "hybrid_memetic"
+  output_dirs:
+    results: "results/"
+    figures: "figures/"

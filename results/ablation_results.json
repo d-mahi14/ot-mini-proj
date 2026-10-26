@@ -1,0 +1,44 @@
+{
+  "component_ablation": {
+    "Base NSGA-II": {
+      "hypervolume": 188.632927956,
+      "num_non_dominated": 6,
+      "feasibility_rate": 1.0,
+      "runtime_seconds": 3.134948799852282
+    },
+    "Seeded NSGA-II": {
+      "hypervolume": 234.17081498400012,
+      "num_non_dominated": 10,
+      "feasibility_rate": 1.0,
+      "runtime_seconds": 3.305018200073391
+    },
+    "Full Hybrid Memetic": {
+      "hypervolume": 213.55366494500015,
+      "num_non_dominated": 4,
+      "feasibility_rate": 1.0,
+      "runtime_seconds": 3.5573021001182497
+    }
+  },
+  "branch_parity_sensitivity": {
+    "0.15": {
+      "max_total_quality_z1": 65.8,
+      "worst_student_z2": 0.897,
+      "achieved_branch_disparity": 0.1476
+    },
+    "0.25": {
+      "max_total_quality_z1": 69.471,
+      "worst_student_z2": 0.997,
+      "achieved_branch_disparity": 0.2438
+    },
+    "0.35": {
+      "max_total_quality_z1": 72.318,
+      "worst_student_z2": 1.023,
+      "achieved_branch_disparity": 0.3258
+    },
+    "0.5": {
+      "max_total_quality_z1": 70.612,
+      "worst_student_z2": 0.718,
+      "achieved_branch_disparity": 0.4279
+    }
+  }
+}

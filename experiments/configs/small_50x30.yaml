@@ -1,0 +1,39 @@
+# Configuration for Small Instance (50 Students x 30 Alumni)
+# NOTICE: ARTIFICIAL - FOR TESTING ONLY
+
+instance:
+  name: "small_50x30"
+  n_students: 50
+  n_alumni: 30
+  k_matches: 2
+  q_min: 0.25
+  theta_min_quality: 0.70
+  delta_branch_parity: 0.35
+  max_company_share: 1
+  consent_rate: 0.95
+  avg_capacity: 4.0
+  seed: 42
+  file_path: "data/small_50x30.json"
+
+algorithms:
+  nsga2:
+    pop_size: 40
+    n_gen: 40
+    seed: 42
+  spea2:
+    pop_size: 40
+    n_gen: 40
+    seed: 42
+  moead:
+    n_partitions: 6
+    n_gen: 40
+    seed: 42
+  hybrid_memetic:
+    pop_size: 40
+    n_gen: 40
+    seed: 42
+    apply_local_search: true
+  milp:
+    grid_steps: 4
+    time_limit_sec: 45.0
+    epsilon_scenario: true

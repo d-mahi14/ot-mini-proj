@@ -1,0 +1,74 @@
+{
+  "Random": {
+    "runtime_seconds": 0.25109479995444417,
+    "Z1_total_quality": 274.7093,
+    "avg_student_quality": 0.9157,
+    "Z2_worst_quality": 0.5213,
+    "Z3_max_load": 10,
+    "active_alumni": 140,
+    "is_feasible": false,
+    "total_constraint_violation": 20.6821,
+    "branch_disparity": 0.1018,
+    "company_entropy": 3.5758
+  },
+  "Greedy": {
+    "runtime_seconds": 0.04861559998244047,
+    "Z1_total_quality": 506.1058,
+    "avg_student_quality": 1.687,
+    "Z2_worst_quality": 1.0434,
+    "Z3_max_load": 10,
+    "active_alumni": 128,
+    "is_feasible": true,
+    "total_constraint_violation": 0.0,
+    "branch_disparity": 0.3295,
+    "company_entropy": 3.5641
+  },
+  "Min-Cost Flow": {
+    "runtime_seconds": 3.4923002999275923,
+    "Z1_total_quality": 509.2078,
+    "avg_student_quality": 1.6974,
+    "Z2_worst_quality": 1.2924,
+    "Z3_max_load": 10,
+    "active_alumni": 124,
+    "is_feasible": false,
+    "total_constraint_violation": 19.0,
+    "branch_disparity": 0.2927,
+    "company_entropy": 3.555
+  },
+  "NSGA-II": {
+    "num_total_solutions": 1,
+    "num_non_dominated": 1,
+    "spacing": 0.0,
+    "hypervolume": 311.9918319,
+    "avg_gini_quality": 0.12759178435208943,
+    "min_gini_quality": 0.12759178435208943,
+    "avg_max_load": 10.0,
+    "avg_alumni_used": 140.0,
+    "min_alumni_used": 140,
+    "runtime_seconds": 9.311399600002915
+  },
+  "SPEA2": {
+    "num_total_solutions": 1,
+    "num_non_dominated": 1,
+    "spacing": 0.0,
+    "hypervolume": 311.9918319,
+    "avg_gini_quality": 0.12759178435208943,
+    "min_gini_quality": 0.12759178435208943,
+    "avg_max_load": 10.0,
+    "avg_alumni_used": 140.0,
+    "min_alumni_used": 140,
+    "runtime_seconds": 8.872057999949902
+  },
+  "Hybrid-Memetic-NSGA-II": {
+    "num_total_solutions": 4,
+    "num_non_dominated": 3,
+    "spacing": 3.7980410108370877,
+    "hypervolume": 572.7905020800002,
+    "avg_gini_quality": 0.06409601454653509,
+    "min_gini_quality": 0.06155577661170645,
+    "avg_max_load": 9.0,
+    "avg_alumni_used": 131.33333333333334,
+    "min_alumni_used": 125,
+    "runtime_seconds": 13.298277500085533
+  }
+}
