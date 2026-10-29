@@ -24,7 +24,7 @@ import yaml
 from experiments.run_experiments import load_or_create_instance
 from src.data_generator import MatchingInstance
 from src.hybrid.seeded_memetic_nsga2 import SeededMemeticNSGA2
-from src.metrics import compute_full_metrics
+from src.metrics import compute_full_metrics, compute_shared_reference_setup
 from src.multiobjective.nsga2 import run_nsga2
 from src.problem import StudentAlumniMatchingProblem
 
@@ -49,32 +49,40 @@ def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml"
     print("Evaluating Variant 1: Base NSGA-II...")
     v1_sols, v1_meta = run_nsga2(base_problem, pop_size=40, n_gen=35, seed=42)
     objs1 = np.array([s.objectives for s in v1_sols])
-    ablation_results["Base NSGA-II"] = {
-        "hypervolume": compute_full_metrics(objs1)["hypervolume"],
-        "num_non_dominated": len(v1_sols),
-        "feasibility_rate": float(np.mean([s.is_feasible for s in v1_sols])) if v1_sols else 0.0,
-        "runtime_seconds": v1_meta["runtime_seconds"],
-    }
 
     # Variant 2: Hybrid Seeded (No memetic local search)
     print("Evaluating Variant 2: Seeded NSGA-II (No Local Search)...")
     v2_solver = SeededMemeticNSGA2(base_problem)
     v2_sols, v2_meta = v2_solver.solve(pop_size=40, n_gen=35, seed=42, apply_local_search=False)
     objs2 = np.array([s.objectives for s in v2_sols])
-    ablation_results["Seeded NSGA-II"] = {
-        "hypervolume": compute_full_metrics(objs2)["hypervolume"],
-        "num_non_dominated": len(v2_sols),
-        "feasibility_rate": float(np.mean([s.is_feasible for s in v2_sols])) if v2_sols else 0.0,
-        "runtime_seconds": v2_meta["runtime_seconds"],
-    }
 
     # Variant 3: Full Seeded + Memetic NSGA-II
     print("Evaluating Variant 3: Full Hybrid (Seeded + Memetic)...")
     v3_solver = SeededMemeticNSGA2(base_problem)
     v3_sols, v3_meta = v3_solver.solve(pop_size=40, n_gen=35, seed=42, apply_local_search=True)
     objs3 = np.array([s.objectives for s in v3_sols])
+
+    # Shared reference setup across all ablation variants
+    all_objs = [o for o in [objs1, objs2, objs3] if len(o) > 0]
+    ref_setup = compute_shared_reference_setup(all_objs)
+    id_pt = np.array(ref_setup["ideal_point"])
+    nd_pt = np.array(ref_setup["nadir_point"])
+    rf_pt = np.array(ref_setup["ref_point"])
+
+    ablation_results["Base NSGA-II"] = {
+        "hypervolume": compute_full_metrics(objs1, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
+        "num_non_dominated": len(v1_sols),
+        "feasibility_rate": float(np.mean([s.is_feasible for s in v1_sols])) if v1_sols else 0.0,
+        "runtime_seconds": v1_meta["runtime_seconds"],
+    }
+    ablation_results["Seeded NSGA-II"] = {
+        "hypervolume": compute_full_metrics(objs2, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
+        "num_non_dominated": len(v2_sols),
+        "feasibility_rate": float(np.mean([s.is_feasible for s in v2_sols])) if v2_sols else 0.0,
+        "runtime_seconds": v2_meta["runtime_seconds"],
+    }
     ablation_results["Full Hybrid Memetic"] = {
-        "hypervolume": compute_full_metrics(objs3)["hypervolume"],
+        "hypervolume": compute_full_metrics(objs3, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
         "num_non_dominated": len(v3_sols),
         "feasibility_rate": float(np.mean([s.is_feasible for s in v3_sols])) if v3_sols else 0.0,
         "runtime_seconds": v3_meta["runtime_seconds"],
@@ -99,36 +107,32 @@ def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml"
     # Save results
     all_ablation = {
         "component_ablation": ablation_results,
-        "branch_parity_sensitivity": delta_results,
+        "delta_sensitivity": {str(k): v for k, v in delta_results.items()},
     }
-    with open(results_dir / "ablation_results.json", "w", encoding="utf-8") as f:
+    ablation_file = results_dir / "ablation_results.json"
+    with open(ablation_file, "w", encoding="utf-8") as f:
         json.dump(all_ablation, f, indent=2)
+    print(f"\nSaved ablation and sensitivity results to: {ablation_file}")
 
-    # Plot Ablation and Sensitivity Figure
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    # Plot Delta Trade-off Curve
+    fig, ax1 = plt.subplots(figsize=(7, 4.5))
+    deltas = sorted(list(delta_results.keys()))
+    z1_vals = [delta_results[d]["max_total_quality_z1"] for d in deltas]
+    z2_vals = [delta_results[d]["worst_student_z2"] for d in deltas]
 
-    # Panel 1: Component Hypervolume comparison
-    comp_names = list(ablation_results.keys())
-    comp_hvs = [ablation_results[k]["hypervolume"] for k in comp_names]
-    axes[0].bar(comp_names, comp_hvs, color=["#4c72b0", "#55a868", "#c44e52"], edgecolor="black", alpha=0.85)
-    axes[0].set_ylabel("Hypervolume (HV) [Normalized]")
-    axes[0].set_title("Component Ablation: Hypervolume Impact")
-    axes[0].grid(True, linestyle="--", alpha=0.6)
+    ax1.plot(deltas, z1_vals, marker="o", color="#1f77b4", label="Total Quality $Z_1$")
+    ax1.set_xlabel(r"Branch Parity Tolerance $\delta$")
+    ax1.set_ylabel(r"Total Quality $Z_1$", color="#1f77b4")
+    ax1.tick_params(axis="y", labelcolor="#1f77b4")
 
-    # Panel 2: Parity Tolerance delta vs Achieved Total Quality
-    deltas = list(delta_results.keys())
-    qualities = [delta_results[d]["max_total_quality_z1"] for d in deltas]
-    axes[1].plot(deltas, qualities, marker="s", color="#8172b3", linewidth=2.0, markersize=8)
-    axes[1].set_xlabel("Branch Parity Tolerance $\\delta$")
-    axes[1].set_ylabel("Maximum Achievable Quality ($Z_1$)")
-    axes[1].set_title("Fairness-Efficiency Frontier (Price of Parity)")
-    axes[1].grid(True, linestyle="--", alpha=0.6)
+    ax2 = ax1.twinx()
+    ax2.plot(deltas, z2_vals, marker="s", color="#ff7f0e", linestyle="--", label="Worst Student $Z_2$")
+    ax2.set_ylabel(r"Worst-Off Student Quality $Z_2$", color="#ff7f0e")
+    ax2.tick_params(axis="y", labelcolor="#ff7f0e")
 
-    plt.tight_layout()
-    plt.savefig(figures_dir / "ablation_study.png", dpi=300)
+    plt.title(r"Trade-off: Branch Fairness Tolerance $\delta$ vs Quality Objectives")
+    fig.tight_layout()
+    plot_file = figures_dir / "delta_sensitivity_tradeoff.png"
+    plt.savefig(plot_file, dpi=300)
     plt.close()
-    print("Ablation study completed and figure saved to figures/ablation_study.png")
-
-
-if __name__ == "__main__":
-    run_ablation_study()
+    print(f"Saved delta sensitivity plot to: {plot_file}")

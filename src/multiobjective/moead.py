@@ -11,6 +11,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from pymoo.algorithms.moo.moead import MOEAD
+from pymoo.core.problem import Problem
+from pymoo.decomposition.tchebicheff import Tchebicheff
 from pymoo.operators.crossover.sbx import SBX
 from pymoo.operators.mutation.pm import PM
 from pymoo.operators.sampling.rnd import IntegerRandomSampling
@@ -20,6 +22,37 @@ from pymoo.util.ref_dirs import get_reference_directions
 
 from src.multiobjective.repair import MatchingRepair
 from src.problem import MatchingSolution, StudentAlumniMatchingProblem
+
+
+class _MOEADProblemWrapper(Problem):
+    """Adapter wrapping constrained StudentAlumniMatchingProblem for MOEAD.
+
+    Pymoo's native MOEAD implementation asserts that problems have no explicit
+    constraints (n_ieq_constr == 0). This wrapper penalizes constraint violations
+    directly onto the scalarized objective vectors, while the custom repair operator
+    repairs offspring before evaluation.
+    """
+
+    def __init__(self, inner: StudentAlumniMatchingProblem) -> None:
+        super().__init__(
+            n_var=inner.n_var,
+            n_obj=inner.n_obj,
+            n_ieq_constr=0,
+            xl=inner.xl,
+            xu=inner.xu,
+            vtype=inner.vtype,
+        )
+        self.inner = inner
+
+    def _evaluate(self, x, out, *args, **kwargs) -> None:
+        sub_out: Dict[str, Any] = {}
+        self.inner._evaluate(x, sub_out, *args, **kwargs)
+        F = sub_out["F"].copy()
+        if "G" in sub_out:
+            G = sub_out["G"]
+            cv = np.sum(np.maximum(0, G), axis=1, keepdims=True)
+            F = F + cv * 50.0
+        out["F"] = F
 
 
 def run_moead(
@@ -51,7 +84,7 @@ def run_moead(
     algorithm = MOEAD(
         ref_dirs,
         n_neighbors=n_neighbors,
-        decomposition="tchebi",
+        decomposition=Tchebicheff(),
         prob_neighbor_mating=0.7,
         sampling=IntegerRandomSampling(),
         crossover=SBX(prob=0.9, eta=15, vtype=int, repair=repair),
@@ -60,10 +93,11 @@ def run_moead(
     )
 
     termination = get_termination("n_gen", n_gen)
+    wrapped_problem = _MOEADProblemWrapper(problem)
 
     start_time = time.perf_counter()
     res = minimize(
-        problem,
+        wrapped_problem,
         algorithm,
         termination,
         seed=seed,

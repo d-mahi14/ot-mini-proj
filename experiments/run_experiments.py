@@ -1,7 +1,7 @@
 """Master experiment runner for Student-Alumni Matching optimization.
 
 Reads configuration from YAML, executes baselines, exact methods, MOEAs, and hybrid
-algorithms, calculates comprehensive metrics, and plots publication figures.
+algorithms, calculates comprehensive metrics with shared reference hypervolume, and plots publication figures.
 """
 
 from __future__ import annotations
@@ -21,7 +21,12 @@ from src.baseline.min_cost_flow import MinCostFlowBaseline
 from src.baseline.random_baseline import RandomBaseline
 from src.data_generator import MatchingInstance, SyntheticDataGenerator
 from src.hybrid.seeded_memetic_nsga2 import SeededMemeticNSGA2
-from src.metrics import compute_full_metrics, extract_non_dominated_front
+from src.metrics import (
+    compute_full_metrics,
+    compute_hypervolume,
+    compute_shared_reference_setup,
+    extract_non_dominated_front,
+)
 from src.multiobjective.moead import run_moead
 from src.multiobjective.nsga2 import run_nsga2
 from src.multiobjective.spea2 import run_spea2
@@ -84,44 +89,32 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
     print(f"=======================================================\n")
 
     solutions_by_algo: Dict[str, List[MatchingSolution]] = {}
-    metrics_by_algo: Dict[str, Dict[str, Any]] = {}
+    runtimes_by_algo: Dict[str, float] = {}
 
     # 1. Baseline: Random Feasible
-    print("[1/7] Running Random Feasible Baseline...")
+    print("[1/8] Running Random Feasible Baseline...")
     t0 = time.perf_counter()
     rand_sol = RandomBaseline(problem, seed=inst_cfg.get("seed", 42)).solve(n_trials=5)
-    t_rand = time.perf_counter() - t0
+    runtimes_by_algo["Random"] = time.perf_counter() - t0
     solutions_by_algo["Random"] = [rand_sol]
-    metrics_by_algo["Random"] = {
-        "runtime_seconds": t_rand,
-        **rand_sol.to_summary(),
-    }
 
     # 2. Baseline: Greedy Score-First
-    print("[2/7] Running Greedy Score-First Baseline...")
+    print("[2/8] Running Greedy Score-First Baseline...")
     t0 = time.perf_counter()
     greedy_sol = GreedyBaseline(problem).solve()
-    t_greedy = time.perf_counter() - t0
+    runtimes_by_algo["Greedy"] = time.perf_counter() - t0
     solutions_by_algo["Greedy"] = [greedy_sol]
-    metrics_by_algo["Greedy"] = {
-        "runtime_seconds": t_greedy,
-        **greedy_sol.to_summary(),
-    }
 
     # 3. Baseline: Single-Objective Min-Cost Flow
-    print("[3/7] Running Single-Objective Min-Cost Flow (Max Z1)...")
+    print("[3/8] Running Single-Objective Min-Cost Flow (Max Z1)...")
     t0 = time.perf_counter()
     mcf_sol = MinCostFlowBaseline(problem).solve()
-    t_mcf = time.perf_counter() - t0
+    runtimes_by_algo["Min-Cost Flow"] = time.perf_counter() - t0
     solutions_by_algo["Min-Cost Flow"] = [mcf_sol]
-    metrics_by_algo["Min-Cost Flow"] = {
-        "runtime_seconds": t_mcf,
-        **mcf_sol.to_summary(),
-    }
 
     # 4. Exact MILP (Enabled on small instances)
     if "milp" in algo_cfg and instance.n_students <= 100:
-        print("[4/7] Running Exact MILP Pareto Sweep (Weighted-Sum & Epsilon-Constraint)...")
+        print("[4/8] Running Exact MILP Pareto Sweep (Weighted-Sum & Epsilon-Constraint)...")
         m_cfg = algo_cfg["milp"]
         milp_solver = ExactMILP(problem)
         t0 = time.perf_counter()
@@ -129,24 +122,14 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
             grid_steps=m_cfg.get("grid_steps", 4),
             time_limit_per_point=m_cfg.get("time_limit_sec", 30.0),
         )
-        t_milp = time.perf_counter() - t0
+        runtimes_by_algo["Exact-MILP"] = time.perf_counter() - t0
         if milp_sols:
             solutions_by_algo["Exact-MILP"] = milp_sols
-            objs = np.array([s.objectives for s in milp_sols])
-            q_mat = np.array([s.student_qualities for s in milp_sols])
-            ld_mat = np.array([s.alumni_loads for s in milp_sols])
-            metrics_by_algo["Exact-MILP"] = compute_full_metrics(
-                objs,
-                qualities_matrix=q_mat,
-                loads_matrix=ld_mat,
-                runtimes=[t_milp],
-            )
-            metrics_by_algo["Exact-MILP"]["runtime_seconds"] = t_milp
     else:
-        print("[4/7] Skipping Exact MILP (Only configured for small instance).")
+        print("[4/8] Skipping Exact MILP (Only configured for small instance).")
 
     # 5. NSGA-II with Custom Repair
-    print("[5/7] Running NSGA-II with Custom Repair...")
+    print("[5/8] Running NSGA-II with Custom Repair...")
     n_cfg = algo_cfg.get("nsga2", {})
     nsga_sols, nsga_meta = run_nsga2(
         problem,
@@ -154,21 +137,11 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
         n_gen=n_cfg.get("n_gen", 40),
         seed=n_cfg.get("seed", 42),
     )
+    runtimes_by_algo["NSGA-II"] = nsga_meta["runtime_seconds"]
     solutions_by_algo["NSGA-II"] = nsga_sols
-    if nsga_sols:
-        objs = np.array([s.objectives for s in nsga_sols])
-        q_mat = np.array([s.student_qualities for s in nsga_sols])
-        ld_mat = np.array([s.alumni_loads for s in nsga_sols])
-        metrics_by_algo["NSGA-II"] = compute_full_metrics(
-            objs,
-            qualities_matrix=q_mat,
-            loads_matrix=ld_mat,
-            runtimes=[nsga_meta["runtime_seconds"]],
-        )
-        metrics_by_algo["NSGA-II"]["runtime_seconds"] = nsga_meta["runtime_seconds"]
 
     # 6. Comparison MOEA: SPEA2
-    print("[6/7] Running SPEA2 Comparison...")
+    print("[6/8] Running SPEA2 Comparison...")
     sp_cfg = algo_cfg.get("spea2", {})
     spea_sols, spea_meta = run_spea2(
         problem,
@@ -176,21 +149,24 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
         n_gen=sp_cfg.get("n_gen", 40),
         seed=sp_cfg.get("seed", 42),
     )
+    runtimes_by_algo["SPEA2"] = spea_meta["runtime_seconds"]
     solutions_by_algo["SPEA2"] = spea_sols
-    if spea_sols:
-        objs = np.array([s.objectives for s in spea_sols])
-        q_mat = np.array([s.student_qualities for s in spea_sols])
-        ld_mat = np.array([s.alumni_loads for s in spea_sols])
-        metrics_by_algo["SPEA2"] = compute_full_metrics(
-            objs,
-            qualities_matrix=q_mat,
-            loads_matrix=ld_mat,
-            runtimes=[spea_meta["runtime_seconds"]],
-        )
-        metrics_by_algo["SPEA2"]["runtime_seconds"] = spea_meta["runtime_seconds"]
 
-    # 7. Hybrid: Seeded + Memetic NSGA-II
-    print("[7/7] Running Hybrid Seeded + Memetic NSGA-II...")
+    # 7. Comparison MOEA: MOEA/D
+    if "moead" in algo_cfg:
+        print("[7/8] Running MOEA/D Comparison...")
+        mo_cfg = algo_cfg.get("moead", {})
+        moead_sols, moead_meta = run_moead(
+            problem,
+            n_partitions=mo_cfg.get("n_partitions", 6),
+            n_gen=mo_cfg.get("n_gen", 40),
+            seed=mo_cfg.get("seed", 42),
+        )
+        runtimes_by_algo["MOEA/D"] = moead_meta["runtime_seconds"]
+        solutions_by_algo["MOEA/D"] = moead_sols
+
+    # 8. Hybrid: Seeded + Memetic NSGA-II
+    print("[8/8] Running Hybrid Seeded + Memetic NSGA-II...")
     h_cfg = algo_cfg.get("hybrid_memetic", {})
     hybrid_solver = SeededMemeticNSGA2(problem)
     hybrid_sols, hybrid_meta = hybrid_solver.solve(
@@ -199,24 +175,61 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
         seed=h_cfg.get("seed", 42),
         apply_local_search=h_cfg.get("apply_local_search", True),
     )
+    runtimes_by_algo["Hybrid-Memetic-NSGA-II"] = hybrid_meta["runtime_seconds"]
     solutions_by_algo["Hybrid-Memetic-NSGA-II"] = hybrid_sols
-    if hybrid_sols:
-        objs = np.array([s.objectives for s in hybrid_sols])
-        q_mat = np.array([s.student_qualities for s in hybrid_sols])
-        ld_mat = np.array([s.alumni_loads for s in hybrid_sols])
-        metrics_by_algo["Hybrid-Memetic-NSGA-II"] = compute_full_metrics(
+
+    # ---------------------------------------------------------
+    # Shared Hypervolume Reference Setup Across ALL Methods
+    # ---------------------------------------------------------
+    all_objs_list: List[np.ndarray] = []
+    for algo, sols in solutions_by_algo.items():
+        if sols:
+            all_objs_list.append(np.array([s.objectives for s in sols]))
+
+    ref_setup = compute_shared_reference_setup(all_objs_list)
+    ideal_pt = np.array(ref_setup["ideal_point"])
+    nadir_pt = np.array(ref_setup["nadir_point"])
+    ref_pt = np.array(ref_setup["ref_point"])  # Fixed at 1.1 in normalized space
+
+    # Store ideal, nadir and ref point in results/<instance>_hv_reference.json
+    hv_ref_file = results_dir / f"{inst_name}_hv_reference.json"
+    with open(hv_ref_file, "w", encoding="utf-8") as f:
+        json.dump({
+            "instance": inst_name,
+            "ideal_point": ref_setup["ideal_point"],
+            "nadir_point": ref_setup["nadir_point"],
+            "ref_point": ref_setup["ref_point"],
+        }, f, indent=2)
+    print(f"\nStored shared HV reference setup in: {hv_ref_file}")
+
+    # Compute standardized metrics using shared reference bounds
+    metrics_by_algo: Dict[str, Dict[str, Any]] = {}
+    for algo, sols in solutions_by_algo.items():
+        if not sols:
+            continue
+        objs = np.array([s.objectives for s in sols])
+        q_mat = np.array([s.student_qualities for s in sols])
+        ld_mat = np.array([s.alumni_loads for s in sols])
+        t_run = runtimes_by_algo.get(algo, 0.0)
+
+        m = compute_full_metrics(
             objs,
             qualities_matrix=q_mat,
             loads_matrix=ld_mat,
-            runtimes=[hybrid_meta["runtime_seconds"]],
+            runtimes=[t_run],
+            ref_point=ref_pt,
+            ideal_point=ideal_pt,
+            nadir_point=nadir_pt,
         )
-        metrics_by_algo["Hybrid-Memetic-NSGA-II"]["runtime_seconds"] = hybrid_meta["runtime_seconds"]
+        if len(sols) == 1:
+            m.update(sols[0].to_summary())
+        metrics_by_algo[algo] = m
 
     # Save summary metrics to JSON
     metrics_file = results_dir / f"{inst_name}_metrics.json"
     with open(metrics_file, "w", encoding="utf-8") as f:
         json.dump(metrics_by_algo, f, indent=2)
-    print(f"\nSaved metrics summary to: {metrics_file}")
+    print(f"Saved metrics summary to: {metrics_file}")
 
     # Generate Publication Plots
     print("Generating visualization figures...")
@@ -236,7 +249,6 @@ def run_experiment_on_instance(config_path: str | Path) -> Dict[str, Any]:
     # Pick representative balanced solution from Hybrid or NSGA-II for detailed analysis
     rep_sols = solutions_by_algo.get("Hybrid-Memetic-NSGA-II") or solutions_by_algo.get("NSGA-II") or [greedy_sol]
     best_rep = rep_sols[0]
-    # Select solution with best compromise (e.g. median Z1)
     if len(rep_sols) > 1:
         z1_vals = [s.z1_total_quality for s in rep_sols]
         median_idx = int(np.argsort(z1_vals)[len(z1_vals) // 2])
