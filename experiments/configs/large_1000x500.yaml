@@ -35,3 +35,10 @@ algorithms:
     pop_size: 25
     n_gen: 12
     apply_local_search: true
+
+# Prompt D: threshold calibration fractions
+# theta = theta_fraction * greedy_Z2 (quality floor per student)
+# delta = delta_fraction * greedy_branch_spread (branch parity cap)
+calibration:
+  theta_fraction: 0.85
+  delta_fraction: 1.20
