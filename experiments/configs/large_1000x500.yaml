@@ -15,21 +15,23 @@ instance:
   seed: 42
   file_path: "data/large_1000x500.json"
 
+# 10 seeds specified to manage computational runtime while maintaining statistical stability
+seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51]
+
+# Equal evaluation budget per metaheuristic (~375 evaluations)
+eval_budget: 375
+
 algorithms:
   nsga2:
     pop_size: 25
     n_gen: 15
-    seed: 42
   spea2:
     pop_size: 25
     n_gen: 15
-    seed: 42
   moead:
     n_partitions: 5
-    n_gen: 15
-    seed: 42
+    n_gen: 18
   hybrid_memetic:
     pop_size: 25
-    n_gen: 15
-    seed: 42
+    n_gen: 12
     apply_local_search: true

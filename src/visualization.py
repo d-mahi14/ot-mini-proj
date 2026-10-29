@@ -261,3 +261,51 @@ def plot_scalability_curve(
     plt.tight_layout()
     plt.savefig(save_path, dpi=300)
     plt.close()
+
+
+def plot_hypervolume_boxplots(
+    runs_df: Any,
+    save_path: str | Path,
+    title: str = "Hypervolume Distribution Across Independent Seeds",
+) -> None:
+    """Plot publication-quality boxplot with overlaid seed points for hypervolume distributions.
+
+    Args:
+        runs_df: Pandas DataFrame containing 'method' and 'hypervolume' columns.
+        save_path: File path where the plot figure should be saved.
+        title: Plot title.
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    methods = list(runs_df["method"].unique())
+    palette = sns.color_palette("Set2", len(methods))
+
+    sns.boxplot(
+        data=runs_df,
+        x="method",
+        y="hypervolume",
+        palette=palette,
+        ax=ax,
+        showmeans=True,
+        meanprops={"marker": "D", "markeredgecolor": "black", "markerfacecolor": "white", "markersize": 6},
+    )
+    sns.stripplot(
+        data=runs_df,
+        x="method",
+        y="hypervolume",
+        color="black",
+        alpha=0.55,
+        jitter=0.2,
+        size=5,
+        ax=ax,
+    )
+    ax.set_title(title, fontsize=13, fontweight="bold")
+    ax.set_xlabel("Optimization Method", fontsize=11, fontweight="bold")
+    ax.set_ylabel("Normalized Hypervolume (HV) [Shared Ref 1.1]", fontsize=11, fontweight="bold")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=20, ha="right")
+    ax.grid(True, linestyle="--", alpha=0.5)
+
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=300)
+    plt.close()

@@ -15,23 +15,25 @@ instance:
   seed: 42
   file_path: "data/small_50x30.json"
 
+# 30 independent seeds for rigorous statistical significance & Wilcoxon testing
+seeds: [42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+
+# Equal evaluation budget per metaheuristic (~1600 evaluations)
+eval_budget: 1600
+
 algorithms:
   nsga2:
     pop_size: 40
     n_gen: 40
-    seed: 42
   spea2:
     pop_size: 40
     n_gen: 40
-    seed: 42
   moead:
     n_partitions: 6
-    n_gen: 40
-    seed: 42
+    n_gen: 57
   hybrid_memetic:
     pop_size: 40
-    n_gen: 40
-    seed: 42
+    n_gen: 35
     apply_local_search: true
   milp:
     grid_steps: 4

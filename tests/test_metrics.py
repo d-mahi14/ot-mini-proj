@@ -108,3 +108,36 @@ def test_hypervolume_shared_reference():
     # 3. Fallback removal test: Calling compute_hypervolume without reference point or bounds raises ValueError
     with pytest.raises(ValueError, match="Per-method fallback"):
         compute_hypervolume(front_a)
+
+
+def test_check_front_dominates_point():
+    """Verify Pareto dominance checking for single points against fronts."""
+    from src.metrics import check_front_dominates_point
+
+    # Front contains points (minimization)
+    front = np.array([
+        [-80.0, -2.0, 5.0],
+        [-75.0, -2.2, 4.0],
+    ])
+
+    # Point clearly dominated by [-80, -2.0, 5.0]: e.g. [-70, -1.5, 6.0]
+    target_dominated = np.array([-70.0, -1.5, 6.0])
+    assert check_front_dominates_point(front, target_dominated) is True
+
+    # Point dominating or non-dominated: e.g. [-90, -3.0, 3.0]
+    target_superior = np.array([-90.0, -3.0, 3.0])
+    assert check_front_dominates_point(front, target_superior) is False
+
+
+def test_compute_wilcoxon_with_effect_size():
+    """Verify Wilcoxon test and effect size calculation."""
+    from src.metrics import compute_wilcoxon_with_effect_size
+
+    # Superior algorithm sample vs inferior algorithm sample across 10 paired seeds
+    sample_a = np.array([0.80, 0.82, 0.81, 0.83, 0.85, 0.79, 0.84, 0.82, 0.81, 0.83])
+    sample_b = np.array([0.50, 0.52, 0.51, 0.49, 0.53, 0.48, 0.51, 0.50, 0.49, 0.52])
+
+    res = compute_wilcoxon_with_effect_size(sample_a, sample_b)
+    assert res["p_value"] < 0.05
+    assert res["significant_0_05"] is True
+    assert res["effect_size_r"] > 0.8

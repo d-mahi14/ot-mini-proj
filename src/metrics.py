@@ -283,3 +283,97 @@ def compute_full_metrics(
         metrics["runtime_seconds"] = float(np.mean(runtimes))
 
     return metrics
+
+
+def check_front_dominates_point(
+    front_points: np.ndarray,
+    target_point: np.ndarray,
+) -> bool:
+    """Check if any solution in front_points dominates target_point for minimization.
+
+    A point p dominates target if p_m <= target_m for all objectives m and
+    p_m < target_m for at least one objective.
+
+    Args:
+        front_points: Array of shape (P, M) with minimization objective vectors.
+        target_point: Vector of shape (M,) with minimization objective values.
+
+    Returns:
+        True if at least one solution in front_points dominates target_point.
+    """
+    pts = np.atleast_2d(front_points)
+    target = np.asarray(target_point, dtype=float)
+    for p in pts:
+        if np.all(p <= target) and np.any(p < target):
+            return True
+    return False
+
+
+def compute_wilcoxon_with_effect_size(
+    sample_a: List[float] | np.ndarray,
+    sample_b: List[float] | np.ndarray,
+) -> Dict[str, Any]:
+    """Perform paired Wilcoxon signed-rank test and compute rank-biserial effect size r.
+
+    Args:
+        sample_a: First paired sample (e.g., Hybrid HV across seeds).
+        sample_b: Second paired sample (e.g., NSGA-II HV across seeds).
+
+    Returns:
+        Dictionary with:
+            - 'statistic': W test statistic
+            - 'p_value': Two-sided p-value
+            - 'effect_size_r': Rank-biserial effect size in [-1, +1]
+            - 'significant_0_05': Boolean indicator if p < 0.05
+            - 'sample_size': Total pair count N
+            - 'non_zero_pairs': Count of non-tied pairs
+    """
+    from scipy.stats import wilcoxon
+
+    a = np.asarray(sample_a, dtype=float)
+    b = np.asarray(sample_b, dtype=float)
+    diff = a - b
+    non_zero = diff[diff != 0]
+    n = len(non_zero)
+
+    if n < 3:
+        mean_diff = float(np.mean(diff)) if len(diff) > 0 else 0.0
+        return {
+            "statistic": 0.0,
+            "p_value": 1.0 if n == 0 else 0.5,
+            "effect_size_r": 0.0 if n == 0 else (1.0 if mean_diff > 0 else -1.0),
+            "significant_0_05": False,
+            "sample_size": len(a),
+            "non_zero_pairs": n,
+        }
+
+    try:
+        res = wilcoxon(a, b, alternative="two-sided")
+        w_stat = float(res.statistic)
+        p_val = float(res.pvalue)
+    except Exception:
+        return {
+            "statistic": 0.0,
+            "p_value": 1.0,
+            "effect_size_r": 0.0,
+            "significant_0_05": False,
+            "sample_size": len(a),
+            "non_zero_pairs": n,
+        }
+
+    # Rank-biserial correlation: r = (W_+ - W_-) / (W_+ + W_-)
+    abs_diff = np.abs(non_zero)
+    ranks = np.argsort(np.argsort(abs_diff)) + 1.0
+    w_plus = float(np.sum(ranks[non_zero > 0]))
+    w_minus = float(np.sum(ranks[non_zero < 0]))
+    total_w = w_plus + w_minus
+    r_biserial = float((w_plus - w_minus) / total_w) if total_w > 0 else 0.0
+
+    return {
+        "statistic": w_stat,
+        "p_value": p_val,
+        "effect_size_r": round(r_biserial, 4),
+        "significant_0_05": bool(p_val < 0.05),
+        "sample_size": len(a),
+        "non_zero_pairs": n,
+    }
