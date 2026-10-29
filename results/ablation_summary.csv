@@ -1,0 +1,4 @@
+variant,hv_mean,hv_std,hv_median,feasibility_rate,z1_mean,z2_mean,z3_mean,spacing_mean,runtime_mean
+Seeding Only,0.630712,0.064082,0.640711,0.6839,72.6228,1.0952,6.0,0.68538,16.9761
+Local Search Only,0.375876,0.107495,0.352216,1.0,66.8836,1.0672,5.07,0.44706,26.9704
+Both (Full Hybrid),0.870445,0.157701,0.90046,0.7721,72.6404,1.1109,5.47,0.6524,35.3281

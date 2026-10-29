@@ -1,36 +1,55 @@
 """Ablation and Sensitivity Analysis for VJTI Student-Alumni Matching.
 
 Systematically evaluates:
-1. Algorithmic components:
-   - Base NSGA-II (standard)
-   - NSGA-II + Custom Repair
-   - NSGA-II + Custom Repair + Heuristic Seeding
-   - Full Hybrid (Seeding + Repair + Memetic Local Search)
+1. Algorithmic Component Ablation across 30 seeds:
+   - Seeding Only (Heuristic Seeding + NSGA-II, no memetic local search)
+   - Local Search Only (Uniform random init + NSGA-II + Memetic Local Search)
+   - Both / Full Hybrid (Heuristic Seeding + NSGA-II + Memetic Local Search)
+   Saves raw runs to results/ablation_runs.csv with paired Wilcoxon signed-rank tests.
 2. Policy parameters:
-   - Branch Parity Disparity Tolerance delta in {0.10, 0.20, 0.35, 0.50}
-   - Minimum Quality Floor theta in {0.50, 0.70, 0.90}
+   - Branch Parity Disparity Tolerance delta in {0.15, 0.25, 0.35, 0.50}
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import os
+import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import yaml
+
+# Ensure project root is in sys.path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from experiments.run_experiments import load_or_create_instance
 from src.data_generator import MatchingInstance
 from src.hybrid.seeded_memetic_nsga2 import SeededMemeticNSGA2
-from src.metrics import compute_full_metrics, compute_shared_reference_setup
-from src.multiobjective.nsga2 import run_nsga2
-from src.problem import StudentAlumniMatchingProblem
+from src.metrics import (
+    compute_full_metrics,
+    compute_hypervolume,
+    compute_shared_reference_setup,
+    compute_spacing,
+    compute_wilcoxon_with_effect_size,
+    extract_non_dominated_front,
+)
+from src.problem import MatchingSolution, StudentAlumniMatchingProblem
 
 
-def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml") -> None:
-    """Run full component ablation and parameter sensitivity analysis."""
+def run_ablation_study(
+    config_path: str = "experiments/configs/small_50x30.yaml",
+    max_seeds: int | None = None,
+) -> Dict[str, Any]:
+    """Run full component ablation over 30 seeds and parameter sensitivity analysis."""
     with open(config_path, "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
 
@@ -42,52 +61,175 @@ def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml"
     results_dir.mkdir(parents=True, exist_ok=True)
     figures_dir.mkdir(parents=True, exist_ok=True)
 
-    print("\n--- Part 1: Algorithmic Component Ablation ---")
-    ablation_results: Dict[str, Dict[str, Any]] = {}
+    raw_seeds: List[int] = cfg.get("seeds", [42])
+    seeds = raw_seeds[:max_seeds] if max_seeds is not None else raw_seeds
 
-    # Variant 1: Pure NSGA-II with basic repair
-    print("Evaluating Variant 1: Base NSGA-II...")
-    v1_sols, v1_meta = run_nsga2(base_problem, pop_size=40, n_gen=35, seed=42)
-    objs1 = np.array([s.objectives for s in v1_sols])
+    print(f"\n================================================================================")
+    print(f" ABLATION STUDY: 3 Components x {len(seeds)} Seeds ({instance.name})")
+    print(f" Variants: [1] Seeding Only, [2] Local Search Only, [3] Both (Full Hybrid)")
+    print(f"================================================================================\n")
 
-    # Variant 2: Hybrid Seeded (No memetic local search)
-    print("Evaluating Variant 2: Seeded NSGA-II (No Local Search)...")
-    v2_solver = SeededMemeticNSGA2(base_problem)
-    v2_sols, v2_meta = v2_solver.solve(pop_size=40, n_gen=35, seed=42, apply_local_search=False)
-    objs2 = np.array([s.objectives for s in v2_sols])
+    h_cfg = cfg.get("algorithms", {}).get("hybrid_memetic", {})
+    pop_size = h_cfg.get("pop_size", 40)
+    n_gen = h_cfg.get("n_gen", 35)
 
-    # Variant 3: Full Seeded + Memetic NSGA-II
-    print("Evaluating Variant 3: Full Hybrid (Seeded + Memetic)...")
-    v3_solver = SeededMemeticNSGA2(base_problem)
-    v3_sols, v3_meta = v3_solver.solve(pop_size=40, n_gen=35, seed=42, apply_local_search=True)
-    objs3 = np.array([s.objectives for s in v3_sols])
+    def _eval_ablation_seed(seed: int) -> List[Dict[str, Any]]:
+        records = []
+        hybrid_solver = SeededMemeticNSGA2(base_problem)
 
-    # Shared reference setup across all ablation variants
-    all_objs = [o for o in [objs1, objs2, objs3] if len(o) > 0]
-    ref_setup = compute_shared_reference_setup(all_objs)
-    id_pt = np.array(ref_setup["ideal_point"])
-    nd_pt = np.array(ref_setup["nadir_point"])
-    rf_pt = np.array(ref_setup["ref_point"])
+        # 1. Seeding Only
+        t0 = time.perf_counter()
+        sols_seed, meta_seed = hybrid_solver.solve(
+            pop_size=pop_size,
+            n_gen=n_gen,
+            seed=seed,
+            use_seeding=True,
+            apply_local_search=False,
+        )
+        t_seed = time.perf_counter() - t0
+        records.append({"seed": seed, "variant": "Seeding Only", "solutions": sols_seed, "runtime": t_seed})
 
-    ablation_results["Base NSGA-II"] = {
-        "hypervolume": compute_full_metrics(objs1, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
-        "num_non_dominated": len(v1_sols),
-        "feasibility_rate": float(np.mean([s.is_feasible for s in v1_sols])) if v1_sols else 0.0,
-        "runtime_seconds": v1_meta["runtime_seconds"],
-    }
-    ablation_results["Seeded NSGA-II"] = {
-        "hypervolume": compute_full_metrics(objs2, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
-        "num_non_dominated": len(v2_sols),
-        "feasibility_rate": float(np.mean([s.is_feasible for s in v2_sols])) if v2_sols else 0.0,
-        "runtime_seconds": v2_meta["runtime_seconds"],
-    }
-    ablation_results["Full Hybrid Memetic"] = {
-        "hypervolume": compute_full_metrics(objs3, ideal_point=id_pt, nadir_point=nd_pt, ref_point=rf_pt)["hypervolume"],
-        "num_non_dominated": len(v3_sols),
-        "feasibility_rate": float(np.mean([s.is_feasible for s in v3_sols])) if v3_sols else 0.0,
-        "runtime_seconds": v3_meta["runtime_seconds"],
-    }
+        # 2. Local Search Only
+        t0 = time.perf_counter()
+        sols_ls, meta_ls = hybrid_solver.solve(
+            pop_size=pop_size,
+            n_gen=n_gen,
+            seed=seed,
+            use_seeding=False,
+            apply_local_search=True,
+        )
+        t_ls = time.perf_counter() - t0
+        records.append({"seed": seed, "variant": "Local Search Only", "solutions": sols_ls, "runtime": t_ls})
 
+        # 3. Both (Full Hybrid)
+        t0 = time.perf_counter()
+        sols_both, meta_both = hybrid_solver.solve(
+            pop_size=pop_size,
+            n_gen=n_gen,
+            seed=seed,
+            use_seeding=True,
+            apply_local_search=True,
+        )
+        t_both = time.perf_counter() - t0
+        records.append({"seed": seed, "variant": "Both (Full Hybrid)", "solutions": sols_both, "runtime": t_both})
+
+        return records
+
+    n_workers = min(4, os.cpu_count() or 4)
+    print(f"[1/3] Running Ablation experiments across {len(seeds)} seeds in parallel ({n_workers} threads)...", flush=True)
+
+    all_raw_runs: List[Dict[str, Any]] = []
+    completed_cnt = 0
+    with ThreadPoolExecutor(max_workers=n_workers) as executor:
+        futures = {executor.submit(_eval_ablation_seed, s): s for s in seeds}
+        for fut in as_completed(futures):
+            res_list = fut.result()
+            all_raw_runs.extend(res_list)
+            completed_cnt += 1
+            if completed_cnt % 5 == 0 or completed_cnt == len(seeds) or completed_cnt == 1:
+                print(f"      -> Completed ablation seed {completed_cnt}/{len(seeds)} (seed={futures[fut]})...", flush=True)
+
+    # -------------------------------------------------------------
+    # Pool objective vectors for shared normalization
+    # -------------------------------------------------------------
+    print("[2/3] Constructing shared reference setup across ablation runs...", flush=True)
+    pooled_objs: List[np.ndarray] = []
+    for item in all_raw_runs:
+        for s in item["solutions"]:
+            pooled_objs.append(s.objectives)
+
+    ref_setup = compute_shared_reference_setup(pooled_objs)
+    ideal_pt = np.array(ref_setup["ideal_point"])
+    nadir_pt = np.array(ref_setup["nadir_point"])
+    ref_pt = np.array(ref_setup["ref_point"])
+
+    runs_records: List[Dict[str, Any]] = []
+    for item in all_raw_runs:
+        seed = item["seed"]
+        variant = item["variant"]
+        sols = item["solutions"]
+        t_sec = item["runtime"]
+
+        objs = np.array([s.objectives for s in sols])
+        nd_objs, _ = extract_non_dominated_front(objs)
+
+        hv = compute_hypervolume(nd_objs, ideal_point=ideal_pt, nadir_point=nadir_pt, ref_point=ref_pt)
+        sp = compute_spacing(nd_objs)
+        num_nd = int(nd_objs.shape[0])
+        feasibility_rate = float(np.mean([s.is_feasible for s in sols])) if sols else 0.0
+
+        z1_max = float(max(s.z1_total_quality for s in sols)) if sols else 0.0
+        z2_worst = float(max(s.z2_worst_quality for s in sols)) if sols else 0.0
+        z3_min = int(min(s.z3_max_load for s in sols)) if sols else 0
+
+        runs_records.append({
+            "seed": seed,
+            "variant": variant,
+            "hypervolume": round(hv, 6),
+            "spacing": round(sp, 5),
+            "num_non_dominated": num_nd,
+            "feasibility_rate": round(feasibility_rate, 4),
+            "z1_max": round(z1_max, 4),
+            "z2_worst": round(z2_worst, 4),
+            "z3_min_load": z3_min,
+            "runtime_seconds": round(t_sec, 4),
+        })
+
+    ablation_df = pd.DataFrame(runs_records)
+    ablation_runs_csv = results_dir / "ablation_runs.csv"
+    ablation_df.to_csv(ablation_runs_csv, index=False)
+    print(f"      Saved raw ablation runs to: {ablation_runs_csv}")
+
+    # Summary by variant
+    summary_rows: List[Dict[str, Any]] = []
+    for v in ["Seeding Only", "Local Search Only", "Both (Full Hybrid)"]:
+        sub = ablation_df[ablation_df["variant"] == v]
+        if sub.empty:
+            continue
+        summary_rows.append({
+            "variant": v,
+            "hv_mean": round(float(sub["hypervolume"].mean()), 6),
+            "hv_std": round(float(sub["hypervolume"].std(ddof=1) if len(sub) > 1 else 0.0), 6),
+            "hv_median": round(float(sub["hypervolume"].median()), 6),
+            "feasibility_rate": round(float(sub["feasibility_rate"].mean()), 4),
+            "z1_mean": round(float(sub["z1_max"].mean()), 4),
+            "z2_mean": round(float(sub["z2_worst"].mean()), 4),
+            "z3_mean": round(float(sub["z3_min_load"].mean()), 2),
+            "spacing_mean": round(float(sub["spacing"].mean()), 5),
+            "runtime_mean": round(float(sub["runtime_seconds"].mean()), 4),
+        })
+
+    summary_df = pd.DataFrame(summary_rows)
+    ablation_summary_csv = results_dir / "ablation_summary.csv"
+    summary_df.to_csv(ablation_summary_csv, index=False)
+    print(f"      Saved ablation summary to: {ablation_summary_csv}")
+
+    # Wilcoxon Tests on Ablation Variants
+    ablation_wilcoxon: Dict[str, Any] = {}
+    test_pairs = [
+        ("Both (Full Hybrid)", "Seeding Only"),
+        ("Both (Full Hybrid)", "Local Search Only"),
+        ("Seeding Only", "Local Search Only"),
+    ]
+
+    print("[3/3] Performing Wilcoxon hypothesis tests across ablation variants...", flush=True)
+    for v1, v2 in test_pairs:
+        s1 = ablation_df[ablation_df["variant"] == v1].sort_values("seed")["hypervolume"].values
+        s2 = ablation_df[ablation_df["variant"] == v2].sort_values("seed")["hypervolume"].values
+        res = compute_wilcoxon_with_effect_size(s1, s2)
+        key = f"{v1}_vs_{v2}"
+        ablation_wilcoxon[key] = res
+        sig_str = "SIGNIFICANT (p < 0.05)" if res["significant_0_05"] else "NOT significant"
+        print(f"      Wilcoxon {v1} vs {v2}: p = {res['p_value']:.4e}, effect size r = {res['effect_size_r']:+.4f} -> {sig_str}")
+
+    stat_file = results_dir / "ablation_statistical_tests.json"
+    with open(stat_file, "w", encoding="utf-8") as f:
+        json.dump(ablation_wilcoxon, f, indent=2)
+    print(f"      Saved ablation Wilcoxon test report to: {stat_file}")
+
+    # -------------------------------------------------------------
+    # Part 2: Branch Parity Sensitivity (delta sweep)
+    # -------------------------------------------------------------
     print("\n--- Part 2: Branch Parity Sensitivity (delta sweep) ---")
     delta_results: Dict[float, Dict[str, float]] = {}
     for delta_val in [0.15, 0.25, 0.35, 0.50]:
@@ -102,17 +244,17 @@ def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml"
                 "worst_student_z2": round(best_sol.z2_worst_quality, 3),
                 "achieved_branch_disparity": round(best_sol.branch_disparity, 4),
             }
-            print(f"delta = {delta_val:.2f} -> Max Quality Z1: {best_sol.z1_total_quality:.2f}, Achieved Disparity: {best_sol.branch_disparity:.3f}")
+            print(f"      delta = {delta_val:.2f} -> Max Z1: {best_sol.z1_total_quality:.2f}, Worst Z2: {best_sol.z2_worst_quality:.3f}, Disparity: {best_sol.branch_disparity:.3f}")
 
     # Save results
     all_ablation = {
-        "component_ablation": ablation_results,
+        "component_ablation_summary": summary_rows,
+        "ablation_wilcoxon": ablation_wilcoxon,
         "delta_sensitivity": {str(k): v for k, v in delta_results.items()},
     }
-    ablation_file = results_dir / "ablation_results.json"
-    with open(ablation_file, "w", encoding="utf-8") as f:
+    ablation_json = results_dir / "ablation_results.json"
+    with open(ablation_json, "w", encoding="utf-8") as f:
         json.dump(all_ablation, f, indent=2)
-    print(f"\nSaved ablation and sensitivity results to: {ablation_file}")
 
     # Plot Delta Trade-off Curve
     fig, ax1 = plt.subplots(figsize=(7, 4.5))
@@ -135,4 +277,33 @@ def run_ablation_study(config_path: str = "experiments/configs/small_50x30.yaml"
     plot_file = figures_dir / "delta_sensitivity_tradeoff.png"
     plt.savefig(plot_file, dpi=300)
     plt.close()
-    print(f"Saved delta sensitivity plot to: {plot_file}")
+    print(f"      Saved delta sensitivity plot to: {plot_file}")
+
+    return {
+        "ablation_df": ablation_df,
+        "summary_df": summary_df,
+        "wilcoxon": ablation_wilcoxon,
+    }
+
+
+def main() -> None:
+    """CLI driver for ablation experiments."""
+    parser = argparse.ArgumentParser(description="Run Component Ablation Benchmark.")
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="experiments/configs/small_50x30.yaml",
+        help="Path to YAML configuration file.",
+    )
+    parser.add_argument(
+        "--seeds",
+        type=int,
+        default=None,
+        help="Optional override for maximum number of seeds to execute.",
+    )
+    args = parser.parse_args()
+    run_ablation_study(args.config, max_seeds=args.seeds)
+
+
+if __name__ == "__main__":
+    main()

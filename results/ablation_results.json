@@ -1,44 +1,88 @@
 {
-  "component_ablation": {
-    "Base NSGA-II": {
-      "hypervolume": 188.632927956,
-      "num_non_dominated": 6,
-      "feasibility_rate": 1.0,
-      "runtime_seconds": 3.134948799852282
+  "component_ablation_summary": [
+    {
+      "variant": "Seeding Only",
+      "hv_mean": 0.630712,
+      "hv_std": 0.064082,
+      "hv_median": 0.640711,
+      "feasibility_rate": 0.6839,
+      "z1_mean": 72.6228,
+      "z2_mean": 1.0952,
+      "z3_mean": 6.0,
+      "spacing_mean": 0.68538,
+      "runtime_mean": 16.9761
     },
-    "Seeded NSGA-II": {
-      "hypervolume": 234.17081498400012,
-      "num_non_dominated": 10,
+    {
+      "variant": "Local Search Only",
+      "hv_mean": 0.375876,
+      "hv_std": 0.107495,
+      "hv_median": 0.352216,
       "feasibility_rate": 1.0,
-      "runtime_seconds": 3.305018200073391
+      "z1_mean": 66.8836,
+      "z2_mean": 1.0672,
+      "z3_mean": 5.07,
+      "spacing_mean": 0.44706,
+      "runtime_mean": 26.9704
     },
-    "Full Hybrid Memetic": {
-      "hypervolume": 213.55366494500015,
-      "num_non_dominated": 4,
-      "feasibility_rate": 1.0,
-      "runtime_seconds": 3.5573021001182497
+    {
+      "variant": "Both (Full Hybrid)",
+      "hv_mean": 0.870445,
+      "hv_std": 0.157701,
+      "hv_median": 0.90046,
+      "feasibility_rate": 0.7721,
+      "z1_mean": 72.6404,
+      "z2_mean": 1.1109,
+      "z3_mean": 5.47,
+      "spacing_mean": 0.6524,
+      "runtime_mean": 35.3281
+    }
+  ],
+  "ablation_wilcoxon": {
+    "Both (Full Hybrid)_vs_Seeding Only": {
+      "statistic": 3.0,
+      "p_value": 9.313225746154785e-09,
+      "effect_size_r": 0.9871,
+      "significant_0_05": true,
+      "sample_size": 30,
+      "non_zero_pairs": 30
+    },
+    "Both (Full Hybrid)_vs_Local Search Only": {
+      "statistic": 0.0,
+      "p_value": 1.862645149230957e-09,
+      "effect_size_r": 1.0,
+      "significant_0_05": true,
+      "sample_size": 30,
+      "non_zero_pairs": 30
+    },
+    "Seeding Only_vs_Local Search Only": {
+      "statistic": 1.0,
+      "p_value": 3.725290298461914e-09,
+      "effect_size_r": 0.9957,
+      "significant_0_05": true,
+      "sample_size": 30,
+      "non_zero_pairs": 30
     }
   },
-  "branch_parity_sensitivity": {
+  "delta_sensitivity": {
     "0.15": {
-      "max_total_quality_z1": 65.8,
-      "worst_student_z2": 0.897,
-      "achieved_branch_disparity": 0.1476
+      "max_total_quality_z1": 72.619,
+      "worst_student_z2": 1.08,
+      "achieved_branch_disparity": 0.2626
     },
     "0.25": {
-      "max_total_quality_z1": 69.471,
-      "worst_student_z2": 0.997,
-      "achieved_branch_disparity": 0.2438
+      "max_total_quality_z1": 72.619,
+      "worst_student_z2": 1.08,
+      "achieved_branch_disparity": 0.2626
     },
     "0.35": {
-      "max_total_quality_z1": 72.318,
-      "worst_student_z2": 1.023,
-      "achieved_branch_disparity": 0.3258
+      "max_total_quality_z1": 72.619,
+      "worst_student_z2": 1.08,
+      "achieved_branch_disparity": 0.2626
     },
     "0.5": {
-      "max_total_quality_z1": 70.612,
-      "worst_student_z2": 0.718,
-      "achieved_branch_disparity": 0.4279
+      "max_total_quality_z1": 72.619,
+      "worst_student_z2": 1.08,
+      "achieved_branch_disparity": 0.2626
     }
   }
 }

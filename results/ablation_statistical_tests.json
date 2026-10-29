@@ -1,0 +1,26 @@
+{
+  "Both (Full Hybrid)_vs_Seeding Only": {
+    "statistic": 3.0,
+    "p_value": 9.313225746154785e-09,
+    "effect_size_r": 0.9871,
+    "significant_0_05": true,
+    "sample_size": 30,
+    "non_zero_pairs": 30
+  },
+  "Both (Full Hybrid)_vs_Local Search Only": {
+    "statistic": 0.0,
+    "p_value": 1.862645149230957e-09,
+    "effect_size_r": 1.0,
+    "significant_0_05": true,
+    "sample_size": 30,
+    "non_zero_pairs": 30
+  },
+  "Seeding Only_vs_Local Search Only": {
+    "statistic": 1.0,
+    "p_value": 3.725290298461914e-09,
+    "effect_size_r": 0.9957,
+    "significant_0_05": true,
+    "sample_size": 30,
+    "non_zero_pairs": 30
+  }
+}
