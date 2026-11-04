@@ -18,6 +18,7 @@ from experiments.run_ablation import run_ablation_study
 from experiments.run_exact import run_exact_analysis
 from experiments.run_experiments import run_experiment_on_instance
 from experiments.run_scalability import run_scalability_benchmark
+from experiments.run_sensitivity import run_sensitivity_analysis
 
 
 def main() -> None:
@@ -29,7 +30,7 @@ def main() -> None:
 
     parser.add_argument(
         "--mode",
-        choices=["run", "exact", "scalability", "ablation", "all"],
+        choices=["run", "exact", "scalability", "ablation", "sensitivity", "all"],
         default="run",
         help="Execution mode.",
     )
@@ -76,6 +77,9 @@ def main() -> None:
     elif args.mode == "ablation":
         run_ablation_study(config_path)
 
+    elif args.mode == "sensitivity":
+        run_sensitivity_analysis(config_path)
+
     elif args.mode == "all":
         print(">>> Running Full Comprehensive Research Pipeline <<<\n")
         print("\n--- Phase 1: Small Instance Benchmark (50x30) ---")
@@ -93,8 +97,11 @@ def main() -> None:
         print("\n--- Phase 5: Scalability Across Dimensions ---")
         run_scalability_benchmark()
 
-        print("\n--- Phase 6: Ablation & Sensitivity Study ---")
+        print("\n--- Phase 6: Ablation Study ---")
         run_ablation_study("experiments/configs/small_50x30.yaml")
+
+        print("\n--- Phase 7: Parameter Sensitivity & Coverage-Gap Analysis ---")
+        run_sensitivity_analysis("experiments/configs/small_50x30.yaml")
 
         print("\n>>> Full Research Pipeline Successfully Executed! <<<")
 
