@@ -382,6 +382,7 @@ def calibrate_thresholds(
         theta_min_quality=0.0,
         delta_branch_parity=1e9,
         max_company_share=instance.max_company_share,
+        branches=instance.branches,
         students=instance.students,
         alumni=instance.alumni,
     )

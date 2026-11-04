@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 from src.baseline.greedy_baseline import GreedyBaseline
-from src.baseline.min_cost_flow import MinCostFlowBaseline
+from src.baseline.min_cost_flow import MinCostFlowBaseline, mcf_repaired
 from src.baseline.random_baseline import RandomBaseline
 from src.data_generator import SyntheticDataGenerator
 from src.problem import StudentAlumniMatchingProblem
@@ -45,3 +45,20 @@ def test_min_cost_flow_baseline(baseline_problem):
     assert np.all(np.sum(sol.x, axis=1) == baseline_problem.k_matches)
     # Check capacity constraints
     assert np.all(sol.alumni_loads <= baseline_problem.capacities)
+
+
+def test_mcf_repaired_baseline(baseline_problem):
+    """Test mcf_repaired variant enforcing feasibility and diversity cap."""
+    solver = MinCostFlowBaseline(baseline_problem)
+    sol = solver.solve_repaired(method="networkx")
+    assert sol.z1_total_quality > 0
+    assert np.all(np.sum(sol.x, axis=1) == baseline_problem.k_matches)
+    # Capacity constraints must be satisfied
+    assert np.all(sol.alumni_loads <= baseline_problem.capacities)
+    # Company diversity cap must be strictly satisfied
+    assert sol.diversity_violations == 0
+    # Convenience function mcf_repaired must yield matching behavior
+    sol_func = mcf_repaired(baseline_problem, method="networkx")
+    assert sol_func.z1_total_quality > 0
+    assert sol_func.diversity_violations == 0
+

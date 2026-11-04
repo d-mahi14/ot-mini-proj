@@ -98,6 +98,7 @@ def main():
             theta_min_quality=result["theta"],
             delta_branch_parity=result["delta"],
             max_company_share=instance.max_company_share,
+            branches=instance.branches,
             students=instance.students,
             alumni=instance.alumni,
         )

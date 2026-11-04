@@ -44,9 +44,9 @@ from src.metrics import (
     compute_wilcoxon_with_effect_size,
     extract_non_dominated_front,
 )
-from src.multiobjective.moead import run_moead
-from src.multiobjective.nsga2 import run_nsga2
-from src.multiobjective.spea2 import run_spea2
+from src.algorithms.moead import run_moead
+from src.algorithms.nsga2 import run_nsga2
+from src.algorithms.spea2 import run_spea2
 from src.problem import MatchingSolution, StudentAlumniMatchingProblem
 from src.visualization import (
     plot_branch_parity,
@@ -125,6 +125,12 @@ def run_multi_seed_benchmark(
     mcf_sol = MinCostFlowBaseline(problem).solve()
     t_mcf = time.perf_counter() - t0
 
+    t0 = time.perf_counter()
+    mcf_repaired_sol = MinCostFlowBaseline(problem).solve_repaired()
+    t_mcf_repaired = time.perf_counter() - t0
+    print(f"      Min-Cost Flow (raw: infeasible)     : Z1={mcf_sol.z1_total_quality:.2f}, feasible={mcf_sol.is_feasible}")
+    print(f"      mcf_repaired (repaired: feasible)   : Z1={mcf_repaired_sol.z1_total_quality:.2f}, feasible={mcf_repaired_sol.is_feasible}")
+
     exact_sols: List[MatchingSolution] = []
     t_milp = 0.0
     if "milp" in algo_cfg and instance.n_students <= 100:
@@ -164,8 +170,21 @@ def run_multi_seed_benchmark(
         # Baseline: Greedy (replicated per seed for paired testing)
         records.append({"seed": s_val, "method": "Greedy", "solutions": [greedy_sol], "runtime": t_greedy})
 
-        # Baseline: MCF (replicated per seed for paired testing)
-        records.append({"seed": s_val, "method": "Min-Cost Flow", "solutions": [mcf_sol], "runtime": t_mcf})
+        # Baseline: MCF raw (single-objective Z1 reference, infeasible due to diversity cap)
+        records.append({
+            "seed": s_val,
+            "method": "Min-Cost Flow (raw: infeasible)",
+            "solutions": [mcf_sol],
+            "runtime": t_mcf,
+        })
+
+        # Baseline: MCF repaired (feasible variant with MatchingRepair)
+        records.append({
+            "seed": s_val,
+            "method": "mcf_repaired (repaired: feasible)",
+            "solutions": [mcf_repaired_sol],
+            "runtime": t_mcf_repaired,
+        })
 
         # NSGA-II
         nsga_sols, nsga_meta = run_nsga2(
@@ -256,6 +275,7 @@ def run_multi_seed_benchmark(
 
     greedy_obj = greedy_sol.objectives
     mcf_obj = mcf_sol.objectives
+    mcf_repaired_obj = mcf_repaired_sol.objectives
 
     for item in all_runs_raw:
         seed = item["seed"]
@@ -286,6 +306,7 @@ def run_multi_seed_benchmark(
         dom_rand = check_front_dominates_point(nd_objs, rand_obj)
         dom_greedy = check_front_dominates_point(nd_objs, greedy_obj)
         dom_mcf = check_front_dominates_point(nd_objs, mcf_obj)
+        dom_mcf_repaired = check_front_dominates_point(nd_objs, mcf_repaired_obj)
 
         runs_records.append({
             "seed": seed,
@@ -302,6 +323,7 @@ def run_multi_seed_benchmark(
             "dominates_random": bool(dom_rand),
             "dominates_greedy": bool(dom_greedy),
             "dominates_mcf": bool(dom_mcf),
+            "dominates_mcf_repaired": bool(dom_mcf_repaired),
         })
 
     runs_df = pd.DataFrame(runs_records)
@@ -311,7 +333,16 @@ def run_multi_seed_benchmark(
 
     # Compute Summary Statistics by Method
     summary_rows: List[Dict[str, Any]] = []
-    methods_order = ["Random", "Greedy", "Min-Cost Flow", "NSGA-II", "SPEA2", "MOEA/D", "Hybrid"]
+    methods_order = [
+        "Random",
+        "Greedy",
+        "Min-Cost Flow (raw: infeasible)",
+        "mcf_repaired (repaired: feasible)",
+        "NSGA-II",
+        "SPEA2",
+        "MOEA/D",
+        "Hybrid",
+    ]
 
     for m in methods_order:
         sub = runs_df[runs_df["method"] == m]
@@ -335,6 +366,7 @@ def run_multi_seed_benchmark(
             "pct_dominates_random": round(100.0 * float(sub["dominates_random"].mean()), 1),
             "pct_dominates_greedy": round(100.0 * float(sub["dominates_greedy"].mean()), 1),
             "pct_dominates_mcf": round(100.0 * float(sub["dominates_mcf"].mean()), 1),
+            "pct_dominates_mcf_repaired": round(100.0 * float(sub["dominates_mcf_repaired"].mean()), 1),
         })
 
     summary_df = pd.DataFrame(summary_rows)
@@ -352,7 +384,8 @@ def run_multi_seed_benchmark(
         ("Hybrid", "MOEA/D"),
         ("NSGA-II", "Random"),
         ("NSGA-II", "Greedy"),
-        ("NSGA-II", "Min-Cost Flow"),
+        ("NSGA-II", "Min-Cost Flow (raw: infeasible)"),
+        ("NSGA-II", "mcf_repaired (repaired: feasible)"),
     ]
 
     wilcoxon_results: Dict[str, Any] = {}
@@ -413,6 +446,11 @@ def run_multi_seed_benchmark(
         "wilcoxon": wilcoxon_results,
         "shared_reference": ref_setup,
     }
+
+
+# Alias for main.py entrypoint
+run_experiment_on_instance = run_multi_seed_benchmark
+
 
 
 def main() -> None:

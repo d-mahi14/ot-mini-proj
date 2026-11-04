@@ -53,13 +53,13 @@ ot-proj/
 │   ├── baseline/               # Baseline heuristics
 │   │   ├── random_baseline.py  # Random feasible stochastic baseline
 │   │   ├── greedy_baseline.py  # Greedy score-first priority baseline
-│   │   └── min_cost_flow.py    # Single-objective Min-Cost Network Flow (Max Z1)
-│   ├── algorithms/             # Exact mathematical solvers
-│   │   └── exact_milp.py       # HiGHS MILP: Weighted-Sum & Epsilon-Constraint
-│   ├── multiobjective/         # Multi-objective evolutionary algorithms
+│   │   └── min_cost_flow.py    # Min-Cost Flow baseline (raw & mcf_repaired)
+│   ├── algorithms/             # Optimization algorithms
+│   │   ├── exact_milp.py       # HiGHS MILP: Weighted-Sum & Epsilon-Constraint
 │   │   ├── nsga2.py            # NSGA-II with custom repair
 │   │   ├── spea2.py            # SPEA2 comparison
-│   │   ├── moead.py            # MOEA/D decomposition with Das-Dennis weights
+│   │   └── moead.py            # MOEA/D decomposition with Das-Dennis weights
+│   ├── multiobjective/         # Genetic operators & repair mechanisms
 │   │   └── repair.py           # Two-pass MatchingRepair feasibility operator
 │   └── hybrid/                 # Hybrid metaheuristics
 │       └── seeded_memetic_nsga2.py # Seeded initialization + Lamarckian local search

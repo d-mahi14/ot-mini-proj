@@ -21,8 +21,8 @@ from src.baseline.greedy_baseline import GreedyBaseline
 from src.baseline.min_cost_flow import MinCostFlowBaseline
 from src.baseline.random_baseline import RandomBaseline
 from src.hybrid.seeded_memetic_nsga2 import SeededMemeticNSGA2
-from src.multiobjective.nsga2 import run_nsga2
-from src.multiobjective.spea2 import run_spea2
+from src.algorithms.nsga2 import run_nsga2
+from src.algorithms.spea2 import run_spea2
 from src.problem import StudentAlumniMatchingProblem
 from src.visualization import plot_scalability_curve
 

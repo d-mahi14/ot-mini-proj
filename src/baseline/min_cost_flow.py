@@ -26,14 +26,15 @@ class MinCostFlowBaseline:
         """Initialize min cost flow solver with problem instance."""
         self.problem = problem
 
-    def solve(self, method: str = "auto") -> MatchingSolution:
+    def solve(self, method: str = "auto", repair: bool = False) -> MatchingSolution:
         """Solve min-cost flow formulation to maximize Z1.
 
         Args:
             method: 'networkx' (cycle cancelling / cost scaling) or 'scipy' (HiGHS LP).
+            repair: If True, applies MatchingRepair to enforce diversity cap and all feasibility constraints.
 
         Returns:
-            Evaluated MatchingSolution.
+            Evaluated MatchingSolution (raw or repaired).
         """
         start_time = time.perf_counter()
         n = self.problem.n_students
@@ -82,7 +83,7 @@ class MinCostFlowBaseline:
                             j = int(a_node.split("_")[1])
                             x_bin[i, j] = 1
             except Exception:
-                return self.solve(method="scipy")
+                return self.solve(method="scipy", repair=repair)
 
         else:
             from scipy.sparse import coo_matrix
@@ -126,4 +127,42 @@ class MinCostFlowBaseline:
                     x_bin = (res.x > 0.5).astype(int).reshape((n, m))
 
         solution = self.problem.evaluate_solution(x_bin)
+        if repair:
+            return self.repair_solution(solution)
         return solution
+
+    def repair_solution(self, raw_solution: MatchingSolution) -> MatchingSolution:
+        """Apply MatchingRepair operator to resolve diversity cap and other constraint violations."""
+        from src.multiobjective.repair import MatchingRepair
+
+        repair = MatchingRepair(self.problem)
+        n = self.problem.n_students
+        k = self.problem.k_matches
+        assigned = np.zeros((n, k), dtype=int)
+
+        for i in range(n):
+            matched = np.where(raw_solution.x[i] > 0)[0]
+            if len(matched) >= k:
+                assigned[i] = matched[:k]
+            elif len(matched) > 0:
+                assigned[i, :len(matched)] = matched
+                assigned[i, len(matched):] = matched[-1]
+            else:
+                assigned[i] = np.random.choice(self.problem.n_alumni, size=k, replace=False)
+
+        repaired_assigned = repair.repair_single(assigned)
+        x_bin_repaired = self.problem.decode_chromosome(repaired_assigned.flatten())
+        return self.problem.evaluate_solution(x_bin_repaired)
+
+    def solve_repaired(self, method: str = "auto") -> MatchingSolution:
+        """Solve min-cost flow and return feasible repaired solution."""
+        return self.solve(method=method, repair=True)
+
+
+def mcf_repaired(problem: StudentAlumniMatchingProblem, method: str = "auto") -> MatchingSolution:
+    """Variant of Min-Cost Flow that applies the existing repair operator to enforce feasibility."""
+    return MinCostFlowBaseline(problem).solve_repaired(method=method)
+
+
+__all__ = ["MinCostFlowBaseline", "mcf_repaired"]
+

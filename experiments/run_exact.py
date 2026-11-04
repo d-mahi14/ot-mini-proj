@@ -18,7 +18,7 @@ import yaml
 from src.algorithms.exact_milp import ExactMILP
 from src.data_generator import MatchingInstance
 from src.hybrid.seeded_memetic_nsga2 import SeededMemeticNSGA2
-from src.multiobjective.nsga2 import run_nsga2
+from src.algorithms.nsga2 import run_nsga2
 from src.problem import StudentAlumniMatchingProblem
 
 

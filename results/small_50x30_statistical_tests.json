@@ -39,7 +39,15 @@
     "sample_size": 30,
     "non_zero_pairs": 30
   },
-  "NSGA-II_vs_Min-Cost Flow": {
+  "NSGA-II_vs_Min-Cost Flow (raw: infeasible)": {
+    "statistic": 0.0,
+    "p_value": 1.862645149230957e-09,
+    "effect_size_r": 1.0,
+    "significant_0_05": true,
+    "sample_size": 30,
+    "non_zero_pairs": 30
+  },
+  "NSGA-II_vs_mcf_repaired (repaired: feasible)": {
     "statistic": 0.0,
     "p_value": 1.862645149230957e-09,
     "effect_size_r": 1.0,

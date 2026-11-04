@@ -71,6 +71,7 @@ def test_greedy_feasible_under_calibrated_thresholds(mini_instance):
         theta_min_quality=result["theta"],
         delta_branch_parity=result["delta"],
         max_company_share=mini_instance.max_company_share,
+        branches=mini_instance.branches,
         students=mini_instance.students,
         alumni=mini_instance.alumni,
     )

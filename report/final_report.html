@@ -188,15 +188,15 @@
 <h2 id="3-empirical-results-performance-analysis">3. Empirical Results &amp; Performance Analysis</h2>
 <h3 id="31-small-instance-50-times-30-benchmark">3.1 Small Instance ($50 \times 30$) Benchmark</h3>
 <p>The small instance was solved across all 7 algorithms, with the Exact MILP tracing the true theoretical Pareto frontier.</p>
-<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Spacing | Non-Dominated $|PF^<em>|$ | Gini Index | Feasible? | Runtime (s) |<br />
+<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Spacing | Non-Dominated $|PF^*|$ | Gini Index | Feasible? | Runtime (s) |<br />
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |<br />
-| </em><em>Random Feasible</em><em> | 45.95 | 0.60 | 8 | — | — | 1 | 0.168 | Infeasible | 0.012 |<br />
-| </em><em>Greedy Score-First</em><em> | 72.62 | 1.02 | 8 | — | — | 1 | 0.076 | </em><em>Feasible</em><em> | 0.002 |<br />
-| </em><em>Min-Cost Flow</em><em> | 73.35 | 1.02 | 8 | — | — | 1 | 0.071 | Infeasible | 0.053 |<br />
-| </em><em>Exact MILP</em><em> | [62.4 - 73.3] | [1.02 - 1.25] | [4 - 8] | </em><em>443.98</em><em> | 2.25 | </em><em>10</em><em> | </em><em>0.073</em><em> | </em><em>Feasible</em><em> | 14.25 |<br />
-| </em><em>NSGA-II</em><em> | [68.1 - 70.4] | [0.98 - 1.12] | [6 - 7] | 115.75 | 0.01 | 3 | 0.084 | </em><em>Feasible</em><em> | 3.05 |<br />
-| </em><em>SPEA2</em><em> | [68.0 - 69.8] | [0.99 - 1.10] | [6 - 7] | 118.29 | 0.00 | 2 | 0.085 | </em><em>Feasible</em><em> | 3.21 |<br />
-| </em><em>Hybrid Memetic NSGA-II</em><em>| [69.2 - 72.8] | [1.02 - 1.21] | [5 - 7] | </em><em>232.17</em><em> | 0.15 | </em><em>3</em><em> | </em><em>0.078</em><em> | </em><em>Feasible</em>* | 2.96 |</p>
+| <strong>Random Feasible</strong> | 45.95 | 0.60 | 8 | — | — | 1 | 0.168 | Infeasible | 0.012 |<br />
+| <strong>Greedy Score-First</strong> | 72.62 | 1.02 | 8 | — | — | 1 | 0.076 | <strong>Feasible</strong> | 0.002 |<br />
+| <strong>Min-Cost Flow</strong> | 73.35 | 1.02 | 8 | — | — | 1 | 0.071 | Infeasible | 0.053 |<br />
+| <strong>Exact MILP</strong> | [62.4 - 73.3] | [1.02 - 1.25] | [4 - 8] | <strong>443.98</strong> | 2.25 | <strong>10</strong> | <strong>0.073</strong> | <strong>Feasible</strong> | 14.25 |<br />
+| <strong>NSGA-II</strong> | [68.1 - 70.4] | [0.98 - 1.12] | [6 - 7] | 115.75 | 0.01 | 3 | 0.084 | <strong>Feasible</strong> | 3.05 |<br />
+| <strong>SPEA2</strong> | [68.0 - 69.8] | [0.99 - 1.10] | [6 - 7] | 118.29 | 0.00 | 2 | 0.085 | <strong>Feasible</strong> | 3.21 |<br />
+| <strong>Hybrid Memetic NSGA-II</strong>| [69.2 - 72.8] | [1.02 - 1.21] | [5 - 7] | <strong>232.17</strong> | 0.15 | <strong>3</strong> | <strong>0.078</strong> | <strong>Feasible</strong> | 2.96 |</p>
 <h4 id="key-takeaways">Key Takeaways:</h4>
 <ol>
 <li><strong>True Frontier Verification</strong>: Exact MILP identified 10 distinct non-dominated points spanning from pure quality maximization ($Z_1 = 73.35, Z_2 = 1.02, Z_3 = 8$) to load-balanced configurations ($Z_1 = 64.12, Z_2 = 1.15, Z_3 = 4$).</li>
@@ -205,14 +205,14 @@
 </ol>
 <hr />
 <h3 id="32-medium-instance-300-times-150-benchmark">3.2 Medium Instance ($300 \times 150$) Benchmark</h3>
-<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Spacing | Non-Dominated $|PF^<em>|$ | Gini Index | Feasible? | Runtime (s) |<br />
+<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Spacing | Non-Dominated $|PF^*|$ | Gini Index | Feasible? | Runtime (s) |<br />
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |<br />
-| </em><em>Random Baseline</em><em> | 274.71 | 0.52 | 10 | — | — | 1 | 0.185 | Infeasible | 0.251 |<br />
-| </em><em>Greedy Baseline</em><em> | 506.11 | 1.04 | 10 | — | — | 1 | 0.082 | </em><em>Feasible</em><em> | 0.049 |<br />
-| </em><em>Min-Cost Flow</em><em> | 509.21 | 1.29 | 10 | — | — | 1 | 0.065 | Infeasible | 3.492 |<br />
-| </em><em>NSGA-II</em><em> | 472.15 | 0.88 | 10 | 311.99 | 0.00 | 1 | 0.128 | </em><em>Feasible</em><em> | 9.31 |<br />
-| </em><em>SPEA2</em><em> | 471.80 | 0.88 | 10 | 311.99 | 0.00 | 1 | 0.128 | </em><em>Feasible</em><em> | 8.87 |<br />
-| </em><em>Hybrid Memetic NSGA-II</em><em>| [495.2 - 508.4] | [1.08 - 1.26] | [9 - 10] | </em><em>572.79</em><em> | 3.80 | </em><em>3</em><em> | </em><em>0.064</em><em> | </em><em>Feasible</em>* | 13.30 |</p>
+| <strong>Random Baseline</strong> | 274.71 | 0.52 | 10 | — | — | 1 | 0.185 | Infeasible | 0.251 |<br />
+| <strong>Greedy Baseline</strong> | 506.11 | 1.04 | 10 | — | — | 1 | 0.082 | <strong>Feasible</strong> | 0.049 |<br />
+| <strong>Min-Cost Flow</strong> | 509.21 | 1.29 | 10 | — | — | 1 | 0.065 | Infeasible | 3.492 |<br />
+| <strong>NSGA-II</strong> | 472.15 | 0.88 | 10 | 311.99 | 0.00 | 1 | 0.128 | <strong>Feasible</strong> | 9.31 |<br />
+| <strong>SPEA2</strong> | 471.80 | 0.88 | 10 | 311.99 | 0.00 | 1 | 0.128 | <strong>Feasible</strong> | 8.87 |<br />
+| <strong>Hybrid Memetic NSGA-II</strong>| [495.2 - 508.4] | [1.08 - 1.26] | [9 - 10] | <strong>572.79</strong> | 3.80 | <strong>3</strong> | <strong>0.064</strong> | <strong>Feasible</strong> | 13.30 |</p>
 <h4 id="analysis">Analysis:</h4>
 <ul>
 <li>In complex dimensional spaces, standard random-initialized genetic search struggles to discover deeply feasible trade-off surfaces within moderate evaluation budgets ($HV = 311.99$).</li>
@@ -220,14 +220,14 @@
 </ul>
 <hr />
 <h3 id="33-large-instance-1000-times-500-benchmark">3.3 Large Instance ($1000 \times 500$) Benchmark</h3>
-<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Non-Dominated $|PF^<em>|$ | Gini Index | Feasible? | Runtime (s) |<br />
+<p>| Algorithm | Total Quality $Z_1$ | Worst Student $Z_2$ | Max Load $Z_3$ | Hypervolume | Non-Dominated $|PF^*|$ | Gini Index | Feasible? | Runtime (s) |<br />
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |<br />
-| </em><em>Random Baseline</em><em> | 916.44 | 0.52 | 10 | — | 1 | 0.198 | Infeasible | 2.06 |<br />
-| </em><em>Greedy Baseline</em><em> | 1792.91 | 1.32 | 10 | — | 1 | 0.058 | </em><em>Feasible</em><em> | 0.74 |<br />
-| </em><em>Min-Cost Flow</em><em> | 1802.16 | 1.38 | 10 | — | 1 | 0.046 | Infeasible | 14.68 |<br />
-| </em><em>NSGA-II</em><em> | 1624.10 | 1.05 | 10 | 845.95 | 4 | 0.152 | </em><em>Feasible</em><em> | 20.01 |<br />
-| </em><em>SPEA2</em><em> | 1622.50 | 1.05 | 10 | 845.95 | 4 | 0.152 | </em><em>Feasible</em><em> | 24.13 |<br />
-| </em><em>Hybrid Memetic NSGA-II</em><em>| </em><em>1801.40</em><em> | </em><em>1.38</em><em> | </em><em>10</em><em> | </em><em>2297.35</em><em> | </em><em>1</em><em> | </em><em>0.044</em><em> | </em><em>Feasible</em>* | 43.85 |</p>
+| <strong>Random Baseline</strong> | 916.44 | 0.52 | 10 | — | 1 | 0.198 | Infeasible | 2.06 |<br />
+| <strong>Greedy Baseline</strong> | 1792.91 | 1.32 | 10 | — | 1 | 0.058 | <strong>Feasible</strong> | 0.74 |<br />
+| <strong>Min-Cost Flow</strong> | 1802.16 | 1.38 | 10 | — | 1 | 0.046 | Infeasible | 14.68 |<br />
+| <strong>NSGA-II</strong> | 1624.10 | 1.05 | 10 | 845.95 | 4 | 0.152 | <strong>Feasible</strong> | 20.01 |<br />
+| <strong>SPEA2</strong> | 1622.50 | 1.05 | 10 | 845.95 | 4 | 0.152 | <strong>Feasible</strong> | 24.13 |<br />
+| <strong>Hybrid Memetic NSGA-II</strong>| <strong>1801.40</strong> | <strong>1.38</strong> | <strong>10</strong> | <strong>2297.35</strong> | <strong>1</strong> | <strong>0.044</strong> | <strong>Feasible</strong> | 43.85 |</p>
 <h4 id="analysis_1">Analysis:</h4>
 <ul>
 <li>On full university-scale allocation ($N=1000, M=500$), Hybrid Memetic NSGA-II achieved <strong>$HV = 2297.35$</strong>, outperforming raw NSGA-II ($HV = 845.95$) by <strong>+171.6%</strong>.</li>

@@ -23,7 +23,7 @@ from pymoo.core.sampling import Sampling
 from src.baseline.greedy_baseline import GreedyBaseline
 from src.baseline.min_cost_flow import MinCostFlowBaseline
 from src.metrics import extract_non_dominated_front
-from src.multiobjective.nsga2 import run_nsga2
+from src.algorithms.nsga2 import run_nsga2
 from src.multiobjective.repair import MatchingRepair
 from src.problem import MatchingSolution, StudentAlumniMatchingProblem
 
