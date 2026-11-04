@@ -1,0 +1,51 @@
+student_id,student_branch,student_target_domain,student_gpa,total_match_quality_Qi,meets_quality_floor,mentor_1_id,mentor_1_branch,mentor_1_company,mentor_1_quality,mentor_2_id,mentor_2_branch,mentor_2_company,mentor_2_quality,employer_diversity_valid
+S001,CE,Consulting & Strategy,8.75,1.6584,True,A019,CE,BharatDynamics,0.9175,A020,IT,InfraBuildCorp,0.7409,True
+S002,CE,Finance & Quantitative,6.7,1.5548,True,A002,CE,DataMindAnalytics,0.5823,A010,CE,BharatDynamics,0.9725,True
+S003,CEV,Consulting & Strategy,7.98,1.2322,True,A015,ME,LuminarySolutions,0.5523,A018,CEV,InfraBuildCorp,0.6799,True
+S004,PE,Core Engineering & Manufacturing,8.78,1.781,True,A025,PE,LuminarySolutions,0.9573,A026,PE,DataMindAnalytics,0.8237,True
+S005,PE,Consulting & Strategy,8.47,1.1624,True,A011,PE,FutureSystems,0.6192,A022,PE,HorizonRobotics,0.5432,True
+S006,EE,Data Science & Analytics,7.04,1.7594,True,A009,EE,KineticMotors,0.8252,A024,EE,EquiFinance,0.9342,True
+S007,PE,Consulting & Strategy,7.82,1.2389,True,A011,PE,FutureSystems,0.6664,A022,PE,HorizonRobotics,0.5725,True
+S008,CEV,Core Engineering & Manufacturing,7.85,1.098,True,A017,IT,KineticMotors,0.5159,A018,CEV,InfraBuildCorp,0.5821,True
+S009,CEV,Finance & Quantitative,8.53,1.1789,True,A003,TT,DataMindAnalytics,0.5549,A010,CE,BharatDynamics,0.624,True
+S010,EE,Software & AI,8.43,1.6721,True,A006,EXTC,AlphaTech,0.782,A016,EE,HorizonRobotics,0.8901,True
+S011,TT,Core Engineering & Manufacturing,7.49,1.2069,True,A005,TT,CoreEngineeringLabs,0.5201,A007,TT,DataMindAnalytics,0.6868,True
+S012,CEV,Core Engineering & Manufacturing,9.13,1.2398,True,A017,IT,KineticMotors,0.5726,A028,CE,LuminarySolutions,0.6672,True
+S013,EE,Finance & Quantitative,7.18,1.5553,True,A009,EE,KineticMotors,0.746,A023,EXTC,DataMindAnalytics,0.8093,True
+S014,EE,Finance & Quantitative,8.54,1.4388,True,A009,EE,KineticMotors,0.7235,A021,EE,HorizonRobotics,0.7153,True
+S015,EE,Electronics & Embedded,8.12,1.6096,True,A021,EE,HorizonRobotics,0.9536,A029,EXTC,GlobalConsulting,0.656,True
+S016,PE,Core Engineering & Manufacturing,8.22,1.1449,True,A001,EXTC,InfraBuildCorp,0.6326,A015,ME,LuminarySolutions,0.5123,True
+S017,CEV,Finance & Quantitative,8.29,1.1723,True,A003,TT,DataMindAnalytics,0.5609,A018,CEV,InfraBuildCorp,0.6114,True
+S018,CE,Data Science & Analytics,7.68,1.498,True,A002,CE,DataMindAnalytics,0.7706,A030,EXTC,LuminarySolutions,0.7274,True
+S019,CEV,Consulting & Strategy,7.72,1.2287,True,A014,ME,DataMindAnalytics,0.5985,A018,CEV,InfraBuildCorp,0.6302,True
+S020,ME,Electronics & Embedded,8.97,1.3407,True,A021,EE,HorizonRobotics,0.7411,A027,CE,LuminarySolutions,0.5996,True
+S021,CEV,Core Engineering & Manufacturing,8.16,1.1401,True,A015,ME,LuminarySolutions,0.5538,A017,IT,KineticMotors,0.5863,True
+S022,PE,Core Engineering & Manufacturing,8.79,1.8905,True,A025,PE,LuminarySolutions,0.9577,A026,PE,DataMindAnalytics,0.9328,True
+S023,ME,Electronics & Embedded,8.86,1.4628,True,A015,ME,LuminarySolutions,0.6233,A021,EE,HorizonRobotics,0.8395,True
+S024,EE,Finance & Quantitative,6.87,1.509,True,A009,EE,KineticMotors,0.7392,A023,EXTC,DataMindAnalytics,0.7698,True
+S025,PE,Consulting & Strategy,8.14,1.1943,True,A014,ME,DataMindAnalytics,0.563,A019,CE,BharatDynamics,0.6313,True
+S026,EXTC,Software & AI,8.16,1.6878,True,A006,EXTC,AlphaTech,0.9129,A016,EE,HorizonRobotics,0.7749,True
+S027,ME,Finance & Quantitative,8.46,1.2745,True,A008,TT,JupiterAI,0.5843,A015,ME,LuminarySolutions,0.6902,True
+S028,EE,Electronics & Embedded,7.62,1.6681,True,A021,EE,HorizonRobotics,0.9576,A029,EXTC,GlobalConsulting,0.7105,True
+S029,CE,Finance & Quantitative,7.53,1.6113,True,A002,CE,DataMindAnalytics,0.6619,A010,CE,BharatDynamics,0.9494,True
+S030,EE,Finance & Quantitative,8.45,1.4591,True,A023,EXTC,DataMindAnalytics,0.7584,A024,EE,EquiFinance,0.7007,True
+S031,IT,Software & AI,7.58,1.3756,True,A006,EXTC,AlphaTech,0.7724,A007,TT,DataMindAnalytics,0.6032,True
+S032,EE,Core Engineering & Manufacturing,6.55,1.544,True,A001,EXTC,InfraBuildCorp,0.7417,A014,ME,DataMindAnalytics,0.8023,True
+S033,EXTC,Electronics & Embedded,8.4,1.5092,True,A027,CE,LuminarySolutions,0.6899,A029,EXTC,GlobalConsulting,0.8193,True
+S034,TT,Core Engineering & Manufacturing,7.62,1.3596,True,A003,TT,DataMindAnalytics,0.7299,A013,TT,BharatDynamics,0.6297,True
+S035,PE,Consulting & Strategy,8.74,1.0853,True,A019,CE,BharatDynamics,0.5272,A020,IT,InfraBuildCorp,0.5581,True
+S036,PE,Core Engineering & Manufacturing,7.05,1.7829,True,A014,ME,DataMindAnalytics,0.8234,A025,PE,LuminarySolutions,0.9595,True
+S037,EE,Finance & Quantitative,6.27,1.485,True,A016,EE,HorizonRobotics,0.6908,A023,EXTC,DataMindAnalytics,0.7942,True
+S038,CEV,Core Engineering & Manufacturing,7.41,1.21,True,A017,IT,KineticMotors,0.5062,A018,CEV,InfraBuildCorp,0.7038,True
+S039,EE,Finance & Quantitative,7.47,1.5475,True,A016,EE,HorizonRobotics,0.7157,A023,EXTC,DataMindAnalytics,0.8318,True
+S040,CEV,Core Engineering & Manufacturing,9.6,1.5067,True,A014,ME,DataMindAnalytics,0.8459,A028,CE,LuminarySolutions,0.6608,True
+S041,CE,Core Engineering & Manufacturing,8.18,1.5421,True,A010,CE,BharatDynamics,0.6811,A028,CE,LuminarySolutions,0.861,True
+S042,PE,Core Engineering & Manufacturing,8.84,1.5102,True,A001,EXTC,InfraBuildCorp,0.6666,A025,PE,LuminarySolutions,0.8436,True
+S043,CEV,Software & AI,6.81,1.6265,True,A018,CEV,InfraBuildCorp,0.9019,A022,PE,HorizonRobotics,0.7246,True
+S044,PE,Core Engineering & Manufacturing,7.61,1.5179,True,A026,PE,DataMindAnalytics,0.8773,A028,CE,LuminarySolutions,0.6406,True
+S045,EE,Electronics & Embedded,7.78,1.5018,True,A021,EE,HorizonRobotics,0.8545,A029,EXTC,GlobalConsulting,0.6473,True
+S046,IT,Consulting & Strategy,8.31,1.6706,True,A019,CE,BharatDynamics,0.7161,A020,IT,InfraBuildCorp,0.9545,True
+S047,CE,Software & AI,10.0,1.2892,True,A002,CE,DataMindAnalytics,0.6812,A028,CE,LuminarySolutions,0.608,True
+S048,EE,Finance & Quantitative,5.87,1.4626,True,A016,EE,HorizonRobotics,0.6877,A023,EXTC,DataMindAnalytics,0.7749,True
+S049,PE,Core Engineering & Manufacturing,7.58,1.1778,True,A017,IT,KineticMotors,0.5864,A028,CE,LuminarySolutions,0.5914,True
+S050,PE,Electronics & Embedded,9.07,1.2543,True,A011,PE,FutureSystems,0.6494,A027,CE,LuminarySolutions,0.6049,True
