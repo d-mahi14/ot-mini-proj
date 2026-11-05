@@ -324,3 +324,33 @@ class SyntheticDataGenerator:
             alumni=alumni,
             q_matrix=q_matrix,
         )
+
+
+def generate_all_datasets(data_dir: str | Path = "data") -> None:
+    """Generate all three benchmark instances (small, medium, large) if not already present."""
+    target_dir = Path(data_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    configs = [
+        {"name": "small_50x30", "n_students": 50, "n_alumni": 30, "seed": 42},
+        {"name": "medium_300x150", "n_students": 300, "n_alumni": 150, "seed": 123},
+        {"name": "large_1000x500", "n_students": 1000, "n_alumni": 500, "seed": 999},
+    ]
+
+    for cfg in configs:
+        out_file = target_dir / f"{cfg['name']}.json"
+        if out_file.exists():
+            print(f"Dataset already exists: {out_file} ({out_file.stat().st_size} bytes)")
+            continue
+        gen = SyntheticDataGenerator(seed=cfg["seed"], k_matches=2, q_min=0.25)
+        inst = gen.generate_instance(
+            n_students=cfg["n_students"],
+            n_alumni=cfg["n_alumni"],
+            name=cfg["name"],
+        )
+        inst.save_json(out_file)
+        print(f"Generated synthetic instance: {out_file} ({out_file.stat().st_size} bytes)")
+
+
+if __name__ == "__main__":
+    generate_all_datasets()
