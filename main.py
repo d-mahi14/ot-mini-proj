@@ -7,6 +7,7 @@ A thin, modular entrypoint driving:
 - Algorithmic ablation studies
 - Empirical scalability evaluations
 - Parameter sensitivity & coverage-gap analysis
+- Automated figure and PDF generation
 - Automated test verification and data synthesis
 """
 
@@ -35,7 +36,7 @@ def main() -> None:
 
     parser.add_argument(
         "--mode",
-        choices=["run", "baselines", "exact", "scalability", "ablation", "sensitivity", "interpretation", "data", "all"],
+        choices=["run", "baselines", "exact", "scalability", "ablation", "sensitivity", "interpretation", "data", "figures", "all"],
         default="run",
         help="Execution mode.",
     )
@@ -47,21 +48,32 @@ def main() -> None:
     )
     parser.add_argument(
         "--instance",
-        choices=["small", "medium", "large"],
+        choices=["small", "medium", "large", "small_50x30", "medium_300x150", "large_1000x500"],
         default=None,
         help="Convenience selector for standard instance size.",
+    )
+    parser.add_argument(
+        "--seeds",
+        type=int,
+        default=None,
+        help="Optional override for maximum number of seeds to execute.",
     )
 
     args = parser.parse_args()
 
-    # Resolve instance alias if provided
+    # Resolve instance alias and canonical instance name
     config_path = args.config
-    if args.instance == "small":
+    instance_name = "small_50x30"
+
+    if args.instance in ["small", "small_50x30"]:
         config_path = "experiments/configs/small_50x30.yaml"
-    elif args.instance == "medium":
+        instance_name = "small_50x30"
+    elif args.instance in ["medium", "medium_300x150"]:
         config_path = "experiments/configs/medium_300x150.yaml"
-    elif args.instance == "large":
+        instance_name = "medium_300x150"
+    elif args.instance in ["large", "large_1000x500"]:
         config_path = "experiments/configs/large_1000x500.yaml"
+        instance_name = "large_1000x500"
 
     print("================================================================================")
     print("      VJTI STUDENT-ALUMNI MULTI-OBJECTIVE MATCHING OPTIMIZATION")
@@ -78,7 +90,7 @@ def main() -> None:
         run_baselines_evaluation(config_path)
 
     elif args.mode == "run":
-        run_experiment_on_instance(config_path)
+        run_experiment_on_instance(config_path, max_seeds=args.seeds)
 
     elif args.mode == "exact":
         run_exact_analysis(config_path)
@@ -87,14 +99,18 @@ def main() -> None:
         run_scalability_benchmark()
 
     elif args.mode == "ablation":
-        run_ablation_study(config_path)
+        run_ablation_study(config_path, max_seeds=args.seeds)
 
     elif args.mode == "sensitivity":
-        run_sensitivity_analysis(config_path)
+        n_seeds = args.seeds if args.seeds is not None else 10
+        run_sensitivity_analysis(config_path, n_seeds=n_seeds)
 
     elif args.mode == "interpretation":
-        inst_n = args.instance or "small_50x30"
-        run_interpretation_pipeline(instance_name=inst_n, config_path=config_path)
+        run_interpretation_pipeline(instance_name=instance_name, config_path=config_path)
+
+    elif args.mode == "figures":
+        import generate_figures
+        generate_figures.main()
 
     elif args.mode == "all":
         print(">>> Running Full Comprehensive Research Pipeline <<<\n")
@@ -105,28 +121,33 @@ def main() -> None:
         run_baselines_evaluation("experiments/configs/small_50x30.yaml")
 
         print("\n--- Phase 2: Small Instance Benchmark (50x30) ---")
-        run_experiment_on_instance("experiments/configs/small_50x30.yaml")
+        run_experiment_on_instance("experiments/configs/small_50x30.yaml", max_seeds=args.seeds)
 
         print("\n--- Phase 3: Exact MILP and Secondary Scenario ---")
         run_exact_analysis("experiments/configs/small_50x30.yaml")
 
         print("\n--- Phase 4: Medium Instance Benchmark (300x150) ---")
-        run_experiment_on_instance("experiments/configs/medium_300x150.yaml")
+        run_experiment_on_instance("experiments/configs/medium_300x150.yaml", max_seeds=args.seeds)
 
         print("\n--- Phase 5: Large Instance Benchmark (1000x500) ---")
-        run_experiment_on_instance("experiments/configs/large_1000x500.yaml")
+        run_experiment_on_instance("experiments/configs/large_1000x500.yaml", max_seeds=args.seeds)
 
         print("\n--- Phase 6: Scalability Across Dimensions ---")
         run_scalability_benchmark()
 
         print("\n--- Phase 7: Ablation Study ---")
-        run_ablation_study("experiments/configs/small_50x30.yaml")
+        run_ablation_study("experiments/configs/small_50x30.yaml", max_seeds=args.seeds)
 
         print("\n--- Phase 8: Parameter Sensitivity & Coverage-Gap Analysis ---")
-        run_sensitivity_analysis("experiments/configs/small_50x30.yaml")
+        n_seeds = args.seeds if args.seeds is not None else 10
+        run_sensitivity_analysis("experiments/configs/small_50x30.yaml", n_seeds=n_seeds)
 
         print("\n--- Phase 9: Pareto Interpretation & Institutional Policy Report ---")
         run_interpretation_pipeline(instance_name="small_50x30", config_path="experiments/configs/small_50x30.yaml")
+
+        print("\n--- Phase 10: Visual Figures & PDF Deliverables ---")
+        import generate_figures
+        generate_figures.main()
 
         print("\n>>> Full Research Pipeline Successfully Executed! <<<")
 

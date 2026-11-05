@@ -131,6 +131,11 @@ class MatchingInstance:
             "q_matrix": self.q_matrix.tolist(),
         }
 
+    @property
+    def capacities(self) -> np.ndarray:
+        """Convenience array of alumni capacities."""
+        return np.array([a.capacity for a in self.alumni], dtype=int)
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "MatchingInstance":
         """Reconstruct instance from dictionary."""

@@ -454,7 +454,7 @@ def run_multi_seed_benchmark(
             print(f"      Saved branch parity figure to: {bp_png}")
 
             wl_png = figures_dir / f"{inst_name}_workload_distribution.png"
-            plot_workload_distribution(rep_sol, instance.capacities, wl_png)
+            plot_workload_distribution(rep_sol, problem.capacities, wl_png)
             print(f"      Saved workload distribution figure to: {wl_png}")
 
     # Save Comparison Table in CSV and Markdown formats into results/ and figures/

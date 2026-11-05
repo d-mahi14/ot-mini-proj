@@ -6,6 +6,7 @@
 PYTHON ?= python
 PIP ?= $(PYTHON) -m pip
 PYTEST ?= $(PYTHON) -m pytest
+SEEDS ?=
 
 .PHONY: all install test data baselines exact benchmark sensitivity interpret figures clean help
 
@@ -22,7 +23,7 @@ help:
 	@echo   data         - Generate/verify synthetic benchmark datasets in data/
 	@echo   baselines    - Run baseline heuristics (Random, Greedy, Min-Cost Flow)
 	@echo   exact        - Run exact HiGHS MILP Pareto frontier and secondary scenario
-	@echo   benchmark    - Run multi-objective evolutionary algorithms benchmark
+	@echo   benchmark    - Run multi-objective evolutionary algorithms benchmark (opt: SEEDS=1)
 	@echo   sensitivity  - Run parameter sensitivity and coverage-gap analysis
 	@echo   interpret    - Run Pareto frontier interpretation and institutional policy report
 	@echo   figures      - Generate visualizations and compile publication-grade PDFs
@@ -45,17 +46,16 @@ exact:
 	$(PYTHON) main.py --mode exact
 
 benchmark:
-	$(PYTHON) main.py --mode run
+	$(PYTHON) main.py --mode run $(if $(SEEDS),--seeds $(SEEDS),)
 
 sensitivity:
 	$(PYTHON) main.py --mode sensitivity
 
 interpret:
-	$(PYTHON) main.py --mode interpretation
+	$(PYTHON) main.py --mode interpretation --instance small_50x30
 
 figures:
 	$(PYTHON) generate_figures.py
 
 clean:
 	@$(PYTHON) -c "import shutil, pathlib; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('.pytest_cache')]; [p.unlink() for p in pathlib.Path('.').rglob('*.pyc')]; [p.unlink() for p in pathlib.Path('.').rglob('.coverage*')]; print('Build artifacts and caches cleaned.')"
-

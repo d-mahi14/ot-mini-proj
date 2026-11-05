@@ -8,6 +8,8 @@ REM ============================================================================
 
 set "TARGET=%~1"
 if "%TARGET%"=="" set "TARGET=all"
+set "SEEDS_ARG="
+if not "%~2"=="" set "SEEDS_ARG=--seeds %~2"
 
 echo ==============================================================================
 echo       VJTI STUDENT-ALUMNI MULTI-OBJECTIVE MATCHING OPTIMIZATION
@@ -17,10 +19,23 @@ echo       Veermata Jijabai Technological Institute (VJTI), Mumbai
 echo ==============================================================================
 echo.
 
-REM Verify Python is installed and accessible
-python --version >nul 2>&1
+REM Automatically detect virtual environment or fall back to system Python
+set "PY=python"
+if exist ".venv\Scripts\python.exe" (
+    set "PY=.venv\Scripts\python.exe"
+    echo [INFO] Using virtual environment: .venv
+) else if exist "venv\Scripts\python.exe" (
+    set "PY=venv\Scripts\python.exe"
+    echo [INFO] Using virtual environment: venv
+) else if exist "fresh_venv\Scripts\python.exe" (
+    set "PY=fresh_venv\Scripts\python.exe"
+    echo [INFO] Using virtual environment: fresh_venv
+)
+
+REM Verify Python is accessible
+!PY! --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Python is not found in PATH. Please install Python 3.11+ and add it to PATH.
+    echo [ERROR] Python is not found. Please install Python 3.11+ and configure PATH or .venv.
     exit /b 1
 )
 
@@ -43,7 +58,7 @@ goto target_help
 
 REM ------------------------------------------------------------------------------
 :target_help
-echo Usage: run_all.bat [target]
+echo Usage: run_all.bat [target] [optional: seeds_count]
 echo.
 echo Available Targets:
 echo   install      - Install project dependencies from requirements.txt
@@ -51,18 +66,18 @@ echo   test         - Run pytest verification suite on tests/
 echo   data         - Generate / verify synthetic benchmark datasets in data/
 echo   baselines    - Run baseline heuristics (Random, Greedy, Min-Cost Flow)
 echo   exact        - Run exact HiGHS MILP Pareto frontier and secondary scenario
-echo   benchmark    - Run multi-objective evolutionary algorithms benchmark
+echo   benchmark    - Run multi-objective evolutionary algorithms benchmark (opt: run_all.bat benchmark 1)
 echo   sensitivity  - Run parameter sensitivity and coverage-gap analysis
 echo   interpret    - Run Pareto frontier interpretation and institutional policy report
 echo   figures      - Generate visualizations and compile publication-grade PDFs
-echo   all          - Execute full end-to-end research and verification pipeline
+echo   all          - Execute full end-to-end research and verification pipeline (opt: run_all.bat all 1)
 echo   clean        - Remove temporary build files, bytecode, and test caches
 exit /b 0
 
 REM ------------------------------------------------------------------------------
 :target_install
 echo [1/1] Installing dependencies from requirements.txt...
-python -m pip install -r requirements.txt
+!PY! -m pip install -r requirements.txt
 if errorlevel 1 (
     echo [ERROR] Dependency installation failed.
     exit /b %errorlevel%
@@ -73,7 +88,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_test
 echo [1/1] Running pytest verification suite...
-python -m pytest tests/ -v
+!PY! -m pytest tests/ -v
 if errorlevel 1 (
     echo [ERROR] Test suite encountered failures.
     exit /b %errorlevel%
@@ -84,7 +99,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_data
 echo [1/1] Generating synthetic datasets in data/...
-python -m src.data_generator
+!PY! -m src.data_generator
 if errorlevel 1 (
     echo [ERROR] Data generation failed.
     exit /b %errorlevel%
@@ -95,7 +110,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_baselines
 echo [1/1] Running baseline algorithms...
-python main.py --mode baselines
+!PY! main.py --mode baselines
 if errorlevel 1 (
     echo [ERROR] Baseline execution failed.
     exit /b %errorlevel%
@@ -106,7 +121,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_exact
 echo [1/1] Running exact HiGHS MILP analysis...
-python main.py --mode exact
+!PY! main.py --mode exact
 if errorlevel 1 (
     echo [ERROR] Exact MILP execution failed.
     exit /b %errorlevel%
@@ -117,7 +132,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_benchmark
 echo [1/1] Running multi-objective evolutionary benchmark...
-python main.py --mode run
+!PY! main.py --mode run !SEEDS_ARG!
 if errorlevel 1 (
     echo [ERROR] Benchmark execution failed.
     exit /b %errorlevel%
@@ -128,7 +143,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_sensitivity
 echo [1/1] Running parameter sensitivity and coverage gap analysis...
-python main.py --mode sensitivity
+!PY! main.py --mode sensitivity !SEEDS_ARG!
 if errorlevel 1 (
     echo [ERROR] Sensitivity analysis failed.
     exit /b %errorlevel%
@@ -139,7 +154,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_interpret
 echo [1/1] Running Pareto interpretation pipeline...
-python main.py --mode interpretation
+!PY! main.py --mode interpretation --instance small_50x30
 if errorlevel 1 (
     echo [ERROR] Interpretation pipeline failed.
     exit /b %errorlevel%
@@ -150,7 +165,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_figures
 echo [1/1] Generating figures and PDF deliverables...
-python generate_figures.py
+!PY! generate_figures.py
 if errorlevel 1 (
     echo [ERROR] Figure / PDF generation failed.
     exit /b %errorlevel%
@@ -161,17 +176,17 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_clean
 echo [1/1] Cleaning temporary files and caches...
-python -c "import shutil, pathlib; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('.pytest_cache')]; [p.unlink() for p in pathlib.Path('.').rglob('*.pyc')]; [p.unlink() for p in pathlib.Path('.').rglob('.coverage*')]; print('Build artifacts and caches cleaned.')"
+!PY! -c "import shutil, pathlib; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('.pytest_cache')]; [p.unlink() for p in pathlib.Path('.').rglob('*.pyc')]; [p.unlink() for p in pathlib.Path('.').rglob('.coverage*')]; print('Build artifacts and caches cleaned.')"
 echo [SUCCESS] Workspace clean.
 exit /b 0
 
 REM ------------------------------------------------------------------------------
 :target_all
-echo >>> STARTING FULL RESEARCH PIPELINE AND VERIFICATION <<<
+echo === STARTING FULL RESEARCH PIPELINE AND VERIFICATION ===
 echo.
 
 echo --- Step 1: Synthetic Dataset Verification ---
-python -m src.data_generator
+!PY! -m src.data_generator
 if errorlevel 1 (
     echo [ERROR] Step 1 Data verification failed.
     exit /b %errorlevel%
@@ -179,7 +194,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 2: Running Unit Tests ---
-python -m pytest tests/ -v
+!PY! -m pytest tests/ -v
 if errorlevel 1 (
     echo [ERROR] Step 2 Unit tests failed.
     exit /b %errorlevel%
@@ -187,7 +202,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 3: Baseline Algorithms Benchmark ---
-python main.py --mode baselines
+!PY! main.py --mode baselines
 if errorlevel 1 (
     echo [ERROR] Step 3 Baselines failed.
     exit /b %errorlevel%
@@ -195,7 +210,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 4: Exact HiGHS MILP Pareto Analysis ---
-python main.py --mode exact
+!PY! main.py --mode exact
 if errorlevel 1 (
     echo [ERROR] Step 4 Exact MILP failed.
     exit /b %errorlevel%
@@ -203,7 +218,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 5: Multi-Objective Evolutionary Algorithms Benchmark ---
-python main.py --mode run --config experiments/configs/small_50x30.yaml
+!PY! main.py --mode run --config experiments/configs/small_50x30.yaml !SEEDS_ARG!
 if errorlevel 1 (
     echo [ERROR] Step 5 Benchmark failed.
     exit /b %errorlevel%
@@ -211,7 +226,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 6: Parameter Sensitivity ^& Coverage Gaps ---
-python main.py --mode sensitivity
+!PY! main.py --mode sensitivity !SEEDS_ARG!
 if errorlevel 1 (
     echo [ERROR] Step 6 Sensitivity analysis failed.
     exit /b %errorlevel%
@@ -219,15 +234,15 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 7: Pareto Interpretation ^& Institutional Policy ---
-python main.py --mode interpretation --instance small_50x30
+!PY! main.py --mode interpretation --instance small_50x30
 if errorlevel 1 (
     echo [ERROR] Step 7 Interpretation failed.
     exit /b %errorlevel%
 )
 
 echo.
-echo --- Step 8: PDF Report ^& Visual Deliverables Generation ---
-python generate_figures.py
+echo --- Step 8: Visual Figures and PDF Deliverables Generation ---
+!PY! generate_figures.py
 if errorlevel 1 (
     echo [WARNING] Headless PDF generation encountered an issue; visual figures remain available in figures/.
 )
@@ -237,4 +252,3 @@ echo ===========================================================================
 echo    FULL RESEARCH PIPELINE COMPLETED SUCCESSFULLY ON WINDOWS!
 echo ==============================================================================
 exit /b 0
-
