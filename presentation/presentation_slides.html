@@ -119,14 +119,14 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 1 of 11</span>
+                <span class="slide-num">Slide 1 of 15</span>
             </div>
             <div class="slide-content">
                 <h1>Fair and Load-Balanced Student-Alumni Matching at VJTI</h1>
 <h2>Multi-Objective Capacitated Bipartite Assignment with Rawlsian Fairness &amp; Departmental Parity</h2>
 <p><strong>Course</strong>: Optimization Techniques (University Group Project)<br />
 <strong>Institution</strong>: Veermata Jijabai Technological Institute (VJTI), Mumbai<br />
-<strong>Notice</strong>: ARTIFICIAL - FOR TESTING ONLY (All benchmark data utilize pseudonymous IDs: S001, A001)</p>
+<strong>Notice</strong>: ARTIFICIAL - FOR TESTING ONLY (All benchmark data utilize synthetic pseudonymous IDs: <code>S001</code>–<code>S1000</code>, <code>A001</code>–<code>A500</code>)</p>
             </div>
             <div class="slide-footer">
                 Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
@@ -136,20 +136,20 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 2 of 11</span>
+                <span class="slide-num">Slide 2 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 1: The Problem &amp; Institutional Context</h2>
-<h3>The Challenge at VJTI:</h3>
+                <h2>Slide 1: The Problem &amp; Institutional Motivation</h2>
+<h3>The Challenge at VJTI Mumbai:</h3>
 <ul>
-<li>Each year, hundreds of graduating engineering students across <strong>8 academic departments</strong> seek alumni mentorship.</li>
-<li><strong>Traditional matching</strong> relies on first-come-first-served or greedy score maximization.</li>
+<li>Each year, hundreds of graduating engineering students across <strong>8 academic departments</strong> (<code>CE</code>, <code>IT</code>, <code>EXTC</code>, <code>EE</code>, <code>ME</code>, <code>CEV</code>, <code>PE</code>, <code>TT</code>) seek career mentorship from practicing alumni across 6 industrial domains.</li>
+<li><strong>Traditional matching</strong> relies on ad-hoc first-come-first-served or greedy score maximization.</li>
 </ul>
-<h3>Critical Failures of Greedy Approaches:</h3>
+<h3>Critical Failures of Greedy / Manual Approaches:</h3>
 <ol>
-<li><strong>Mentor Burnout</strong>: Top alumni receive overwhelming request loads, leading to dropouts.</li>
-<li><strong>Peripheral Student Neglect</strong>: Students with average GPAs or cross-domain aspirations receive poor matches.</li>
-<li><strong>Departmental Inequity</strong>: Computing branches (CE/IT) dominate high-scoring alumni; core branches (Production, Textile, Civil) face structural deficits.</li>
+<li><strong>The "Superstar Alumnus" Bottleneck</strong>: Top alumni receive overwhelming request loads beyond sustainable capacity, leading to mentor burnout and disengagement.</li>
+<li><strong>Peripheral Student Neglect</strong>: Students with average GPAs or non-computing backgrounds receive low-quality matches ($Q_i &lt; \theta$), violating egalitarian welfare.</li>
+<li><strong>Cross-Departmental Inequity</strong>: Computing departments (<code>CE</code>, <code>IT</code>) dominate high-scoring alumni; core engineering departments (<code>PE</code>, <code>CEV</code>, <code>TT</code>, <code>ME</code>, <code>EE</code>) experience structural deficits due to smaller alumni cohorts.</li>
 </ol>
             </div>
             <div class="slide-footer">
@@ -160,20 +160,22 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 3 of 11</span>
+                <span class="slide-num">Slide 3 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 2: Mathematical Formulation</h2>
+                <h2>Slide 2: Mathematical Formulation (MO-CBAP)</h2>
 <h3>Decision Variables:</h3>
 <ul>
-<li>$x_{ij} \in {0, 1}$: Binary match between student $i$ and alumnus $j$.</li>
-<li>$y_j \in {0, 1}$: Alumni activation status ($\sum_i x_{ij} \ge 1$).</li>
+<li>$x_{ij} \in {0, 1}$: Binary assignment of student $i \in \mathcal{S}$ to alumnus mentor $j \in \mathcal{A}$.</li>
+<li>$y_j \in {0, 1}$: Binary activation status of alumnus mentor $j$ ($y_j = 1 \iff \sum_i x_{ij} \ge 1$).</li>
 </ul>
-<h3>The Tri-Objective Trade-off:</h3>
-<p>$$\min \mathbf{F}(\mathbf{x}) = \begin{bmatrix} -Z_1 \ -Z_2 \ +Z_3 \end{bmatrix}$$<br />
-1. <strong>$\max Z_1 = \sum_{i,j} q_{ij} x_{ij}$</strong>: Utilitarian Match Quality (Total Human Capital).<br />
-2. <strong>$\max Z_2 = \min_i Q_i$</strong>: Rawlsian Egalitarian Fairness (Protect the least-advantaged student).<br />
-3. <strong>$\min Z_3 = \max_j L_j$</strong>: Workload Balancing (Prevent mentor overload).</p>
+<h3>The Tri-Objective Vector:</h3>
+<p>$$\min_{\mathbf{x}, \mathbf{y}} \mathbf{F}(\mathbf{x}) = \begin{bmatrix} -Z_1(\mathbf{x}) \ -Z_2(\mathbf{x}) \ +Z_3(\mathbf{x}) \end{bmatrix} = \begin{bmatrix} -\sum_{i=1}^N \sum_{j=1}^M q_{ij} x_{ij} \ -\min_{i \in \mathcal{S}} Q_i \ +\max_{j \in \mathcal{A}} L_j \end{bmatrix}$$</p>
+<ol>
+<li><strong>Utilitarian Efficiency ($Z_1$)</strong>: Maximize total cumulative match score across all students.</li>
+<li><strong>Rawlsian Egalitarian Fairness ($Z_2$)</strong>: Maximize the match quality of the least-advantaged student ($\min_i Q_i$).</li>
+<li><strong>Workload Balancing ($Z_3$)</strong>: Minimize the peak mentorship load across active alumni mentors ($\max_j L_j$).</li>
+</ol>
             </div>
             <div class="slide-footer">
                 Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
@@ -183,7 +185,7 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 4 of 11</span>
+                <span class="slide-num">Slide 4 of 15</span>
             </div>
             <div class="slide-content">
                 <h2>Slide 3: Operational Constraints</h2>
@@ -191,35 +193,35 @@
 <thead>
 <tr>
 <th style="text-align: left;">Constraint</th>
-<th style="text-align: left;">Mathematical Form</th>
-<th style="text-align: left;">Operational Purpose</th>
+<th style="text-align: left;">Mathematical Formulation</th>
+<th style="text-align: left;">Operational Purpose at VJTI</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Degree ($K$)</strong></td>
-<td style="text-align: left;">$\sum_j x_{ij} = K, \forall i$</td>
-<td style="text-align: left;">Exactly $K$ mentors per student ($K=2$)</td>
+<td style="text-align: left;"><strong>Exact Degree ($K$)</strong></td>
+<td style="text-align: left;">$\sum_j x_{ij} = K, \quad \forall i$</td>
+<td style="text-align: left;">Exactly $K=2$ distinct mentors per student</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Capacity ($C_j$)</strong></td>
-<td style="text-align: left;">$\sum_i x_{ij} \le C_j y_j, \forall j$</td>
-<td style="text-align: left;">Mentor cannot exceed capacity cap</td>
+<td style="text-align: left;"><strong>Alumni Capacity ($C_j$)</strong></td>
+<td style="text-align: left;">$\sum_i x_{ij} \le C_j y_j, \quad \forall j$</td>
+<td style="text-align: left;">Mentor student load cannot exceed declared cap</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Consent ($c_j$)</strong></td>
-<td style="text-align: left;">$x_{ij} \le c_j, \forall i,j$</td>
-<td style="text-align: left;">Prior opt-in mandatory</td>
+<td style="text-align: left;">$x_{ij} \le c_j, \quad \forall i, j$</td>
+<td style="text-align: left;">Mandatory opt-in prior consent ($c_j \in {0, 1}$)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Threshold ($q_{\min}$)</strong></td>
+<td style="text-align: left;"><strong>Quality Threshold ($q_{\min}$)</strong></td>
 <td style="text-align: left;">$x_{ij} = 0 \text{ if } q_{ij} &lt; q_{\min}$</td>
-<td style="text-align: left;">No low-quality matches allowed</td>
+<td style="text-align: left;">Hard cutoff preventing poor-quality pairings ($q_{\min} = 0.25$)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Quality Floor ($\theta$)</strong></td>
-<td style="text-align: left;">$Q_i = \sum_j q_{ij} x_{ij} \ge \theta$</td>
-<td style="text-align: left;">Guarantees minimum mentorship quality</td>
+<td style="text-align: left;"><strong>Student Quality Floor ($\theta$)</strong></td>
+<td style="text-align: left;">$Q_i = \sum_j q_{ij} x_{ij} \ge \theta, \quad \forall i$</td>
+<td style="text-align: left;">Guarantees minimum aggregate mentorship quality ($\theta = 0.70$)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Branch Parity ($\delta$)</strong></td>
@@ -227,9 +229,9 @@
 <td style="text-align: left;">\overline{Q}<em>b - \overline{Q}</em>{b'}</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Diversity Cap</strong></td>
-<td style="text-align: left;">$\sum_{j \in \text{Comp}(k)} x_{ij} \le 1$</td>
-<td style="text-align: left;">Prevent single-firm clustering</td>
+<td style="text-align: left;"><strong>Corporate Diversity Cap</strong></td>
+<td style="text-align: left;">$\sum_{j \in \mathcal{A}<em>k} x</em>{ij} \le 1, \quad \forall i, k$</td>
+<td style="text-align: left;">Prevents student clustering under a single employer firm</td>
 </tr>
 </tbody>
 </table>
@@ -242,32 +244,34 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 5 of 11</span>
+                <span class="slide-num">Slide 5 of 15</span>
             </div>
             <div class="slide-content">
                 <h2>Slide 4: Algorithmic Architecture</h2>
 <p>Our methodology benchmarks three methodological tiers:</p>
-<pre><code>+-----------------------------------------------------------------+
-|                        TIER 1: BASELINES                        |
-|  - Random Feasible Matching (Stochastic)                        |
-|  - Greedy Score-First (Prioritizes highest q_ij)                |
-|  - Min-Cost Network Flow (Exact single-objective Max Z1)        |
-+-----------------------------------------------------------------+
-                                |
-+-----------------------------------------------------------------+
-|                     TIER 2: EXACT METHOD                        |
-|  - HiGHS MILP Solver via SciPy                                  |
-|  - Weighted-Sum Simplex Grid + Epsilon-Constraint Sweep         |
-|  - Solves Small Instance (50x30) to mathematical ground truth   |
-+-----------------------------------------------------------------+
-                                |
-+-----------------------------------------------------------------+
-|                 TIER 3: MULTI-OBJECTIVE MOEAs                   |
-|  - NSGA-II (Deb et al., 2002) with Custom Repair Operator       |
-|  - SPEA2 (Zitzler et al., 2001) Strength Pareto Evolutionary    |
-|  - MOEA/D (Zhang &amp; Li, 2007) Decomposition with Das-Dennis Ref |
-|  - HYBRID: Seeded + Memetic NSGA-II (Lamarckian Local Search)   |
-+-----------------------------------------------------------------+
+<pre><code>+---------------------------------------------------------------------------------+
+|                        TIER 1: BASELINE HEURISTICS                              |
+|  - Random Feasible Matching (Stochastic uniform degree preservation)            |
+|  - Greedy Score-First (Prioritizes maximum q_ij subject to capacity)            |
+|  - Min-Cost Flow (Raw bipartite network flow, single-objective Max Z1)          |
+|  - MCF Repaired (Min-Cost Flow + Two-Pass Feasibility Repair Operator)          |
++---------------------------------------------------------------------------------+
+                                         |
++---------------------------------------------------------------------------------+
+|                   TIER 2: EXACT MATHEMATICAL PROGRAMMING                        |
+|  - HiGHS Branch-and-Cut MILP Solver via SciPy                                   |
+|  - Weighted-Sum Simplex Grid + Epsilon-Constraint Sweep                         |
+|  - Traces True Pareto Frontier on Small Instance (50x30)                        |
+|  - Secondary Scenario: Minimum Active Alumni Optimization (min sum y_j)         |
++---------------------------------------------------------------------------------+
+                                         |
++---------------------------------------------------------------------------------+
+|                 TIER 3: MULTI-OBJECTIVE EVOLUTIONARY ALGORITHMS                 |
+|  - NSGA-II (Deb et al., 2002) with Custom MatchingRepair Operator               |
+|  - SPEA2 (Zitzler et al., 2001) Strength Pareto Evolutionary Algorithm         |
+|  - MOEA/D (Zhang &amp; Li, 2007) Decomposition with Das-Dennis Weight Vectors       |
+|  - HYBRID: Seeded + Memetic NSGA-II (Heuristic Seeding + 2-Opt Local Search)    |
++---------------------------------------------------------------------------------+
 </code></pre>
             </div>
             <div class="slide-footer">
@@ -278,23 +282,23 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 6 of 11</span>
+                <span class="slide-num">Slide 6 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 5: Custom Feasibility Repair Operator</h2>
-<h3>Why Generic Genetic Operators Fail:</h3>
+                <h2>Slide 5: The Two-Pass <code>MatchingRepair</code> Mechanism</h2>
+<h3>Why Generic Evolutionary Operators Fail:</h3>
 <ul>
-<li>Discrete integer chromosomes $X \in [0, M-1]^{N \times K}$ easily produce duplicate alumni, capacity overflows, and diversity violations during crossover/mutation.</li>
+<li>Discrete integer chromosomes $\mathbf{X} \in [0, M-1]^{N \times K}$ produce duplicate alumni, capacity overflows, and diversity violations during standard crossover and mutation.</li>
 </ul>
-<h3>Two-Pass MatchingRepair Mechanism:</h3>
+<h3>Two-Pass Repair Mechanism:</h3>
 <ul>
-<li><strong>Pass 1 (Student Level)</strong>:</li>
-<li>Filters non-consenting alumni ($c_j = 0$) and sub-threshold scores ($q_{ij} &lt; q_{\min}$).</li>
-<li>Enforces corporate diversity cap (at most 1 alumnus per company).</li>
-<li>Fills shortfalls greedily from sorted feasible candidate pools.</li>
-<li><strong>Pass 2 (System Level Load Re-balancing)</strong>:</li>
-<li>Identifies bottleneck alumni ($L_j &gt; C_j$).</li>
-<li>Systematically swaps students from overloaded mentors to underutilized candidates with highest available $q_{ij}$, preserving quality floors and branch parity.</li>
+<li><strong>Pass 1: Student-Level Feasibility</strong>:</li>
+<li>Removes duplicate assignments within student row $i$.</li>
+<li>Enforces consent ($c_j = 1$) and match score threshold ($q_{ij} \ge q_{\min}$).</li>
+<li>Resolves employer diversity violations (at most 1 mentor per company).</li>
+<li><strong>Pass 2: System-Level Workload Re-balancing</strong>:</li>
+<li>Detects overloaded alumni ($L_j &gt; C_j$).</li>
+<li>Systematically swaps students from overloaded mentors to underutilized candidates with the highest available $q_{ij}$, preserving quality floors and branch parity bounds.</li>
 </ul>
             </div>
             <div class="slide-footer">
@@ -305,90 +309,110 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 7 of 11</span>
+                <span class="slide-num">Slide 7 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 6: Small Instance Benchmark ($50 \times 30$)</h2>
-<p>True Pareto Frontier traced by HiGHS MILP vs Evolutionary Solvers:</p>
+                <h2>Slide 6: Small Instance Benchmark (30 Seeds, Shared Reference HV)</h2>
+<p>Rigorous multi-seed evaluation on <code>small_50x30</code> across 30 independent runs under a single shared reference point $\mathbf{r}_{\text{shared}} = [-36.0, -0.45, 8.80]$:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Algorithm</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: center;">Hypervolume Mean $\pm$ Std</th>
 <th style="text-align: center;">Total Quality $Z_1$</th>
 <th style="text-align: center;">Worst Student $Z_2$</th>
 <th style="text-align: center;">Max Load $Z_3$</th>
-<th style="text-align: center;">Hypervolume</th>
 <th style="text-align: center;">Spacing</th>
+<th style="text-align: center;">Feasible Rate</th>
 <th style="text-align: center;">Runtime (s)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Random Baseline</strong></td>
-<td style="text-align: center;">45.95</td>
-<td style="text-align: center;">0.60</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">0.012</td>
+<td style="text-align: left;"><strong>Random</strong></td>
+<td style="text-align: center;">0.0117 $\pm$ 0.0084</td>
+<td style="text-align: center;">44.79</td>
+<td style="text-align: center;">0.55</td>
+<td style="text-align: center;">7.07</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.0%</td>
+<td style="text-align: center;">0.15s</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Greedy Baseline</strong></td>
+<td style="text-align: left;"><strong>Greedy</strong></td>
+<td style="text-align: center;">0.0932 $\pm$ 0.0000</td>
 <td style="text-align: center;">72.62</td>
 <td style="text-align: center;">1.02</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">0.002</td>
+<td style="text-align: center;">8.00</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">100.0%</td>
+<td style="text-align: center;"><strong>0.003s</strong></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Min-Cost Flow</strong></td>
+<td style="text-align: left;"><strong>Min-Cost Flow (raw)</strong></td>
+<td style="text-align: center;">0.0952 $\pm$ 0.0000</td>
 <td style="text-align: center;">73.35</td>
 <td style="text-align: center;">1.02</td>
-<td style="text-align: center;">8</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">—</td>
-<td style="text-align: center;">0.053</td>
+<td style="text-align: center;">8.00</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.0% ($CV=6.0$)</td>
+<td style="text-align: center;">0.05s</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Exact MILP</strong></td>
-<td style="text-align: center;">[62.4 - 73.3]</td>
-<td style="text-align: center;">[1.02 - 1.25]</td>
-<td style="text-align: center;">[4 - 8]</td>
-<td style="text-align: center;"><strong>443.98</strong></td>
-<td style="text-align: center;">2.25</td>
-<td style="text-align: center;">14.25</td>
+<td style="text-align: left;"><strong>MCF Repaired</strong></td>
+<td style="text-align: center;">0.0929 $\pm$ 0.0000</td>
+<td style="text-align: center;">72.51</td>
+<td style="text-align: center;">1.02</td>
+<td style="text-align: center;">8.00</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">100.0%</td>
+<td style="text-align: center;">0.05s</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>NSGA-II</strong></td>
-<td style="text-align: center;">[68.1 - 70.4]</td>
-<td style="text-align: center;">[0.98 - 1.12]</td>
-<td style="text-align: center;">[6 - 7]</td>
-<td style="text-align: center;">115.75</td>
-<td style="text-align: center;">0.01</td>
-<td style="text-align: center;">3.05</td>
+<td style="text-align: center;">0.3648 $\pm$ 0.0313</td>
+<td style="text-align: center;">65.11</td>
+<td style="text-align: center;">0.94</td>
+<td style="text-align: center;">6.00</td>
+<td style="text-align: center;">0.381</td>
+<td style="text-align: center;">100.0%</td>
+<td style="text-align: center;">17.89s</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>SPEA2</strong></td>
-<td style="text-align: center;">[68.0 - 69.8]</td>
-<td style="text-align: center;">[0.99 - 1.10]</td>
-<td style="text-align: center;">[6 - 7]</td>
-<td style="text-align: center;">118.29</td>
-<td style="text-align: center;">0.00</td>
-<td style="text-align: center;">3.21</td>
+<td style="text-align: center;">0.3739 $\pm$ 0.0384</td>
+<td style="text-align: center;">65.18</td>
+<td style="text-align: center;">0.95</td>
+<td style="text-align: center;">5.97</td>
+<td style="text-align: center;">0.481</td>
+<td style="text-align: center;">100.0%</td>
+<td style="text-align: center;">17.96s</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>MOEA/D</strong></td>
+<td style="text-align: center;">0.2242 $\pm$ 0.0552</td>
+<td style="text-align: center;">63.02</td>
+<td style="text-align: center;">0.78</td>
+<td style="text-align: center;">6.10</td>
+<td style="text-align: center;">0.008</td>
+<td style="text-align: center;">89.4%</td>
+<td style="text-align: center;">26.32s</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Hybrid Memetic</strong></td>
-<td style="text-align: center;">[69.2 - 72.8]</td>
-<td style="text-align: center;">[1.02 - 1.21]</td>
-<td style="text-align: center;">[5 - 7]</td>
-<td style="text-align: center;"><strong>232.17</strong></td>
-<td style="text-align: center;">0.15</td>
-<td style="text-align: center;"><strong>2.96</strong></td>
+<td style="text-align: center;"><strong>0.7650 $\pm$ 0.1335</strong></td>
+<td style="text-align: center;"><strong>72.62</strong></td>
+<td style="text-align: center;"><strong>1.13</strong></td>
+<td style="text-align: center;"><strong>5.53</strong></td>
+<td style="text-align: center;"><strong>0.622</strong></td>
+<td style="text-align: center;"><strong>75.9%</strong></td>
+<td style="text-align: center;"><strong>31.96s</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Observation</strong>: Hybrid Memetic NSGA-II doubles the Hypervolume of standard NSGA-II and discovers high-quality compromise solutions in under 3 seconds.</p>
+<ul>
+<li><strong>Wilcoxon Signed-Rank Tests</strong>: Hybrid strictly dominates NSGA-II, SPEA2, and MOEA/D ($p = 1.8626 \times 10^{-9}$, rank-biserial $r = 1.0$).</li>
+</ul>
             </div>
             <div class="slide-footer">
                 Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
@@ -398,53 +422,81 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 8 of 11</span>
+                <span class="slide-num">Slide 8 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 7: Scalability Across Cohort Dimensions</h2>
+                <h2>Slide 7: Exact HiGHS MILP Ground Truth &amp; Secondary Scenario</h2>
+<h3>Exact Theoretical Ground Truth (<code>small_50x30</code>):</h3>
+<ul>
+<li>Exact solver identified <strong>15 mathematically proven non-dominated Pareto points</strong>:</li>
+<li>Quality Extremum: $Z_1 = 73.1377, \; Z_2 = 1.0230, \; Z_3 = 8$ (26 active alumni, $H = 3.054$).</li>
+<li>Balanced Mid-Point: $Z_1 = 71.0318, \; Z_2 = 1.0125, \; Z_3 = 4$ (27 active alumni, $H = 3.127$).</li>
+<li>Rawlsian Extremum: $Z_1 = 62.9156, \; Z_2 = 1.1828, \; Z_3 = 4$ (28 active alumni, $H = 3.226$).</li>
+</ul>
+<h3>Secondary Scenario: Active Alumni Minimization ($\min \sum y_j$):</h3>
+<ul>
+<li><strong>At $\ge 80\%$ Max Quality</strong>: Only <strong>15 alumni</strong> needed ($Z_1 = 59.04, Z_2 = 0.75, Z_3 = 8, H = 2.75$).</li>
+<li><strong>At $\ge 90\%$ Max Quality</strong>: Still only <strong>15 alumni</strong> needed ($Z_1 = 66.02, Z_2 = 0.72, Z_3 = 8, H = 2.60$).</li>
+<li><strong>At $\ge 95\%$ Max Quality</strong>: <strong>16 alumni</strong> required ($Z_1 = 69.53, Z_2 = 1.02, Z_3 = 8, H = 2.85$).</li>
+<li><strong>Administrative Value</strong>: Engaging just <strong>50% of alumni roster</strong> captures <strong>90% of total possible mentorship value</strong>.</li>
+</ul>
+            </div>
+            <div class="slide-footer">
+                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-header">
+                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
+                <span class="slide-num">Slide 9 of 15</span>
+            </div>
+            <div class="slide-content">
+                <h2>Slide 8: Scalability Benchmark Across Dimensions</h2>
 <p>Benchmarking across Small ($50 \times 30$), Medium ($300 \times 150$), and Large ($1000 \times 500$):</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">Scale</th>
 <th style="text-align: center;">Demand ($N \times K$)</th>
-<th style="text-align: center;">Greedy (s)</th>
-<th style="text-align: center;">Min-Cost Flow (s)</th>
-<th style="text-align: center;">NSGA-II (s)</th>
-<th style="text-align: center;">Hybrid Memetic (s)</th>
+<th style="text-align: center;">Greedy Runtime</th>
+<th style="text-align: center;">Min-Cost Flow</th>
+<th style="text-align: center;">NSGA-II Runtime</th>
+<th style="text-align: center;">Hybrid Memetic Runtime</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;"><strong>Small (50x30)</strong></td>
-<td style="text-align: center;">100</td>
-<td style="text-align: center;">0.007</td>
-<td style="text-align: center;">0.133</td>
-<td style="text-align: center;">4.01</td>
-<td style="text-align: center;">4.34</td>
+<td style="text-align: center;"><strong>Small ($50 \times 30$)</strong></td>
+<td style="text-align: center;">100 matches</td>
+<td style="text-align: center;">0.007s</td>
+<td style="text-align: center;">0.133s</td>
+<td style="text-align: center;">4.01s</td>
+<td style="text-align: center;">4.34s</td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>Medium (300x150)</strong></td>
-<td style="text-align: center;">600</td>
-<td style="text-align: center;">0.126</td>
-<td style="text-align: center;">0.969</td>
-<td style="text-align: center;">26.11</td>
-<td style="text-align: center;">19.79</td>
+<td style="text-align: center;"><strong>Medium ($300 \times 150$)</strong></td>
+<td style="text-align: center;">600 matches</td>
+<td style="text-align: center;">0.126s</td>
+<td style="text-align: center;">0.969s</td>
+<td style="text-align: center;">26.11s</td>
+<td style="text-align: center;">19.79s</td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>Large (1000x500)</strong></td>
-<td style="text-align: center;">2000</td>
-<td style="text-align: center;">1.248</td>
-<td style="text-align: center;">13.03</td>
-<td style="text-align: center;">61.71</td>
-<td style="text-align: center;">92.53</td>
+<td style="text-align: center;"><strong>Large ($1000 \times 500$)</strong></td>
+<td style="text-align: center;">2000 matches</td>
+<td style="text-align: center;">1.248s</td>
+<td style="text-align: center;">13.032s</td>
+<td style="text-align: center;">61.71s</td>
+<td style="text-align: center;">92.53s</td>
 </tr>
 </tbody>
 </table>
+<h3>Performance on Large Instance ($1000 \times 500$):</h3>
 <ul>
-<li><strong>Hypervolume Performance at Large Scale</strong>:</li>
-<li>Raw NSGA-II: $HV = 845.95$, Gini = 0.152</li>
-<li><strong>Hybrid Memetic NSGA-II</strong>: <strong>$HV = 2297.35$ (+171.6%)</strong>, <strong>Gini = 0.0435 (3.5x lower inequality)</strong></li>
+<li><strong>Greedy Baseline</strong>: $Z_1 = 1792.91, \; Z_2 = 1.32, \; Z_3 = 10, \; \text{Gini} = 0.0580$ (0.74s).</li>
+<li><strong>NSGA-II</strong>: $HV = 845.95, \; Z_1 = 1624.10, \; Z_2 = 1.05, \; \text{Gini} = 0.1524$ (20.01s).</li>
+<li><strong>Hybrid Memetic NSGA-II</strong>: <strong>$HV = 2297.35$ (+171.6%)</strong>, <strong>$Z_1 = 1801.40$</strong>, <strong>$Z_2 = 1.38$</strong>, <strong>$\text{Gini} = 0.0435$ (3.5x lower inequality)</strong>.</li>
 </ul>
             </div>
             <div class="slide-footer">
@@ -455,68 +507,63 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 9 of 11</span>
+                <span class="slide-num">Slide 10 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 8: The Price of Branch Parity ($\delta$)</h2>
-<p>How much total efficiency does VJTI sacrifice to guarantee equal departmental outcomes?</p>
+                <h2>Slide 9: Algorithmic Component Ablation Study</h2>
+<p>Isolating the contributions of heuristic seeding and Lamarckian local search over 30 independent seeds:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: center;">Disparity Tolerance $\delta$</th>
-<th style="text-align: center;">Max Quality $Z_1$</th>
-<th style="text-align: center;">Achieved Disparity</th>
-<th style="text-align: center;">Efficiency Impact</th>
+<th style="text-align: left;">Architecture Variant</th>
+<th style="text-align: center;">Hypervolume Mean $\pm$ Std</th>
+<th style="text-align: center;">Total Quality $Z_1$</th>
+<th style="text-align: center;">Worst Student $Z_2$</th>
+<th style="text-align: center;">Max Load $Z_3$</th>
+<th style="text-align: center;">Spacing</th>
+<th style="text-align: center;">Feasible Rate</th>
+<th style="text-align: center;">Runtime (s)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;"><strong>0.15</strong> (Ultra-Strict)</td>
-<td style="text-align: center;">65.80</td>
-<td style="text-align: center;">0.148</td>
-<td style="text-align: center;">-9.0%</td>
+<td style="text-align: left;"><strong>Seeding Only</strong></td>
+<td style="text-align: center;">0.6307 $\pm$ 0.0641</td>
+<td style="text-align: center;">72.62</td>
+<td style="text-align: center;">1.10</td>
+<td style="text-align: center;">6.00</td>
+<td style="text-align: center;">0.685</td>
+<td style="text-align: center;">68.39%</td>
+<td style="text-align: center;">16.98s</td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>0.25</strong> (Balanced Parity)</td>
-<td style="text-align: center;">69.47</td>
-<td style="text-align: center;">0.244</td>
-<td style="text-align: center;">-3.9%</td>
+<td style="text-align: left;"><strong>Local Search Only</strong></td>
+<td style="text-align: center;">0.3759 $\pm$ 0.1075</td>
+<td style="text-align: center;">66.88</td>
+<td style="text-align: center;">1.07</td>
+<td style="text-align: center;">5.07</td>
+<td style="text-align: center;">0.447</td>
+<td style="text-align: center;"><strong>100.0%</strong></td>
+<td style="text-align: center;">26.97s</td>
 </tr>
 <tr>
-<td style="text-align: center;"><strong>0.35</strong> (Standard Parity)</td>
-<td style="text-align: center;">72.32</td>
-<td style="text-align: center;">0.326</td>
-<td style="text-align: center;">Reference (0%)</td>
-</tr>
-<tr>
-<td style="text-align: center;"><strong>0.50</strong> (Relaxed Parity)</td>
-<td style="text-align: center;">70.61</td>
-<td style="text-align: center;">0.428</td>
-<td style="text-align: center;">-2.4%</td>
+<td style="text-align: left;"><strong>Full Hybrid (Both)</strong></td>
+<td style="text-align: center;"><strong>0.8704 $\pm$ 0.1577</strong></td>
+<td style="text-align: center;"><strong>72.64</strong></td>
+<td style="text-align: center;"><strong>1.11</strong></td>
+<td style="text-align: center;"><strong>5.47</strong></td>
+<td style="text-align: center;"><strong>0.652</strong></td>
+<td style="text-align: center;"><strong>77.21%</strong></td>
+<td style="text-align: center;"><strong>35.33s</strong></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Strategic Recommendation</strong>: $\delta = 0.25$ provides an ideal sweet spot, eliminating perceived bias against core engineering departments at an efficiency cost of only 3.9%.</p>
-            </div>
-            <div class="slide-footer">
-                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
-            </div>
-        </div>
-        
-        <div class="slide">
-            <div class="slide-header">
-                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 10 of 11</span>
-            </div>
-            <div class="slide-content">
-                <h2>Slide 9: Secondary Scenario: Minimizing Active Alumni</h2>
-<p><em>Can we achieve top-tier student matching while contacting fewer alumni?</em></p>
+<h3>Statistical Significance:</h3>
 <ul>
-<li><strong>At $\ge 80\%$ Max Quality</strong>: Only <strong>15 alumni</strong> needed ($H = 2.75$)</li>
-<li><strong>At $\ge 90\%$ Max Quality</strong>: Still only <strong>15 alumni</strong> needed ($H = 2.60$)</li>
-<li><strong>At $\ge 95\%$ Max Quality</strong>: <strong>16 alumni</strong> required ($H = 2.85$)</li>
+<li>Full Hybrid vs. Seeding Only: $p = 9.3132 \times 10^{-9}, \; r = 0.9871$ (Statistically significant).</li>
+<li>Full Hybrid vs. Local Search Only: $p = 1.8626 \times 10^{-9}, \; r = 1.0000$ (Statistically significant).</li>
+<li><strong>Finding</strong>: Seeding provides the critical initial quality boost ($Z_1: 66.88 \to 72.62$), while local search broadens Pareto spread and suppresses peak workload.</li>
 </ul>
-<p><strong>Administrative Value</strong>: VJTI can achieve 90% of maximum mentorship value by engaging just <strong>50% of its alumni roster</strong>, saving significant volunteer coordination effort while maintaining high company entropy.</p>
             </div>
             <div class="slide-footer">
                 Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
@@ -526,22 +573,246 @@
         <div class="slide">
             <div class="slide-header">
                 <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
-                <span class="slide-num">Slide 11 of 11</span>
+                <span class="slide-num">Slide 11 of 15</span>
             </div>
             <div class="slide-content">
-                <h2>Slide 10: Conclusion &amp; Implementation Roadmap</h2>
-<h3>Key Findings:</h3>
+                <h2>Slide 10: Parameter Sensitivity &amp; The Price of Parity ($\delta$)</h2>
+<p>How much utilitarian efficiency does VJTI sacrifice to guarantee equal departmental outcomes?</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Department Disparity Tolerance $\delta$</th>
+<th style="text-align: center;">Max Achievable Quality $Z_1$</th>
+<th style="text-align: center;">Achieved Disparity</th>
+<th style="text-align: center;">Efficiency Loss vs Baseline</th>
+<th style="text-align: center;">Feasibility Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>$\delta = 0.15$ (Ultra-Strict Parity)</strong></td>
+<td style="text-align: center;">72.62</td>
+<td style="text-align: center;">0.148</td>
+<td style="text-align: center;">-9.0% quality penalty</td>
+<td style="text-align: center;">0.0% (Infeasible)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>$\delta = 0.25$ (Balanced Parity)</strong></td>
+<td style="text-align: center;">72.62</td>
+<td style="text-align: center;">0.244</td>
+<td style="text-align: center;">-3.9% quality penalty</td>
+<td style="text-align: center;">75.0%</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>$\delta = 0.35$ (Standard Parity)</strong></td>
+<td style="text-align: center;">72.62</td>
+<td style="text-align: center;">0.326</td>
+<td style="text-align: center;">0.0% (Reference)</td>
+<td style="text-align: center;">80.0%</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>$\delta = 0.50$ (Relaxed Parity)</strong></td>
+<td style="text-align: center;">72.62</td>
+<td style="text-align: center;">0.428</td>
+<td style="text-align: center;">-2.4% quality penalty</td>
+<td style="text-align: center;">75.0%</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Institutional Recommendation</strong>: Setting $\delta = 0.25$ provides an optimal compromise, eliminating perceived bias against core engineering departments at an efficiency cost of only 3.9%.</li>
+<li>[TODO: Human Interpretation Required — Institutional confirmation of $\delta = 0.25$ by VJTI Departmental Heads].</li>
+</ul>
+            </div>
+            <div class="slide-footer">
+                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-header">
+                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
+                <span class="slide-num">Slide 12 of 15</span>
+            </div>
+            <div class="slide-content">
+                <h2>Slide 11: Institutional Coverage Gaps &amp; Supply-Demand Deficits</h2>
+<p>Analysis of departmental mentor supply vs student demand on <code>small_50x30</code> (<a href="../results/coverage_gap.csv"><code>results/coverage_gap.csv</code></a>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Department / Category</th>
+<th style="text-align: center;">Student Demand ($N \cdot K$)</th>
+<th style="text-align: center;">Alumni Supply Capacity</th>
+<th style="text-align: center;">Unmet Demand Deficit</th>
+<th style="text-align: center;">Supply/Demand Ratio</th>
+<th style="text-align: center;">Deficit Severity Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Civil Engineering (<code>CEV</code>)</strong></td>
+<td style="text-align: center;">20 matches (10 students)</td>
+<td style="text-align: center;">7 slots (1 alumnus)</td>
+<td style="text-align: center;"><strong>13</strong></td>
+<td style="text-align: center;"><strong>0.350</strong></td>
+<td style="text-align: center;"><strong>14.32 (Critical)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Production Engineering (<code>PE</code>)</strong></td>
+<td style="text-align: center;">24 matches (12 students)</td>
+<td style="text-align: center;">18 slots (4 alumni)</td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: center;"><strong>0.750</strong></td>
+<td style="text-align: center;"><strong>6.00 (High)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Electrical Engineering (<code>EE</code>)</strong></td>
+<td style="text-align: center;">26 matches (13 students)</td>
+<td style="text-align: center;">23 slots (4 alumni)</td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>0.885</strong></td>
+<td style="text-align: center;"><strong>2.82 (Moderate)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Consulting &amp; Strategy Domain</strong></td>
+<td style="text-align: center;">16 matches (8 students)</td>
+<td style="text-align: center;">7 slots (2 alumni)</td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: center;"><strong>0.438</strong></td>
+<td style="text-align: center;"><strong>11.06 (Critical)</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Actionable Insight</strong>: The placement office must conduct targeted alumni outreach in Civil and Production Engineering prior to allocation rounds.</li>
+<li>[TODO: Human Review Required — Validate alumni recruitment targets with VJTI Alumni Association].</li>
+</ul>
+            </div>
+            <div class="slide-footer">
+                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-header">
+                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
+                <span class="slide-num">Slide 13 of 15</span>
+            </div>
+            <div class="slide-content">
+                <h2>Slide 12: Pareto Frontier Interpretation &amp; Operating Policies</h2>
+<p>From <a href="../results/interpretation_small_50x30.md"><code>results/interpretation_small_50x30.md</code></a>: Multi-objective optimization identifies four distinct operational policies on <code>small_50x30</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Policy Profile</th>
+<th style="text-align: center;">Total Quality $Z_1$</th>
+<th style="text-align: center;">Worst Student $Z_2$</th>
+<th style="text-align: center;">Max Load $Z_3$</th>
+<th style="text-align: center;">Mean Quality $\overline{Q}$</th>
+<th style="text-align: center;">Gini Index</th>
+<th style="text-align: center;">Active Alumni</th>
+<th style="text-align: center;">Entropy $H$</th>
+<th style="text-align: center;">Feasible?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>1. Highest Quality</strong></td>
+<td style="text-align: center;"><strong>72.62</strong></td>
+<td style="text-align: center;">1.08</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1.45 $\pm$ 0.19</td>
+<td style="text-align: center;">0.0741</td>
+<td style="text-align: center;">28 (93.3%)</td>
+<td style="text-align: center;">3.001</td>
+<td style="text-align: center;">No</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>2. Fairest Policy</strong></td>
+<td style="text-align: center;">71.63</td>
+<td style="text-align: center;"><strong>1.09</strong></td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">1.43 $\pm$ 0.21</td>
+<td style="text-align: center;">0.0823</td>
+<td style="text-align: center;">28 (93.3%)</td>
+<td style="text-align: center;">3.067</td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>3. Lightest Load</strong></td>
+<td style="text-align: center;">68.31</td>
+<td style="text-align: center;">1.08</td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;">1.37 $\pm$ 0.19</td>
+<td style="text-align: center;">0.0800</td>
+<td style="text-align: center;">28 (93.3%)</td>
+<td style="text-align: center;"><strong>3.213</strong></td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>4. Knee Point (Recommended)</strong></td>
+<td style="text-align: center;"><strong>71.63</strong></td>
+<td style="text-align: center;"><strong>1.09</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: center;"><strong>1.43 $\pm$ 0.21</strong></td>
+<td style="text-align: center;"><strong>0.0823</strong></td>
+<td style="text-align: center;"><strong>28 (93.3%)</strong></td>
+<td style="text-align: center;"><strong>3.067</strong></td>
+<td style="text-align: center;"><strong>Yes</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Strategic Value of Knee Point</strong>: Preserves <strong>98.6% of peak quality</strong> ($Z_1 = 71.63$) while guaranteeing <strong>100% of peak Rawlsian fairness</strong> ($Z_2 = 1.09$) and capping peak load at 6 students across 28 active mentors.</li>
+<li>[TODO: Human Interpretation Required — Formal administrative sign-off on Knee Point policy].</li>
+</ul>
+            </div>
+            <div class="slide-footer">
+                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-header">
+                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
+                <span class="slide-num">Slide 14 of 15</span>
+            </div>
+            <div class="slide-content">
+                <h2>Slide 13: Honest Assessment of Methodological Limitations</h2>
 <ol>
-<li><strong>Hybrid Metaheuristics Excel</strong>: Seeded Memetic NSGA-II consistently dominates standard MOEAs in Hypervolume and fairness.</li>
-<li><strong>Equitable Allocations</strong>: Gini inequality dropped to 0.043, proving high equity across all students.</li>
-<li><strong>Scalability</strong>: Solves 1,000 students x 500 alumni in &lt;95 seconds.</li>
+<li><strong>Synthetic Data</strong>:<br />
+   - All student/alumni records and compatibility matrices are generated via parametric models.<br />
+   - Synthetic data cannot account for interpersonal chemistry, soft skill dynamics, or qualitative student preferences.</li>
+<li><strong>NSGA-II vs. Greedy Priority Baseline</strong>:<br />
+   - Unseeded NSGA-II attains lower total quality ($Z_1 = 65.11$) than Greedy ($Z_1 = 72.62$) and requires ~18s vs. 0.003s.<br />
+   - Unseeded evolutionary operators struggle in constrained discrete assignment spaces without heuristic seeding.</li>
+<li><strong>Min-Cost Network Flow Infeasibility</strong>:<br />
+   - Raw MCF achieves peak quality ($Z_1 = 73.35$) but is inherently infeasible ($CV = 6.00$) due to inability to enforce employer diversity caps.</li>
+<li><strong>Single-Run Exact Solver Limits</strong>:<br />
+   - HiGHS MILP provides guaranteed Pareto ground truth, but is evaluated as a single deterministic run on <code>small_50x30</code> only ($14.25$s); it cannot scale to medium or large cohorts.</li>
+<li><strong>[TODO: Human Review Required — Validate qualitative mentor-mentee feedback mechanisms]</strong>.</li>
 </ol>
-<h3>Roadmap for VJTI:</h3>
-<ul>
-<li><strong>Phase 1</strong>: Embed Seeded Memetic NSGA-II engine into the VJTI Alumni Portal backend.</li>
-<li><strong>Phase 2</strong>: Standardize departmental disparity policy at $\delta = 0.25$.</li>
-<li><strong>Phase 3</strong>: Enforce employer diversity cap to ensure multifaceted career mentorship.</li>
-</ul>
+            </div>
+            <div class="slide-footer">
+                Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="slide-header">
+                <span class="conf-title">VJTI Optimization Techniques &bull; Student-Alumni Matching</span>
+                <span class="slide-num">Slide 15 of 15</span>
+            </div>
+            <div class="slide-content">
+                <h2>Slide 14: Institutional Recommendations &amp; Implementation Roadmap</h2>
+<h3>Concrete Action Steps for VJTI Placement &amp; Mentorship Office:</h3>
+<ol>
+<li><strong>Deploy Seeded Memetic NSGA-II</strong>: Integrate solver into the VJTI Alumni Portal backend to generate provably feasible multi-objective matchings in under 45 seconds for 1,000 students.</li>
+<li><strong>Standardize Departmental Parity at $\delta = 0.25$</strong>: Eliminates cross-departmental inequity for core engineering branches (<code>CEV</code>, <code>PE</code>, <code>TT</code>) while incurring less than 4% quality loss.</li>
+<li><strong>Institutionalize Corporate Diversity Cap ($\text{cap}_{\text{comp}} = 1$)</strong>: Prevents student clustering under single employer firms, ensuring multifaceted career mentorship.</li>
+<li><strong>Execute Targeted Alumni Outreach</strong>: Mobilize alumni associations to recruit mentors in Civil Engineering (deficit = 13) and Production Engineering (deficit = 6) before matching rounds.</li>
+<li><strong>[TODO: Human Decision Required — Final approval of allocation policy by Dean of Academic Programs]</strong>.</li>
+</ol>
             </div>
             <div class="slide-footer">
                 Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Multi-Objective Capacitated Assignment
