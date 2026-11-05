@@ -416,6 +416,47 @@ def run_multi_seed_benchmark(
     )
     print(f"      Saved Hypervolume boxplot figure to: {boxplot_png}")
 
+    # Generate multi-panel Pareto and structural plots from primary seed run
+    primary_seed = seeds[0]
+    primary_sols_by_algo: Dict[str, List[MatchingSolution]] = {}
+    for item in all_runs_raw:
+        if item["seed"] == primary_seed:
+            primary_sols_by_algo[item["method"]] = item["solutions"]
+
+    if primary_sols_by_algo:
+        p3d_png = figures_dir / f"{inst_name}_pareto_3d.png"
+        plot_pareto_front_3d(primary_sols_by_algo, p3d_png, title=f"3D Pareto Frontier ({inst_name})")
+        print(f"      Saved 3D Pareto figure to: {p3d_png}")
+
+        t2d_png = figures_dir / f"{inst_name}_tradeoffs_2d.png"
+        plot_tradeoff_2d(primary_sols_by_algo, t2d_png)
+        print(f"      Saved 2D Trade-offs figure to: {t2d_png}")
+
+        metrics_dict: Dict[str, Dict[str, float]] = {}
+        for _, row in summary_df.iterrows():
+            m = row["method"]
+            sub_m = runs_df[runs_df["method"] == m]
+            metrics_dict[m] = {
+                "hypervolume": float(row["hv_mean"]),
+                "spacing": float(row["spacing_mean"]),
+                "num_non_dominated": int(sub_m["num_non_dominated"].mean()) if not sub_m.empty else 0,
+                "avg_gini_quality": float(sub_m["avg_gini_quality"].mean()) if not sub_m.empty else 0.0,
+            }
+        mc_png = figures_dir / f"{inst_name}_metrics_comparison.png"
+        plot_metrics_comparison(metrics_dict, mc_png)
+        print(f"      Saved metrics comparison figure to: {mc_png}")
+
+        hybrid_sols = primary_sols_by_algo.get("Hybrid", [])
+        if hybrid_sols:
+            rep_sol = hybrid_sols[0]
+            bp_png = figures_dir / f"{inst_name}_branch_parity.png"
+            plot_branch_parity(rep_sol, bp_png, title=f"Branch-wise Quality Parity ({inst_name})")
+            print(f"      Saved branch parity figure to: {bp_png}")
+
+            wl_png = figures_dir / f"{inst_name}_workload_distribution.png"
+            plot_workload_distribution(rep_sol, instance.capacities, wl_png)
+            print(f"      Saved workload distribution figure to: {wl_png}")
+
     # Save Comparison Table in CSV and Markdown formats into results/ and figures/
     csv_results = results_dir / f"{inst_name}_comparison_table.csv"
     csv_figures = figures_dir / f"{inst_name}_comparison_table.csv"

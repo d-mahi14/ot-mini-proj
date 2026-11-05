@@ -54,7 +54,7 @@ interpret:
 	$(PYTHON) main.py --mode interpretation
 
 figures:
-	$(PYTHON) generate_pdfs.py
+	$(PYTHON) generate_figures.py
 
 clean:
 	@$(PYTHON) -c "import shutil, pathlib; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('.pytest_cache')]; [p.unlink() for p in pathlib.Path('.').rglob('*.pyc')]; [p.unlink() for p in pathlib.Path('.').rglob('.coverage*')]; print('Build artifacts and caches cleaned.')"

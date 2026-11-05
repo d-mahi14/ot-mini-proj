@@ -2,7 +2,7 @@
 
 **Date of Audit**: October 26, 2026  
 **Auditor**: Antigravity AI Pair Programmer  
-**Repository**: `c:\dev\ot-proj`  
+**Repository**: `.`  
 **Evaluation Target**: Compliance with Project Guide, Multi-Objective Optimization Requirements, and Rigorous Operational Standards.
 
 ---
@@ -11,7 +11,7 @@
 
 ```
 platform win32 -- Python 3.11.14, pytest-8.3.5, pluggy-1.6.0
-rootdir: C:\dev\ot-proj
+rootdir: .
 
 tests/test_baselines.py::test_random_baseline PASSED                     [  6%]
 tests/test_baselines.py::test_greedy_baseline PASSED                     [ 13%]
@@ -71,9 +71,9 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### a) Does each result table use 20-30 independent seeds with mean/std stored in results/, and are Wilcoxon tests present?
 - **Status**: **GAP IDENTIFIED**
 - **Findings**:
-  - The master configuration [`experiments/configs/suite.yaml`](file:///c:/dev/ot-proj/experiments/configs/suite.yaml) declares 3 seeds (`[42, 123, 999]`), but the current experiment execution runner [`experiments/run_experiments.py`](file:///c:/dev/ot-proj/experiments/run_experiments.py) executes a single seed (`seed=42`) per instance to save runtime during initial pipeline validation.
-  - The JSON outputs in [`results/`](file:///c:/dev/ot-proj/results/) store single-run point metrics, not distributions over 20-30 independent runs.
-  - No Wilcoxon signed-rank or Mann-Whitney U test function is currently implemented in [`src/metrics.py`](file:///c:/dev/ot-proj/src/metrics.py) to assess statistical significance across multiple seeds.
+  - The master configuration [`experiments/configs/suite.yaml`](experiments/configs/suite.yaml) declares 3 seeds (`[42, 123, 999]`), but the current experiment execution runner [`experiments/run_experiments.py`](experiments/run_experiments.py) executes a single seed (`seed=42`) per instance to save runtime during initial pipeline validation.
+  - The JSON outputs in [`results/`](results/) store single-run point metrics, not distributions over 20-30 independent runs.
+  - No Wilcoxon signed-rank or Mann-Whitney U test function is currently implemented in [`src/metrics.py`](src/metrics.py) to assess statistical significance across multiple seeds.
 - **Required Remediation**: Add a multi-seed execution harness in `experiments/run_experiments.py` running 20 or 30 seeds, compute `mean` and `std` for all indicators, store aggregated arrays in `results/*_metrics.json`, and implement `scipy.stats.wilcoxon` tests comparing Hybrid Memetic vs NSGA-II.
 
 ---
@@ -81,8 +81,8 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### b) Do all methods share one hypervolume reference point and normalization, and where is it defined?
 - **Status**: **GAP IDENTIFIED**
 - **Findings**:
-  - In [`src/metrics.py`](file:///c:/dev/ot-proj/src/metrics.py#L67-L105), `compute_hypervolume(points, ref_point=None, ideal_point=None, nadir_point=None)` supports reference points and min-max normalization.
-  - However, when called from [`experiments/run_experiments.py`](file:///c:/dev/ot-proj/experiments/run_experiments.py#L143-L148), `ref_point` was omitted (`ref_point=None`).
+  - In [`src/metrics.py`](src/metrics.py#L67-L105), `compute_hypervolume(points, ref_point=None, ideal_point=None, nadir_point=None)` supports reference points and min-max normalization.
+  - However, when called from [`experiments/run_experiments.py`](experiments/run_experiments.py#L143-L148), `ref_point` was omitted (`ref_point=None`).
   - Consequently, line 92 in `src/metrics.py` dynamically falls back to:
     ```python
     r_point = np.max(nd_points, axis=0) * 1.1
@@ -111,7 +111,7 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### d) Are $\theta$ and $\delta$ calibrated from data?
 - **Status**: **GAP IDENTIFIED**
 - **Findings**:
-  - In [`src/data_generator.py`](file:///c:/dev/ot-proj/src/data_generator.py#L137-L143) and [`experiments/configs/small_50x30.yaml`](file:///c:/dev/ot-proj/experiments/configs/small_50x30.yaml), $\theta$ and $\delta$ are statically hardcoded as parameters (`theta_min_quality: 0.70`, `delta_branch_parity: 0.35`).
+  - In [`src/data_generator.py`](src/data_generator.py#L137-L143) and [`experiments/configs/small_50x30.yaml`](experiments/configs/small_50x30.yaml), $\theta$ and $\delta$ are statically hardcoded as parameters (`theta_min_quality: 0.70`, `delta_branch_parity: 0.35`).
   - They are not dynamically calibrated from the generated matrix $q_{ij}$ (e.g., setting $\theta = K \cdot \text{quantile}_{15}(q_{ij})$ or calibrating $\delta$ as a percentage of the unconstrained baseline departmental spread $\Delta_{\text{baseline}}$).
 - **Required Remediation**: Add a calibration utility in `src/data_generator.py` or `src/problem.py` that computes empirical threshold baselines from the data distribution.
 
@@ -120,9 +120,9 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### e) Is the diversity cap implemented?
 - **Status**: **MET (With Caveat)**
 - **Findings**:
-  - **In Model Evaluation**: Fully implemented in [`src/problem.py`](file:///c:/dev/ot-proj/src/problem.py#L225-L235) (counts violations whenever student receives $> \text{cap}_{\text{comp}}$ mentors from the same employer).
-  - **In Exact MILP**: Fully formulated as linear constraints in [`src/algorithms/exact_milp.py`](file:///c:/dev/ot-proj/src/algorithms/exact_milp.py#L182-L198) (`LinearConstraint` over corporate subsets).
-  - **In Custom Repair**: Strictly enforced in [`src/multiobjective/repair.py`](file:///c:/dev/ot-proj/src/multiobjective/repair.py#L90-L95).
+  - **In Model Evaluation**: Fully implemented in [`src/problem.py`](src/problem.py#L225-L235) (counts violations whenever student receives $> \text{cap}_{\text{comp}}$ mentors from the same employer).
+  - **In Exact MILP**: Fully formulated as linear constraints in [`src/algorithms/exact_milp.py`](src/algorithms/exact_milp.py#L182-L198) (`LinearConstraint` over corporate subsets).
+  - **In Custom Repair**: Strictly enforced in [`src/multiobjective/repair.py`](src/multiobjective/repair.py#L90-L95).
   - **In Greedy Baseline**: Enforced via `student_companies` tracking dictionary.
   - **Caveat**: Not enforced in Min-Cost Flow due to network flow structure limits, causing its $CV=6$ violation.
 
@@ -133,7 +133,7 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 - **Findings**:
   - All file references across YAML configs, `main.py`, and `src/` use relative paths (`data/`, `results/`, `figures/`).
   - Algorithm parameters (`pop_size`, `n_gen`, `seed`, `q_min`, `k_matches`) are parsed from YAML configs using `PyYAML`.
-  - **Minor Exception**: In [`experiments/run_scalability.py`](file:///c:/dev/ot-proj/experiments/run_scalability.py#L74-L75), generations were adjusted in code (`n_gen = 25 if instance.n_students > 500 else 30`) instead of being read strictly from YAML.
+  - **Minor Exception**: In [`experiments/run_scalability.py`](experiments/run_scalability.py#L74-L75), generations were adjusted in code (`n_gen = 25 if instance.n_students > 500 else 30`) instead of being read strictly from YAML.
 
 ---
 
@@ -148,7 +148,7 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### h) Does README.md follow the 13-section format?
 - **Status**: **GAP IDENTIFIED**
 - **Findings**:
-  - [`README.md`](file:///c:/dev/ot-proj/README.md) currently contains 8 numbered sections:
+  - [`README.md`](README.md) currently contains 8 numbered sections:
     1. Overview & Institutional Motivation
     2. Mathematical Model Summary
     3. Repository Architecture
@@ -165,7 +165,7 @@ All 15 unit tests pass cleanly covering data synthesis, matrix encoding/decoding
 ### i) Are any numbers in report/final_report.md, presentation_slides.md or literature_review.md not traceable to files in results/, and are all citations real and verifiable?
 - **Status**: **VERIFIED & TRACEABLE**
 - **Findings**:
-  - All quantitative numbers in [`report/final_report.md`](file:///c:/dev/ot-proj/report/final_report.md) and [`presentation/presentation_slides.md`](file:///c:/dev/ot-proj/presentation/presentation_slides.md) map directly to values in `results/`:
+  - All quantitative numbers in [`report/final_report.md`](report/final_report.md) and [`presentation/presentation_slides.md`](presentation/presentation_slides.md) map directly to values in `results/`:
     - Small instance table $\to$ `results/small_50x30_metrics.json`
     - Medium instance table $\to$ `results/medium_300x150_metrics.json`
     - Large instance table $\to$ `results/large_1000x500_metrics.json`

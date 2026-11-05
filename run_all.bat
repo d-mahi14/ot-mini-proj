@@ -150,7 +150,7 @@ exit /b 0
 REM ------------------------------------------------------------------------------
 :target_figures
 echo [1/1] Generating figures and PDF deliverables...
-python generate_pdfs.py
+python generate_figures.py
 if errorlevel 1 (
     echo [ERROR] Figure / PDF generation failed.
     exit /b %errorlevel%
@@ -227,7 +227,7 @@ if errorlevel 1 (
 
 echo.
 echo --- Step 8: PDF Report ^& Visual Deliverables Generation ---
-python generate_pdfs.py
+python generate_figures.py
 if errorlevel 1 (
     echo [WARNING] Headless PDF generation encountered an issue; visual figures remain available in figures/.
 )

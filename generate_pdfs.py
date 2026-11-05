@@ -6,24 +6,73 @@ to publication-grade PDFs via headless Microsoft Edge Chromium engine.
 
 from __future__ import annotations
 
+import os
 import re
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import markdown
 
 
-EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+def find_chromium_executable() -> str | None:
+    """Find an available Chromium-based browser executable (Edge, Chrome, Chromium)."""
+    # 1. Environment variable override
+    env_browser = os.environ.get("BROWSER_PATH")
+    if env_browser and Path(env_browser).exists():
+        return env_browser
+
+    # 2. Check system PATH
+    for name in ["msedge", "edge", "google-chrome", "chrome", "chromium", "chromium-browser"]:
+        found = shutil.which(name)
+        if found:
+            return found
+
+    # 3. Check standard Windows installation paths
+    if sys.platform == "win32":
+        candidates = [
+            Path(os.environ.get("PROGRAMFILES(X86)", r"C:\Program Files (x86)")) / "Microsoft" / "Edge" / "Application" / "msedge.exe",
+            Path(os.environ.get("PROGRAMFILES", r"C:\Program Files")) / "Microsoft" / "Edge" / "Application" / "msedge.exe",
+            Path(os.environ.get("LOCALAPPDATA", "")) / "Microsoft" / "Edge" / "Application" / "msedge.exe",
+            Path(os.environ.get("PROGRAMFILES", r"C:\Program Files")) / "Google" / "Chrome" / "Application" / "chrome.exe",
+            Path(os.environ.get("PROGRAMFILES(X86)", r"C:\Program Files (x86)")) / "Google" / "Chrome" / "Application" / "chrome.exe",
+            Path(os.environ.get("LOCALAPPDATA", "")) / "Google" / "Chrome" / "Application" / "chrome.exe",
+        ]
+        for c in candidates:
+            if c.exists():
+                return str(c)
+
+    # 4. Standard Linux paths
+    elif sys.platform.startswith("linux"):
+        for p in ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/microsoft-edge"]:
+            if Path(p).exists():
+                return p
+
+    # 5. Standard macOS paths
+    elif sys.platform == "darwin":
+        for p in [
+            "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+        ]:
+            if Path(p).exists():
+                return p
+
+    return None
+
+
+EDGE_PATH = find_chromium_executable()
 
 
 def markdown_to_html_report(md_content: str, base_dir: Path) -> str:
     """Convert final report markdown to styled printable A4 HTML."""
-    # Convert image relative paths to absolute file URIs for Chromium rendering
+    # Convert image relative paths to clean relative paths for HTML/Chromium rendering
     def replace_img(match):
         alt = match.group(1)
         rel_path = match.group(2)
-        abs_path = (base_dir / rel_path).resolve().as_uri()
-        return f'<div class="figure-container"><img src="{abs_path}" alt="{alt}" /><div class="figure-caption">{alt}</div></div>'
+        # HTML file is in report/, so if rel_path is figures/..., use ../figures/...
+        img_src = f"../{rel_path}" if not rel_path.startswith("../") and not rel_path.startswith("http") else rel_path
+        return f'<div class="figure-container"><img src="{img_src}" alt="{alt}" /><div class="figure-caption">{alt}</div></div>'
 
     processed_md = re.sub(r'!\[(.*?)\]\((.*?)\)', replace_img, md_content)
 
@@ -32,13 +81,13 @@ def markdown_to_html_report(md_content: str, base_dir: Path) -> str:
         extensions=["tables", "fenced_code", "toc", "nl2br", "sane_lists"],
     )
 
-    # Inject visual figures into report sections where referenced
-    pareto_img = (base_dir / "figures" / "small_50x30_pareto_3d.png").resolve().as_uri()
-    tradeoff_img = (base_dir / "figures" / "small_50x30_tradeoffs_2d.png").resolve().as_uri()
-    parity_img = (base_dir / "figures" / "small_50x30_branch_parity.png").resolve().as_uri()
-    exact_img = (base_dir / "figures" / "exact_vs_metaheuristics.png").resolve().as_uri()
-    ablation_img = (base_dir / "figures" / "ablation_study.png").resolve().as_uri()
-    scale_img = (base_dir / "figures" / "scalability_curve.png").resolve().as_uri()
+    # Inject visual figures into report sections where referenced using relative paths
+    pareto_img = "../figures/small_50x30_pareto_3d.png"
+    tradeoff_img = "../figures/small_50x30_tradeoffs_2d.png"
+    parity_img = "../figures/small_50x30_branch_parity.png"
+    exact_img = "../figures/exact_vs_metaheuristics.png"
+    ablation_img = "../figures/ablation_study.png"
+    scale_img = "../figures/scalability_curve.png"
 
     # Enhance HTML body with inline figures
     fig_markup = f"""
@@ -371,7 +420,12 @@ def markdown_to_html_slides(md_content: str, base_dir: Path) -> str:
 
 
 def render_html_to_pdf(html_path: Path, pdf_path: Path) -> bool:
-    """Use Microsoft Edge in headless mode to render HTML to PDF."""
+    """Use Chromium (Edge, Chrome) in headless mode to render HTML to PDF."""
+    if not EDGE_PATH:
+        print("[WARNING] No Chromium-based browser (Edge, Chrome, Chromium) found in PATH or standard directories.")
+        print(f"[INFO] HTML file is available at: {html_path}")
+        return False
+
     cmd = [
         EDGE_PATH,
         "--headless",
@@ -402,12 +456,12 @@ def main() -> None:
         f.write(report_html)
     print(f"Generated HTML report: {report_html_path}")
 
-    print("Rendering report/final_report.pdf with Microsoft Edge...")
+    print("Rendering report/final_report.pdf with browser engine...")
     success_report = render_html_to_pdf(report_html_path, report_pdf_path)
     if success_report:
         print(f"Successfully generated: {report_pdf_path} ({report_pdf_path.stat().st_size / 1024:.1f} KB)")
     else:
-        print(f"Failed to generate {report_pdf_path}")
+        print(f"Could not render {report_pdf_path} via headless browser; HTML version is ready.")
 
     # 2. Presentation Slides PDF
     slides_md_path = base_dir / "presentation" / "presentation_slides.md"
@@ -423,12 +477,12 @@ def main() -> None:
         f.write(slides_html)
     print(f"Generated HTML slides: {slides_html_path}")
 
-    print("Rendering presentation/presentation_slides.pdf with Microsoft Edge...")
+    print("Rendering presentation/presentation_slides.pdf with browser engine...")
     success_slides = render_html_to_pdf(slides_html_path, slides_pdf_path)
     if success_slides:
         print(f"Successfully generated: {slides_pdf_path} ({slides_pdf_path.stat().st_size / 1024:.1f} KB)")
     else:
-        print(f"Failed to generate {slides_pdf_path}")
+        print(f"Could not render {slides_pdf_path} via headless browser; HTML version is ready.")
 
 
 if __name__ == "__main__":
