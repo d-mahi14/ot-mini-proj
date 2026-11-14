@@ -20,3 +20,4 @@ LATEX_DIR.mkdir(parents=True, exist_ok=True)
 # 9. references.bib: Comprehensive bibliography
 
 print("Generating LaTeX report files...")
+

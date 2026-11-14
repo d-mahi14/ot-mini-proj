@@ -1,241 +1,241 @@
 seed,method,hypervolume,spacing,num_non_dominated,feasibility_rate,z1_max,z2_worst,z3_min_load,avg_gini_quality,runtime_seconds,dominates_random,dominates_greedy,dominates_mcf,dominates_mcf_repaired
-42,Random,0.00572,0.0,1,0.0,45.9515,0.6015,8,0.1172,0.1137,False,False,False,False
-42,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-42,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-42,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-42,NSGA-II,0.382999,0.00849,3,1.0,64.8519,0.9799,6,0.0843,17.0663,True,False,False,False
-42,SPEA2,0.389283,0.3283,11,1.0,66.3124,0.9584,6,0.0841,18.7598,True,False,False,False
-42,MOEA/D,0.30094,0.0,18,1.0,63.595,0.869,6,0.0971,31.3601,True,False,False,False
-42,Hybrid,0.929244,0.53588,5,0.8,72.6193,1.1507,5,0.0756,26.1164,True,True,False,True
-45,Random,0.019287,0.0,1,0.0,45.6415,0.532,6,0.1468,0.0954,False,False,False,False
-45,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-45,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-45,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-45,NSGA-II,0.383624,0.57883,6,1.0,65.4077,0.9526,6,0.0942,16.4858,True,False,False,False
-45,SPEA2,0.390589,0.16632,8,1.0,65.379,0.9708,6,0.0962,16.727,True,False,False,False
-45,MOEA/D,0.19878,0.0,18,1.0,62.8124,0.7303,6,0.1227,32.6274,True,False,False,False
-45,Hybrid,0.645898,0.0,2,0.5,72.6193,1.1186,6,0.0739,29.1966,True,True,False,True
-43,Random,0.007342,0.0,1,0.0,43.8177,0.5204,7,0.1517,0.0846,False,False,False,False
-43,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-43,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-43,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-43,NSGA-II,0.368061,0.0,2,1.0,65.0158,0.9392,6,0.0919,16.6661,True,False,False,False
-43,SPEA2,0.366683,1.18462,4,1.0,65.6403,0.9307,6,0.098,15.4143,True,False,False,False
-43,MOEA/D,0.178976,0.0,21,1.0,63.2921,0.8793,7,0.0952,32.4558,True,False,False,False
-43,Hybrid,0.927137,0.72372,5,0.8,72.6193,1.1507,5,0.0763,30.4806,True,True,False,True
-44,Random,0.01267,0.0,1,0.0,43.9567,0.5797,7,0.1415,0.0788,False,False,False,False
-44,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-44,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-44,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-44,NSGA-II,0.411203,0.17881,6,1.0,66.6136,0.9681,6,0.0947,15.2424,True,False,False,False
-44,SPEA2,0.393369,0.24887,5,1.0,66.0689,0.9681,6,0.0882,17.0367,True,False,False,False
-44,MOEA/D,0.239297,0.0,28,1.0,60.5044,0.8255,6,0.0879,32.4392,True,False,False,False
-44,Hybrid,0.929618,0.61429,6,0.8333,72.6193,1.1449,5,0.0762,33.7526,True,True,False,True
-47,Random,0.027815,0.0,1,0.0,47.7969,0.6199,7,0.131,0.0887,False,False,False,False
-47,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-47,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-47,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-47,NSGA-II,0.441784,0.64372,5,1.0,66.7336,0.997,6,0.083,15.84,True,False,False,False
-47,SPEA2,0.407413,0.31994,14,1.0,66.0953,0.9762,6,0.089,15.7573,True,False,False,False
-47,MOEA/D,0.275436,0.0,21,1.0,64.0526,0.8225,6,0.1097,32.6603,True,False,False,False
-47,Hybrid,0.609489,0.63183,5,0.8,72.6193,1.0804,6,0.079,26.0863,True,True,False,True
-46,Random,0.028425,0.0,1,0.0,45.3679,0.5847,6,0.1339,0.1518,False,False,False,False
-46,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-46,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-46,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-46,NSGA-II,0.357642,0.48151,6,1.0,63.9529,0.9417,6,0.0898,15.2358,True,False,False,False
-46,SPEA2,0.338763,0.26159,8,1.0,64.5192,0.944,6,0.0996,15.4562,True,False,False,False
-46,MOEA/D,0.16113,0.0,21,1.0,63.9038,0.8251,7,0.1,30.8203,False,False,False,False
-46,Hybrid,0.645052,0.43215,3,0.6667,72.6193,1.1186,6,0.0752,31.064,True,True,False,True
-48,Random,0.007163,0.0,1,0.0,45.0993,0.5014,7,0.1287,0.0545,False,False,False,False
-48,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-48,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-48,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-48,NSGA-II,0.337635,0.35334,7,1.0,64.627,0.9091,6,0.0969,16.4592,True,False,False,False
-48,SPEA2,0.394133,0.19046,7,1.0,65.865,0.9742,6,0.0907,14.4645,True,False,False,False
-48,MOEA/D,0.243203,0.0,21,1.0,61.9596,0.8083,6,0.1205,31.8187,True,False,False,False
-48,Hybrid,0.650054,0.07673,4,0.75,72.6193,1.1462,6,0.0733,36.409,True,True,False,True
-49,Random,0.007636,0.0,1,0.0,44.0624,0.5198,7,0.1595,0.1124,False,False,False,False
-49,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-49,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-49,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-49,NSGA-II,0.387561,0.20927,7,1.0,65.7049,0.9569,6,0.0968,16.8057,True,False,False,False
-49,SPEA2,0.360556,0.41341,6,1.0,65.1523,0.9355,6,0.0907,19.9868,True,False,False,False
-49,MOEA/D,0.211747,0.0,4,0.8095,64.1276,0.731,6,0.1068,30.1524,True,False,False,False
-49,Hybrid,0.684385,0.0,2,0.5,72.6193,1.1624,6,0.0744,33.4799,True,True,False,True
-51,Random,0.008199,0.0,1,0.0,43.3781,0.5396,7,0.1116,0.258,False,False,False,False
-51,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-51,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-51,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-51,NSGA-II,0.414162,0.52376,7,1.0,67.0136,0.9672,6,0.0868,15.8238,True,False,False,False
-51,SPEA2,0.380772,0.0,2,1.0,66.6599,0.9205,6,0.0989,16.0913,True,False,False,False
-51,MOEA/D,0.188677,0.0,21,1.0,63.5386,0.7059,6,0.1023,26.5463,True,False,False,False
-51,Hybrid,0.627599,0.62342,4,0.75,72.6193,1.098,6,0.0767,33.7204,True,True,False,True
-50,Random,0.007949,0.0,1,0.0,44.773,0.5129,7,0.1329,0.1805,False,False,False,False
-50,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-50,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-50,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-50,NSGA-II,0.378991,0.34854,12,1.0,65.6187,0.9584,6,0.0861,15.4229,True,False,False,False
-50,SPEA2,0.474385,1.06954,17,1.0,65.9038,0.9778,5,0.089,17.1204,True,False,False,False
-50,MOEA/D,0.254723,0.0,21,1.0,63.9951,0.7933,6,0.0964,28.045,True,False,False,False
-50,Hybrid,0.624972,0.60482,4,0.75,72.6193,1.098,6,0.0779,33.0801,True,True,False,True
-52,Random,0.007781,0.0,1,0.0,43.1367,0.5396,7,0.1189,0.1456,False,False,False,False
-52,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-52,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-52,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-52,NSGA-II,0.340008,0.4898,6,1.0,65.0512,0.9106,6,0.0915,14.7547,True,False,False,False
-52,SPEA2,0.412534,0.30362,9,1.0,66.267,1.0195,6,0.081,20.8342,True,False,False,False
-52,MOEA/D,0.193841,0.0,21,1.0,60.8108,0.7466,6,0.1129,27.2319,True,False,False,False
-52,Hybrid,0.823915,0.62974,6,0.8333,72.6193,1.0804,5,0.0783,28.5996,True,True,False,True
-53,Random,0.007882,0.0,1,0.0,44.1351,0.5214,7,0.12,0.0863,False,False,False,False
-53,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-53,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-53,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-53,NSGA-II,0.347474,0.56557,6,1.0,64.1788,0.9562,6,0.0846,17.8255,True,False,False,False
-53,SPEA2,0.352708,0.97961,7,1.0,64.5541,0.9365,6,0.0955,26.8913,True,False,False,False
-53,MOEA/D,0.2879,0.0,21,1.0,61.3248,0.8881,6,0.0878,23.8056,True,False,False,False
-53,Hybrid,0.646954,0.38677,3,0.6667,72.6193,1.1186,6,0.0746,26.1324,True,True,False,True
-54,Random,0.010886,0.0,1,0.0,44.3117,0.5512,7,0.1501,0.1603,False,False,False,False
-54,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-54,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-54,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-54,NSGA-II,0.363546,0.69336,4,1.0,63.6332,0.9656,6,0.0922,14.8066,True,False,False,False
-54,SPEA2,0.275641,1.20061,5,1.0,62.568,0.8606,6,0.1024,15.3157,True,False,False,False
-54,MOEA/D,0.242159,0.0,21,1.0,63.1877,0.7868,6,0.0961,27.2144,True,False,False,False
-54,Hybrid,0.639616,1.01303,4,0.75,72.6193,1.1186,6,0.078,30.8023,True,True,False,True
-55,Random,0.004362,0.0,1,0.0,47.3554,0.5409,8,0.118,0.0554,False,False,False,False
-55,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-55,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-55,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-55,NSGA-II,0.309764,0.3806,8,1.0,65.2834,0.8966,6,0.1025,17.5986,True,False,False,False
-55,SPEA2,0.371449,0.34557,9,1.0,65.7996,0.9483,6,0.0929,15.9757,True,False,False,False
-55,MOEA/D,0.129327,0.0,15,0.0,62.5508,0.6271,6,0.1037,27.4682,True,False,False,False
-55,Hybrid,0.898726,1.19687,4,0.75,72.6193,1.1186,5,0.077,35.6014,True,True,False,True
-56,Random,0.033224,0.0,1,0.0,45.7906,0.5998,6,0.1187,0.076,False,False,False,False
-56,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-56,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-56,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-56,NSGA-II,0.310989,0.53286,6,1.0,63.9308,0.887,6,0.1023,16.0378,True,False,False,False
-56,SPEA2,0.310287,1.00386,11,1.0,62.9427,0.9022,6,0.1024,19.1727,True,False,False,False
-56,MOEA/D,0.222754,0.0,22,1.0,62.4317,0.7721,6,0.095,28.9402,True,False,False,False
-56,Hybrid,0.64332,0.78067,4,0.75,72.6193,1.1186,6,0.0767,38.1231,True,True,False,True
-57,Random,0.011717,0.0,1,0.0,44.9096,0.5481,7,0.1435,0.0972,False,False,False,False
-57,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-57,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-57,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-57,NSGA-II,0.380689,0.68237,5,1.0,66.2036,0.9392,6,0.0872,16.1274,True,False,False,False
-57,SPEA2,0.375505,0.33469,8,1.0,65.0451,0.9518,6,0.0909,26.2544,True,False,False,False
-57,MOEA/D,0.231047,0.0,16,1.0,64.7609,0.7505,6,0.0998,22.9678,True,False,False,False
-57,Hybrid,0.684963,0.47582,5,0.8,72.6193,1.1624,6,0.0757,60.1963,True,True,False,True
-59,Random,0.001724,0.0,1,0.0,43.2965,0.5129,8,0.1403,0.4184,False,False,False,False
-59,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-59,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-59,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-59,NSGA-II,0.374314,0.04971,4,1.0,64.7084,0.969,6,0.0931,36.1923,True,False,False,False
-59,SPEA2,0.403847,0.05496,4,1.0,65.745,0.9717,6,0.0857,20.9153,True,False,False,False
-59,MOEA/D,0.229447,0.0,21,1.0,64.6375,0.7496,6,0.1019,26.1236,True,False,False,False
-59,Hybrid,0.946791,0.66373,4,0.75,72.6193,1.1624,5,0.0738,39.3928,True,True,False,True
-58,Random,0.012974,0.0,1,0.0,45.8132,0.5444,7,0.1262,0.1733,False,False,False,False
-58,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-58,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-58,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-58,NSGA-II,0.380866,0.0,2,1.0,65.3241,0.9606,6,0.0843,33.4903,True,False,False,False
-58,SPEA2,0.386135,0.42011,6,1.0,65.5315,0.9584,6,0.0908,24.2263,True,False,False,False
-58,MOEA/D,0.278065,0.0,22,1.0,64.9937,0.8682,6,0.0999,27.5877,True,False,False,False
-58,Hybrid,0.930182,0.61291,9,0.8889,72.6193,1.1539,5,0.0759,52.3946,True,True,False,True
-60,Random,0.002747,0.0,1,0.0,44.1916,0.5397,8,0.1283,0.4855,False,False,False,False
-60,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-60,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-60,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-60,NSGA-II,0.374124,0.74654,6,1.0,65.6472,0.9612,6,0.0871,32.1088,True,False,False,False
-60,SPEA2,0.400558,0.52221,4,1.0,66.6032,0.9517,6,0.0821,22.2665,True,False,False,False
-60,MOEA/D,0.217002,0.0,21,1.0,61.4461,0.7745,6,0.1096,28.8426,True,False,False,False
-60,Hybrid,0.616205,0.1967,3,0.6667,72.6193,1.0853,6,0.0764,32.8487,True,True,False,True
-61,Random,0.009809,0.0,1,0.0,45.349,0.5231,7,0.134,0.2172,False,False,False,False
-61,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-61,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-61,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-61,NSGA-II,0.366707,0.31549,7,1.0,65.2611,0.9673,6,0.0858,24.3675,True,False,False,False
-61,SPEA2,0.326792,0.51863,8,1.0,64.4418,0.9178,6,0.0946,26.6254,True,False,False,False
-61,MOEA/D,0.155524,0.0,21,0.0,60.6586,0.6864,6,0.1237,18.8968,True,False,False,False
-61,Hybrid,0.897177,1.73996,4,0.75,72.6193,1.1535,5,0.0751,29.6216,True,True,False,True
-62,Random,0.001633,0.0,1,0.0,42.4349,0.5258,8,0.1414,0.0737,False,False,False,False
-62,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-62,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-62,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-62,NSGA-II,0.391552,0.51946,6,1.0,65.4883,0.969,6,0.0906,14.6822,True,False,False,False
-62,SPEA2,0.424083,0.50497,8,1.0,65.9567,1.0265,6,0.0805,13.3577,True,False,False,False
-62,MOEA/D,0.176644,0.0,20,1.0,62.3823,0.7011,6,0.1085,23.0979,True,False,False,False
-62,Hybrid,0.907309,0.61757,6,0.8333,72.6193,1.1285,5,0.0751,33.6734,True,True,False,True
-63,Random,0.002835,0.0,1,0.0,44.3679,0.5397,8,0.1436,0.122,False,False,False,False
-63,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-63,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-63,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-63,NSGA-II,0.350919,0.01894,3,1.0,64.8573,0.9261,6,0.1031,15.3115,True,False,False,False
-63,SPEA2,0.371412,0.65639,5,1.0,66.0318,0.9417,6,0.0957,14.6889,True,False,False,False
-63,MOEA/D,0.204372,0.0,21,1.0,64.0432,0.7231,6,0.1151,23.9477,True,False,False,False
-63,Hybrid,0.900623,0.47323,6,0.8333,72.6567,1.1507,5,0.0772,26.3264,True,True,False,True
-64,Random,0.025313,0.0,1,0.0,45.6712,0.5623,6,0.1406,0.0675,False,False,False,False
-64,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-64,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-64,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-64,NSGA-II,0.322824,0.30888,3,1.0,64.5511,0.8843,6,0.1073,12.7575,True,False,False,False
-64,SPEA2,0.354306,0.34029,6,1.0,64.4476,0.9584,6,0.0947,13.0373,True,False,False,False
-64,MOEA/D,0.276541,0.0,24,1.0,65.6371,0.8061,6,0.0993,23.5841,True,False,False,False
-64,Hybrid,0.828597,1.05972,5,0.8,72.6193,1.0877,5,0.075,34.9704,True,True,False,True
-65,Random,0.01195,0.0,1,0.0,46.3333,0.5287,7,0.1383,0.1706,False,False,False,False
-65,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-65,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-65,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-65,NSGA-II,0.364183,0.77362,9,1.0,65.0135,0.9738,6,0.0902,17.9028,True,False,False,False
-65,SPEA2,0.425961,0.05597,8,1.0,64.9567,1.0178,6,0.0776,22.9739,True,False,False,False
-65,MOEA/D,0.260278,0.0,21,1.0,63.1876,0.8145,6,0.0987,18.7342,True,False,False,False
-65,Hybrid,0.6919,0.43534,4,0.75,72.6193,1.17,6,0.0715,27.839,True,True,False,True
-66,Random,0.020461,0.0,1,0.0,44.9442,0.5496,6,0.1404,0.1193,False,False,False,False
-66,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-66,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-66,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-66,NSGA-II,0.343975,0.59033,12,1.0,64.7451,0.9398,6,0.0976,14.1317,True,False,False,False
-66,SPEA2,0.360138,0.17549,9,1.0,65.3498,0.9311,6,0.0861,13.449,True,False,False,False
-66,MOEA/D,0.194781,0.23736,21,1.0,63.1264,0.72,6,0.1026,26.9088,True,False,False,False
-66,Hybrid,0.905257,0.84464,8,0.875,72.7153,1.1507,5,0.0765,33.8811,True,True,False,True
-67,Random,0.006821,0.0,1,0.0,43.903,0.5129,7,0.1432,0.1052,False,False,False,False
-67,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-67,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-67,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-67,NSGA-II,0.35408,0.31964,9,1.0,64.9431,0.969,6,0.0884,14.2701,True,False,False,False
-67,SPEA2,0.325835,1.02005,4,1.0,63.4991,0.9135,6,0.0945,14.2607,True,False,False,False
-67,MOEA/D,0.189292,0.0,21,0.0,64.8186,0.6924,6,0.1033,27.6526,True,False,False,False
-67,Hybrid,0.899126,0.41922,4,0.75,72.6193,1.1395,5,0.0758,36.137,True,True,False,True
-68,Random,0.012309,0.0,1,0.0,43.9502,0.5757,7,0.1468,0.1287,False,False,False,False
-68,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-68,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-68,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-68,NSGA-II,0.336904,0.41356,4,1.0,63.9962,0.9117,6,0.0933,13.6313,True,False,False,False
-68,SPEA2,0.372182,0.38538,3,1.0,64.9594,0.9863,6,0.0859,18.7101,True,False,False,False
-68,MOEA/D,0.382157,0.0,21,1.0,62.8403,0.9992,6,0.0801,26.4408,True,False,False,False
-68,Hybrid,0.642824,0.75143,5,0.8,72.6193,1.1186,6,0.0768,34.7529,True,True,False,True
-69,Random,0.011966,0.0,1,0.0,45.1621,0.546,7,0.1186,0.1716,False,False,False,False
-69,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-69,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-69,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-69,NSGA-II,0.392526,0.0,2,1.0,66.0297,0.9478,6,0.0852,21.7819,True,False,False,False
-69,SPEA2,0.351814,0.52879,5,1.0,64.6892,0.9576,6,0.0874,23.6075,True,False,False,False
-69,MOEA/D,0.210721,0.0,21,1.0,61.1141,0.7699,6,0.0996,21.6716,True,False,False,False
-69,Hybrid,0.65732,0.7552,6,0.8333,72.6193,1.1358,6,0.0781,21.1143,True,True,False,True
-70,Random,0.002064,0.0,1,0.0,43.2237,0.5301,8,0.1465,0.1568,False,False,False,False
-70,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,True,False,False,True
-70,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,True,True,False,True
-70,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,True,False,False,False
-70,NSGA-II,0.367868,0.29531,6,1.0,65.0588,0.9397,6,0.0961,14.2872,True,False,False,False
-70,SPEA2,0.370446,0.6482,4,1.0,64.1787,0.9569,6,0.0896,9.5087,True,False,False,False
-70,MOEA/D,0.275449,0.0,21,1.0,63.1391,0.8362,6,0.1,14.9338,True,False,False,False
-70,Hybrid,0.61534,0.69998,5,0.8,72.6193,1.0877,6,0.074,12.9982,True,True,False,True
-71,Random,0.019046,0.0,1,0.0,45.6378,0.6005,7,0.131,0.1922,False,False,False,False
-71,Greedy,0.093181,0.0,1,1.0,72.615,1.023,8,0.082,0.003,False,False,False,True
-71,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.0467,False,True,False,True
-71,mcf_repaired (repaired: feasible),0.092902,0.0,1,1.0,72.5135,1.023,8,0.0724,0.053,False,False,False,False
-71,NSGA-II,0.306578,0.42172,14,1.0,63.9675,0.9014,6,0.0991,13.4775,True,False,False,False
-71,SPEA2,0.350594,0.2393,9,1.0,64.1001,0.9442,6,0.093,9.8685,True,False,False,False
-71,MOEA/D,0.115579,0.0,21,1.0,61.7519,0.7405,7,0.1026,14.5305,True,False,False,False
-71,Hybrid,0.901454,0.67729,4,0.75,72.6193,1.1186,5,0.0755,10.1188,True,True,False,True
+45,Random,0.019495,0.0,1,0.0,45.6415,0.532,6,0.1468,0.072,False,False,False,False
+45,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+45,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+45,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+45,NSGA-II,0.383948,0.57883,6,1.0,65.4077,0.9526,6,0.0942,18.0872,True,False,False,False
+45,SPEA2,0.390929,0.16632,8,1.0,65.379,0.9708,6,0.0962,11.332,True,False,False,False
+45,MOEA/D,0.199022,0.0,18,1.0,62.8124,0.7303,6,0.1227,28.3149,True,False,False,False
+45,Hybrid,0.840444,0.18776,5,0.8,72.6193,1.0827,5,0.0764,23.3681,True,True,False,True
+44,Random,0.012861,0.0,1,0.0,43.9567,0.5797,7,0.1415,0.0993,False,False,False,False
+44,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+44,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+44,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+44,NSGA-II,0.411494,0.17881,6,1.0,66.6136,0.9681,6,0.0947,17.5422,True,False,False,False
+44,SPEA2,0.393683,0.24887,5,1.0,66.0689,0.9681,6,0.0882,11.1309,True,False,False,False
+44,MOEA/D,0.23968,0.0,28,1.0,60.5044,0.8255,6,0.0879,26.3168,True,False,False,False
+44,Hybrid,0.860987,0.56059,5,0.8,72.6193,1.0853,5,0.0769,27.0664,True,True,False,True
+43,Random,0.007456,0.0,1,0.0,43.8177,0.5204,7,0.1517,0.112,False,False,False,False
+43,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+43,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+43,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+43,NSGA-II,0.368379,0.0,2,1.0,65.0158,0.9392,6,0.0919,18.1359,True,False,False,False
+43,SPEA2,0.366996,1.18462,4,1.0,65.6403,0.9307,6,0.098,10.9306,True,False,False,False
+43,MOEA/D,0.179175,0.0,21,1.0,63.2921,0.8793,7,0.0952,26.683,True,False,False,False
+43,Hybrid,0.78754,1.63285,6,0.8333,72.8171,1.0877,5,0.0808,26.8629,True,True,False,True
+42,Random,0.005778,0.0,1,0.0,45.9515,0.6015,8,0.1172,0.0438,False,False,False,False
+42,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+42,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+42,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+42,NSGA-II,0.383339,0.00849,3,1.0,64.8519,0.9799,6,0.0843,19.0931,True,False,False,False
+42,SPEA2,0.389608,0.3283,11,1.0,66.3124,0.9584,6,0.0841,10.5987,True,False,False,False
+42,MOEA/D,0.301269,0.0,18,1.0,63.595,0.869,6,0.0971,25.235,True,False,False,False
+42,Hybrid,0.67484,0.40495,6,0.8333,72.6193,1.1507,6,0.0761,29.3935,True,True,False,True
+49,Random,0.007749,0.0,1,0.0,44.0624,0.5198,7,0.1595,0.0246,False,False,False,False
+49,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+49,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+49,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+49,NSGA-II,0.38788,0.20927,7,1.0,65.7049,0.9569,6,0.0968,8.0609,True,False,False,False
+49,SPEA2,0.360873,0.41341,6,1.0,65.1523,0.9355,6,0.0907,9.298,True,False,False,False
+49,MOEA/D,0.211956,0.0,4,0.8095,64.1276,0.731,6,0.1068,16.5154,True,False,False,False
+49,Hybrid,0.899945,0.56404,4,0.75,72.6193,1.1186,5,0.0772,21.6583,True,True,False,True
+46,Random,0.028747,0.0,1,0.0,45.3679,0.5847,6,0.1339,0.054,False,False,False,False
+46,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+46,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+46,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+46,NSGA-II,0.358009,0.48151,6,1.0,63.9529,0.9417,6,0.0898,11.3657,True,False,False,False
+46,SPEA2,0.339096,0.26159,8,1.0,64.5192,0.944,6,0.0996,12.8088,True,False,False,False
+46,MOEA/D,0.161294,0.0,21,1.0,63.9038,0.8251,7,0.1,19.9507,False,False,False,False
+46,Hybrid,0.896015,0.2907,3,0.6667,72.6193,1.1186,5,0.0756,16.2237,True,True,False,True
+47,Random,0.028026,0.0,1,0.0,47.7969,0.6199,7,0.131,0.0493,False,False,False,False
+47,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+47,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+47,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+47,NSGA-II,0.442068,0.64372,5,1.0,66.7336,0.997,6,0.083,11.9182,True,False,False,False
+47,SPEA2,0.407735,0.31994,14,1.0,66.0953,0.9762,6,0.089,13.1709,True,False,False,False
+47,MOEA/D,0.275712,0.0,21,1.0,64.0526,0.8225,6,0.1097,19.684,True,False,False,False
+47,Hybrid,0.673203,0.41137,4,0.75,72.6193,1.1507,6,0.0737,14.6587,True,True,False,True
+48,Random,0.007248,0.0,1,0.0,45.0993,0.5014,7,0.1287,0.0353,False,False,False,False
+48,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+48,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+48,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+48,NSGA-II,0.33797,0.35334,7,1.0,64.627,0.9091,6,0.0969,12.3422,True,False,False,False
+48,SPEA2,0.394448,0.19046,7,1.0,65.865,0.9742,6,0.0907,12.7543,True,False,False,False
+48,MOEA/D,0.24353,0.0,21,1.0,61.9596,0.8083,6,0.1205,19.072,True,False,False,False
+48,Hybrid,0.860748,0.69749,4,0.75,72.6193,1.0877,5,0.0763,16.6486,True,True,False,True
+50,Random,0.008049,0.0,1,0.0,44.773,0.5129,7,0.1329,0.0459,False,False,False,False
+50,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+50,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+50,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+50,NSGA-II,0.379319,0.34854,12,1.0,65.6187,0.9584,6,0.0861,8.288,True,False,False,False
+50,SPEA2,0.4749,1.06954,17,1.0,65.9038,0.9778,5,0.089,10.1879,True,False,False,False
+50,MOEA/D,0.254979,0.0,21,1.0,63.9951,0.7933,6,0.0964,16.6371,True,False,False,False
+50,Hybrid,0.895507,0.90028,5,0.8,72.6193,1.1186,5,0.0758,20.1588,True,True,False,True
+51,Random,0.00834,0.0,1,0.0,43.3781,0.5396,7,0.1116,0.0588,False,False,False,False
+51,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+51,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+51,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+51,NSGA-II,0.414443,0.52376,7,1.0,67.0136,0.9672,6,0.0868,11.6852,True,False,False,False
+51,SPEA2,0.38102,0.0,2,1.0,66.6599,0.9205,6,0.0989,11.4634,True,False,False,False
+51,MOEA/D,0.188882,0.0,21,1.0,63.5386,0.7059,6,0.1023,20.2995,True,False,False,False
+51,Hybrid,0.897409,1.10231,4,0.75,72.6193,1.1186,5,0.075,19.4625,True,True,False,True
+53,Random,0.007996,0.0,1,0.0,44.1351,0.5214,7,0.12,0.0632,False,False,False,False
+53,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+53,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+53,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+53,NSGA-II,0.34787,0.56557,6,1.0,64.1788,0.9562,6,0.0846,12.9117,True,False,False,False
+53,SPEA2,0.353062,0.97961,7,1.0,64.5541,0.9365,6,0.0955,15.3122,True,False,False,False
+53,MOEA/D,0.288316,0.0,21,1.0,61.3248,0.8881,6,0.0878,18.5434,True,False,False,False
+53,Hybrid,0.646106,0.43483,4,0.75,72.6193,1.1186,6,0.0745,15.8735,True,True,False,True
+52,Random,0.007923,0.0,1,0.0,43.1367,0.5396,7,0.1189,0.0481,False,False,False,False
+52,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+52,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+52,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+52,NSGA-II,0.340341,0.4898,6,1.0,65.0512,0.9106,6,0.0915,11.5962,True,False,False,False
+52,SPEA2,0.412836,0.30362,9,1.0,66.267,1.0195,6,0.081,12.3465,True,False,False,False
+52,MOEA/D,0.194139,0.0,21,1.0,60.8108,0.7466,6,0.1129,19.4801,True,False,False,False
+52,Hybrid,0.90118,0.74013,4,0.75,72.6193,1.1186,5,0.0769,25.6203,True,True,False,True
+54,Random,0.011037,0.0,1,0.0,44.3117,0.5512,7,0.1501,0.0318,False,False,False,False
+54,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+54,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+54,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+54,NSGA-II,0.363943,0.69336,4,1.0,63.6332,0.9656,6,0.0922,8.5041,True,False,False,False
+54,SPEA2,0.276012,1.20061,5,1.0,62.568,0.8606,6,0.1024,10.2952,True,False,False,False
+54,MOEA/D,0.242432,0.0,21,1.0,63.1877,0.7868,6,0.0961,14.5525,True,False,False,False
+54,Hybrid,0.818392,1.30334,6,0.8333,72.6193,1.0804,5,0.0798,25.5049,True,True,False,True
+55,Random,0.004398,0.0,1,0.0,47.3554,0.5409,8,0.118,0.073,False,False,False,False
+55,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+55,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+55,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+55,NSGA-II,0.310079,0.3806,8,1.0,65.2834,0.8966,6,0.1025,12.4237,True,False,False,False
+55,SPEA2,0.371751,0.34557,9,1.0,65.7996,0.9483,6,0.0929,14.0874,True,False,False,False
+55,MOEA/D,0.129486,0.0,15,0.0,62.5508,0.6271,6,0.1037,17.9395,True,False,False,False
+55,Hybrid,0.672862,0.25829,5,0.8,72.6193,1.1507,6,0.0752,20.0986,True,True,False,True
+56,Random,0.033572,0.0,1,0.0,45.7906,0.5998,6,0.1187,0.0111,False,False,False,False
+56,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+56,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+56,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+56,NSGA-II,0.311321,0.53286,6,1.0,63.9308,0.887,6,0.1023,12.1069,True,False,False,False
+56,SPEA2,0.310678,1.00386,11,1.0,62.9427,0.9022,6,0.1024,13.93,True,False,False,False
+56,MOEA/D,0.223041,0.0,22,1.0,62.4317,0.7721,6,0.095,18.3204,True,False,False,False
+56,Hybrid,0.609969,0.59557,4,0.75,72.6193,1.0804,6,0.0788,21.53,True,True,False,True
+57,Random,0.011862,0.0,1,0.0,44.9096,0.5481,7,0.1435,0.0477,False,False,False,False
+57,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+57,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+57,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+57,NSGA-II,0.380962,0.68237,5,1.0,66.2036,0.9392,6,0.0872,13.7516,True,False,False,False
+57,SPEA2,0.37585,0.33469,8,1.0,65.0451,0.9518,6,0.0909,14.5492,True,False,False,False
+57,MOEA/D,0.231254,0.0,16,1.0,64.7609,0.7505,6,0.0998,17.8705,True,False,False,False
+57,Hybrid,0.610068,0.62433,4,0.75,72.6193,1.0804,6,0.0765,21.0291,True,True,False,True
+58,Random,0.01311,0.0,1,0.0,45.8132,0.5444,7,0.1262,0.0441,False,False,False,False
+58,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+58,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+58,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+58,NSGA-II,0.381182,0.0,2,1.0,65.3241,0.9606,6,0.0843,12.1735,True,False,False,False
+58,SPEA2,0.386452,0.42011,6,1.0,65.5315,0.9584,6,0.0908,10.6007,True,False,False,False
+58,MOEA/D,0.278313,0.0,22,1.0,64.9937,0.8682,6,0.0999,23.6822,True,False,False,False
+58,Hybrid,0.904898,0.96976,7,0.8571,72.6193,1.1462,5,0.0775,32.3148,True,True,False,True
+59,Random,0.001754,0.0,1,0.0,43.2965,0.5129,8,0.1403,0.0615,False,False,False,False
+59,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+59,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+59,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+59,NSGA-II,0.374654,0.04971,4,1.0,64.7084,0.969,6,0.0931,13.6568,True,False,False,False
+59,SPEA2,0.404167,0.05496,4,1.0,65.745,0.9717,6,0.0857,24.5732,True,False,False,False
+59,MOEA/D,0.229656,0.0,21,1.0,64.6375,0.7496,6,0.1019,17.5175,True,False,False,False
+59,Hybrid,0.61315,0.499,3,0.6667,72.6193,1.0853,6,0.0782,22.1848,True,True,False,True
+60,Random,0.002787,0.0,1,0.0,44.1916,0.5397,8,0.1283,0.0642,False,False,False,False
+60,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+60,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+60,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+60,NSGA-II,0.374425,0.74654,6,1.0,65.6472,0.9612,6,0.0871,17.4898,True,False,False,False
+60,SPEA2,0.400835,0.52221,4,1.0,66.6032,0.9517,6,0.0821,21.8233,True,False,False,False
+60,MOEA/D,0.217311,0.0,21,1.0,61.4461,0.7745,6,0.1096,18.2399,True,False,False,False
+60,Hybrid,0.643062,0.20531,4,0.75,72.6399,1.1186,6,0.0754,21.1776,True,True,False,True
+61,Random,0.00992,0.0,1,0.0,45.349,0.5231,7,0.134,0.1459,False,False,False,False
+61,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+61,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+61,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+61,NSGA-II,0.367079,0.31549,7,1.0,65.2611,0.9673,6,0.0858,25.1658,True,False,False,False
+61,SPEA2,0.327135,0.51863,8,1.0,64.4418,0.9178,6,0.0946,16.5037,True,False,False,False
+61,MOEA/D,0.155768,0.0,21,0.0,60.6586,0.6864,6,0.1237,17.0695,True,False,False,False
+61,Hybrid,0.644531,0.75096,3,0.6667,72.6193,1.1186,6,0.0765,23.0823,True,True,False,True
+62,Random,0.001669,0.0,1,0.0,42.4349,0.5258,8,0.1414,0.0819,False,False,False,False
+62,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+62,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+62,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+62,NSGA-II,0.391899,0.51946,6,1.0,65.4883,0.969,6,0.0906,11.7582,True,False,False,False
+62,SPEA2,0.424422,0.50497,8,1.0,65.9567,1.0265,6,0.0805,9.3472,True,False,False,False
+62,MOEA/D,0.176869,0.0,20,1.0,62.3823,0.7011,6,0.1085,13.6203,True,False,False,False
+62,Hybrid,0.648009,0.13191,6,0.8333,72.6994,1.1228,6,0.0771,24.3633,True,True,False,True
+63,Random,0.002874,0.0,1,0.0,44.3679,0.5397,8,0.1436,0.0299,False,False,False,False
+63,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+63,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+63,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+63,NSGA-II,0.351263,0.01894,3,1.0,64.8573,0.9261,6,0.1031,11.743,True,False,False,False
+63,SPEA2,0.371692,0.65639,5,1.0,66.0318,0.9417,6,0.0957,12.898,True,False,False,False
+63,MOEA/D,0.20458,0.0,21,1.0,64.0432,0.7231,6,0.1151,16.0691,True,False,False,False
+63,Hybrid,0.860563,0.66472,5,0.8,72.6193,1.0877,5,0.0757,23.6529,True,True,False,True
+64,Random,0.025584,0.0,1,0.0,45.6712,0.5623,6,0.1406,0.0362,False,False,False,False
+64,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+64,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+64,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+64,NSGA-II,0.323134,0.30888,3,1.0,64.5511,0.8843,6,0.1073,12.3265,True,False,False,False
+64,SPEA2,0.354652,0.34029,6,1.0,64.4476,0.9584,6,0.0947,11.5272,True,False,False,False
+64,MOEA/D,0.276772,0.0,24,1.0,65.6371,0.8061,6,0.0993,17.2628,True,False,False,False
+64,Hybrid,0.867303,1.18417,4,0.75,72.6886,1.1186,5,0.0775,21.5849,True,True,False,True
+65,Random,0.012064,0.0,1,0.0,46.3333,0.5287,7,0.1383,0.1232,False,False,False,False
+65,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+65,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+65,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+65,NSGA-II,0.364568,0.77362,9,1.0,65.0135,0.9738,6,0.0902,13.6959,True,False,False,False
+65,SPEA2,0.426334,0.05597,8,1.0,64.9567,1.0178,6,0.0776,14.1756,True,False,False,False
+65,MOEA/D,0.260575,0.0,21,1.0,63.1876,0.8145,6,0.0987,16.6526,True,False,False,False
+65,Hybrid,0.832401,0.69773,5,0.8,72.6193,1.0853,5,0.078,21.62,True,True,False,True
+66,Random,0.020712,0.0,1,0.0,44.9442,0.5496,6,0.1404,0.122,False,False,False,False
+66,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+66,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+66,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+66,NSGA-II,0.344329,0.59033,12,1.0,64.7451,0.9398,6,0.0976,13.2627,True,False,False,False
+66,SPEA2,0.360459,0.17549,9,1.0,65.3498,0.9311,6,0.0861,10.002,True,False,False,False
+66,MOEA/D,0.195007,0.23736,21,1.0,63.1264,0.72,6,0.1026,11.9425,True,False,False,False
+66,Hybrid,0.875958,0.96587,5,0.8,72.6193,1.1524,5,0.0755,20.8396,True,True,False,True
+67,Random,0.006925,0.0,1,0.0,43.903,0.5129,7,0.1432,0.0423,False,False,False,False
+67,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+67,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+67,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+67,NSGA-II,0.354413,0.31964,9,1.0,64.9431,0.969,6,0.0884,13.3662,True,False,False,False
+67,SPEA2,0.326214,1.02005,4,1.0,63.4991,0.9135,6,0.0945,11.223,True,False,False,False
+67,MOEA/D,0.18946,0.0,21,0.0,64.8186,0.6924,6,0.1033,17.0184,True,False,False,False
+67,Hybrid,0.898632,0.79723,6,0.8333,72.6193,1.1186,5,0.0772,20.4321,True,True,False,True
+68,Random,0.012494,0.0,1,0.0,43.9502,0.5757,7,0.1468,0.0371,False,False,False,False
+68,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+68,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+68,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+68,NSGA-II,0.337248,0.41356,4,1.0,63.9962,0.9117,6,0.0933,13.4347,True,False,False,False
+68,SPEA2,0.372551,0.38538,3,1.0,64.9594,0.9863,6,0.0859,11.3534,True,False,False,False
+68,MOEA/D,0.382609,0.0,21,1.0,62.8403,0.9992,6,0.0801,17.8488,True,False,False,False
+68,Hybrid,0.651379,0.30214,6,0.8333,72.7819,1.1228,6,0.0743,28.489,True,True,False,True
+69,Random,0.012107,0.0,1,0.0,45.1621,0.546,7,0.1186,0.0936,False,False,False,False
+69,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+69,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+69,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+69,NSGA-II,0.392814,0.0,2,1.0,66.0297,0.9478,6,0.0852,11.5559,True,False,False,False
+69,SPEA2,0.352149,0.52879,5,1.0,64.6892,0.9576,6,0.0874,16.2965,True,False,False,False
+69,MOEA/D,0.211035,0.0,21,1.0,61.1141,0.7699,6,0.0996,15.0128,True,False,False,False
+69,Hybrid,0.643694,0.68184,4,0.75,72.6193,1.1186,6,0.0763,18.6581,True,True,False,True
+70,Random,0.002101,0.0,1,0.0,43.2237,0.5301,8,0.1465,0.1976,False,False,False,False
+70,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,True,False,False,True
+70,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,True,True,False,True
+70,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,True,False,False,False
+70,NSGA-II,0.368202,0.29531,6,1.0,65.0588,0.9397,6,0.0961,16.6221,True,False,False,False
+70,SPEA2,0.370818,0.6482,4,1.0,64.1787,0.9569,6,0.0896,11.5821,True,False,False,False
+70,MOEA/D,0.275762,0.0,21,1.0,63.1391,0.8362,6,0.1,12.1773,True,False,False,False
+70,Hybrid,0.677741,0.67487,4,0.75,72.6193,1.1624,6,0.0705,9.8663,True,True,False,True
+71,Random,0.019251,0.0,1,0.0,45.6378,0.6005,7,0.131,0.0237,False,False,False,False
+71,Greedy,0.093186,0.0,1,1.0,72.615,1.023,8,0.082,0.0065,False,False,False,True
+71,Min-Cost Flow (raw: infeasible),0.095203,0.0,1,0.0,73.3523,1.023,8,0.074,0.105,False,True,False,True
+71,mcf_repaired (repaired: feasible),0.092909,0.0,1,1.0,72.5135,1.023,8,0.0724,0.1091,False,False,False,False
+71,NSGA-II,0.306927,0.42172,14,1.0,63.9675,0.9014,6,0.0991,12.02,True,False,False,False
+71,SPEA2,0.350987,0.2393,9,1.0,64.1001,0.9442,6,0.093,8.0645,True,False,False,False
+71,MOEA/D,0.115737,0.0,21,1.0,61.7519,0.7405,7,0.1026,6.6119,True,False,False,False
+71,Hybrid,0.874732,0.56079,7,0.8571,72.6193,1.1186,5,0.077,3.9704,True,True,False,True
