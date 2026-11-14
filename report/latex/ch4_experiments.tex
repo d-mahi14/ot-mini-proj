@@ -1,0 +1,105 @@
+\chapter{Experimental Methodology and Setup}
+\label{ch:experiments}
+
+\section{Benchmark Problem Instances}
+To rigorously evaluate the scalability, convergence, and fairness of the optimization portfolio, three benchmark cohorts were generated reflecting the operational tiers of VJTI:
+\begin{enumerate}
+    \item \textbf{Small Instance (\texttt{small\_50x30})}: $N = 50$ students, $M = 30$ alumni mentors. Represents an intensive department-level pilot program (e.g., Computer Engineering departmental honors). This instance is computationally tractable for exact MILP branch-and-cut solvers, providing mathematical ground-truth bounds.
+    \item \textbf{Medium Instance (\texttt{medium\_300x150})}: $N = 300$ students, $M = 150$ alumni mentors. Corresponds to a multi-departmental faculty cohort (e.g., all computing and electrical disciplines).
+    \item \textbf{Large Instance (\texttt{large\_1000x500})}: $N = 1,000$ students, $M = 500$ alumni mentors. Represents the entire graduating undergraduate class of VJTI matched against the institutional alumni registry.
+\end{enumerate}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Structural characteristics of synthetic benchmark instances.}
+    \label{tab:instances}
+    \begin{tabularx}{\textwidth}{lccccc}
+        \toprule
+        \textbf{Instance Identifier} & \textbf{Students ($N$)} & \textbf{Alumni ($M$)} & \textbf{Total Matches ($N \cdot K$)} & \textbf{Total Capacity ($\sum C_j$)} & \textbf{Degree ($K$)} \\
+        \midrule
+        \texttt{small\_50x30} & 50 & 30 & 100 & 120 & 2 \\
+        \texttt{medium\_300x150} & 300 & 150 & 600 & 750 & 2 \\
+        \texttt{large\_1000x500} & 1,000 & 500 & 2,000 & 2,500 & 2 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Threshold Calibration Methodology ($\theta$ and $\delta$)}
+A common flaw in academic assignment benchmarks is the arbitrary assignment of constraint thresholds, which frequently renders instances unintentionally infeasible. We developed an empirical, data-driven calibration procedure (\texttt{calibrate\_thresholds}):
+
+\subsection{Rawlsian Quality Floor Calibration ($\theta$)}
+The quality floor $\theta$ ensures that every student achieves viable mentorship. Setting $\theta$ too high causes mathematical infeasibility; setting it too low renders the constraint inactive. We compute $\theta$ as a calibrated fraction of the unconstrained Greedy baseline's worst-student quality $Z_2^{\text{greedy}}$:
+\begin{equation}
+    \theta = \alpha_{\theta} \cdot Z_2^{\text{greedy}}, \quad \alpha_{\theta} = 0.85
+\end{equation}
+Because $\alpha_{\theta} < 1.0$, the greedy baseline itself is guaranteed to be feasible under the calibrated $\theta$, ensuring a non-empty feasible set.
+
+\subsection{Departmental Parity Cap Calibration ($\delta$)}
+The branch parity parameter $\delta$ bounds the allowable difference between the most-advantaged and least-advantaged departmental averages. We derive $\delta$ from the empirical branch spread of the unconstrained Greedy assignment:
+\begin{equation}
+    \Delta_{\text{greedy}} = \max_{b \in \mathcal{B}} \overline{Q}_b^{\text{greedy}} - \min_{b \in \mathcal{B}} \overline{Q}_b^{\text{greedy}}
+\end{equation}
+\begin{equation}
+    \delta = \alpha_{\delta} \cdot \Delta_{\text{greedy}}, \quad \alpha_{\delta} = 1.20
+\end{equation}
+Providing a 20\% slack margin above the unconstrained spread ensures feasibility while strictly penalizing extreme departmental divergence.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Calibrated institutional thresholds across benchmark cohorts.}
+    \label{tab:calibration}
+    \begin{tabularx}{\textwidth}{lccccc}
+        \toprule
+        \textbf{Cohort Instance} & \textbf{Greedy $Z_2$} & \textbf{Calibrated $\theta$ ($\alpha=0.85$)} & \textbf{Greedy Spread $\Delta$} & \textbf{Calibrated $\delta$ ($\alpha=1.20$)} & \textbf{Feasible?} \\
+        \midrule
+        \texttt{small\_50x30} & 1.0230 & \textbf{0.8696} & 0.3258 & \textbf{0.3910} & \textbf{Yes} \\
+        \texttt{medium\_300x150} & 1.0434 & \textbf{0.8869} & 0.3295 & \textbf{0.3953} & \textbf{Yes} \\
+        \texttt{large\_1000x500} & 1.3211 & \textbf{1.1229} & 0.2386 & \textbf{0.2863} & \textbf{Yes} \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\section{Evaluation Budget Equalization}
+To guarantee rigorous and unbiased scientific comparisons between meta-heuristics, all evolutionary algorithms (NSGA-II, SPEA2, MOEA/D, and Hybrid Memetic) were configured under an strictly equal evaluation budget:
+\begin{equation}
+    \text{Budget} \approx N_{\text{pop}} \times N_{\text{gen}} \approx 1,600 \text{ function evaluations (on \texttt{small\_50x30})}
+\end{equation}
+\begin{itemize}
+    \item \textbf{NSGA-II}: Population size $N_{\text{pop}} = 40$, Generations $N_{\text{gen}} = 40$ (1,600 evals).
+    \item \textbf{SPEA2}: Population size $N_{\text{pop}} = 40$, Generations $N_{\text{gen}} = 40$ (1,600 evals).
+    \item \textbf{MOEA/D}: 6 partitions, 57 generations ($\approx 1,600$ evals).
+    \item \textbf{Hybrid Memetic}: Population size $N_{\text{pop}} = 40$, Generations $N_{\text{gen}} = 35$, plus local search evaluation accounting ($\approx 1,600$ total function evaluations).
+\end{itemize}
+
+\section{Unified Shared Hypervolume Reference Setup}
+A critical methodological vulnerability identified in prior literature is the use of per-method fallback reference points (e.g., multiplying each algorithm's observed maximum by 1.1). When algorithms achieve disparate maximums, comparing their raw hypervolume values is mathematically invalid.
+
+To eliminate this flaw, we implemented a \textbf{Unified Shared Hypervolume Reference System}:
+\begin{enumerate}
+    \item \textbf{Front Pooling}: For each instance, we gather the non-dominated Pareto objective vectors from all eight methods across all 30 random seeds, combined with the exact MILP Pareto front on the small instance:
+    \begin{equation}
+        \mathcal{F}_{\text{all}} = \bigcup_{m \in \text{Methods}} \bigcup_{s=1}^{30} \mathcal{F}_{m,s} \cup \mathcal{F}_{\text{MILP}}
+    \end{equation}
+    \item \textbf{Global Ideal and Nadir Computation}: We compute the global ideal point $\mathbf{z}^*$ and nadir point $\mathbf{z}^{\text{nad}}$ across all objectives in minimization space ($[-Z_1, -Z_2, Z_3]$):
+    \begin{equation}
+        z_k^* = \min_{\mathbf{f} \in \mathcal{F}_{\text{all}}} f_k, \quad z_k^{\text{nad}} = \max_{\mathbf{f} \in \mathcal{F}_{\text{all}}} f_k, \quad \forall k \in \{1, 2, 3\}
+    \end{equation}
+    \item \textbf{Normalized Objective Space}: Every candidate objective vector $\mathbf{f}$ is normalized to the unit hypercube:
+    \begin{equation}
+        \widetilde{f}_k = \frac{f_k - z_k^*}{z_k^{\text{nad}} - z_k^* + \epsilon}, \quad \widetilde{\mathbf{f}} \in [0, 1]^3
+    \end{equation}
+    \item \textbf{Fixed Invariant Reference Point}: Hypervolume is computed against a strictly fixed reference point:
+    \begin{equation}
+        \mathbf{r} = [1.1, 1.1, 1.1]
+    \end{equation}
+\end{enumerate}
+Under this formulation, two identical Pareto fronts yield mathematically identical HV scores, and a strictly dominated front is guaranteed to receive a lower HV.
+
+\section{Multi-Seed Protocol and Statistical Significance Testing}
+All stochastic algorithms were executed across $S = 30$ independent random seeds ($s \in \{42, \dots, 71\}$). For deterministic baselines (Greedy, MCF), evaluations run once and are replicated across seed rows for paired statistical integrity.
+
+To evaluate whether the Hybrid Memetic algorithm provides statistically significant improvements over competing baselines, we conduct paired two-sided non-parametric \textbf{Wilcoxon signed-rank tests}. We report the test statistic $T$, the asymptotic $p$-value, and the rank-biserial effect size $r$:
+\begin{equation}
+    r = \frac{T^+ - T^-}{T^+ + T^-} = 1 - \frac{2T}{\frac{n(n+1)}{2}}
+\end{equation}
+where an effect size $r \ge 0.5$ denotes a large operational advantage.

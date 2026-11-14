@@ -1,0 +1,137 @@
+\chapter{Algorithmic Optimization Suite}
+\label{ch:algorithms}
+
+To comprehensively solve the MO-CBAP, we designed, implemented, and benchmarked an eight-algorithm portfolio spanning heuristic baselines, exact mathematical solvers, standard multi-objective evolutionary algorithms, and a specialized hybrid memetic algorithm.
+
+\section{Deterministic and Stochastic Baseline Solvers}
+
+\subsection{Random Feasible Assignment Baseline}
+The Random Baseline operates as a naive stochastic control. For each student $i \in \mathcal{S}$, $K$ alumni are sampled uniformly at random from the subset of consenting mentors ($\mathcal{A}_{\text{consent}} = \{j \in \mathcal{A} \mid c_j = 1\}$). Capacity overflows and company diversity violations are subsequently repaired using greedy displacement. Because Random ignores pairwise compatibility $q_{ij}$, it establishes the empirical floor for hypervolume and utilitarian efficiency.
+
+\subsection{Greedy Score-First Assignment Baseline}
+The Greedy Baseline prioritizes pure utilitarian efficiency by sorting all valid candidate pairs $(i, j)$ in strictly descending order of compatibility:
+\begin{equation}
+    \mathcal{P} = \left\{ (i, j) \in \mathcal{S} \times \mathcal{A} \;\middle|\; c_j = 1 \land q_{ij} \ge q_{\min} \right\}, \quad q_{i_1 j_1} \ge q_{i_2 j_2} \ge \dots
+\end{equation}
+The algorithm iterates sequentially over $\mathcal{P}$. A pair $(i, j)$ is committed if and only if:
+\begin{enumerate}
+    \item Student $i$ currently has fewer than $K$ assigned mentors ($\sum_{j'} x_{ij'} < K$).
+    \item Alumnus $j$ has remaining capacity ($\sum_{i'} x_{i'j} < C_j$).
+    \item Student $i$ has no existing mentor from company $\text{comp}(j)$.
+\end{enumerate}
+While Greedy is computationally instantaneous ($\mathcal{O}(NM \log(NM))$), it exhibits severe blind spots: it is structurally oblivious to worst-student quality ($Z_2$), departmental parity ($\delta$), and peak alumni load ($Z_3$), frequently driving $Z_3$ directly to its theoretical maximum.
+
+\subsection{Min-Cost Network Flow (MCF) Formulation and Repair}
+The assignment problem can be formulated as a Minimum-Cost Maximum-Flow problem over a directed bipartite network $\mathcal{G} = (\mathcal{V}, \mathcal{E})$:
+\begin{itemize}
+    \item Source node $s$ connects to student nodes $u_i \in \mathcal{V}_{\mathcal{S}}$ with capacity $K$ and cost 0.
+    \item Directed arcs $(u_i, v_j) \in \mathcal{E}$ exist for all valid pairs with capacity 1 and transformed cost $w_{ij} = \lfloor \Lambda (1.0 - q_{ij}) \rfloor$, where $\Lambda$ is an integer scaling factor.
+    \item Alumnus nodes $v_j \in \mathcal{V}_{\mathcal{A}}$ connect to sink node $t$ with capacity $C_j$ and cost 0.
+\end{itemize}
+The total flow demanded is $N \cdot K$. Solved using the Successive Shortest Path algorithm with node potentials, MCF yields the mathematically optimal single-objective utilitarian assignment under standard capacity and degree constraints.
+
+\paragraph{The Corporate Diversity Dilemma and \texttt{mcf\_repaired}:}
+A fundamental limitation of classical network flow is that corporate diversity caps ($\sum_{j \in \mathcal{A}_k} x_{ij} \le 1$) impose bundle constraints across outgoing arcs of a single student node. Because network flow constraints must adhere to standard node-arc incidence matrices, corporate diversity cannot be represented without violating total unimodularity. Consequently, raw MCF solutions are systematically \textbf{infeasible} with respect to Constraint C7. 
+
+To rectify this, we introduced \texttt{mcf\_repaired}: raw MCF outputs are passed to a post-processing repair operator (\texttt{MatchingRepair}) that identifies duplicate corporate matches, removes the lower-scoring arc, and executes greedy augmenting replacements from non-conflicting, consenting alumni with remaining capacity.
+
+\section{Exact Mathematical Programming: Mixed-Integer Linear Programming}
+To establish true Pareto optimality bounds on the $50 \times 30$ cohort, we formulated the MO-CBAP as a Mixed-Integer Linear Program (MILP) solved via the HiGHS branch-and-cut engine.
+
+\subsection{Weighted-Sum MILP Formulation}
+Given weights $\mathbf{w} = (w_1, w_2, w_3)$ such that $w_1, w_2, w_3 \ge 0$ and $\sum w_m = 1$:
+\begin{align}
+    \max_{\mathbf{x}, \mathbf{y}, W, U} \quad & w_1 \left( \sum_{i=1}^N \sum_{j=1}^M q_{ij} x_{ij} \right) + w_2 W - w_3 U \label{eq:milp_obj} \\
+    \text{subject to} \quad & \sum_{j=1}^M x_{ij} = K, \quad \forall i \in \mathcal{S} \label{eq:milp_c1} \\
+    & \sum_{i=1}^N x_{ij} \le C_j y_j, \quad \forall j \in \mathcal{A} \label{eq:milp_c2} \\
+    & x_{ij} \le c_j y_j, \quad \forall i \in \mathcal{S}, \; \forall j \in \mathcal{A} \label{eq:milp_c3} \\
+    & x_{ij} = 0, \quad \forall (i, j): q_{ij} < q_{\min} \label{eq:milp_c4} \\
+    & \sum_{j=1}^M q_{ij} x_{ij} \ge \theta, \quad \forall i \in \mathcal{S} \label{eq:milp_c5} \\
+    & W \le \sum_{j=1}^M q_{ij} x_{ij}, \quad \forall i \in \mathcal{S} \label{eq:milp_w} \\
+    & U \ge \sum_{i=1}^N x_{ij}, \quad \forall j \in \mathcal{A} \label{eq:milp_u} \\
+    & \sum_{j \in \mathcal{A}_k} x_{ij} \le 1, \quad \forall i \in \mathcal{S}, \; \forall k \in \mathcal{K} \label{eq:milp_c7} \\
+    & x_{ij} \in \{0, 1\}, \; y_j \in \{0, 1\}, \; U \in \mathbb{Z}^+, \; W \in \mathbb{R}^+
+\end{align}
+By systematically varying $\mathbf{w}$ over a convex simplex grid ($S = 4$ steps), the solver traces the supported Pareto frontier.
+
+\subsection{$\epsilon$-Constraint Method}
+To capture non-convex regions of the Pareto front, the $\epsilon$-constraint method optimizes Utilitarian Efficiency $Z_1$ while constraining $Z_2$ and $Z_3$:
+\begin{align}
+    \max \quad & Z_1(\mathbf{x}) \\
+    \text{subject to} \quad & Z_2(\mathbf{x}) \ge \epsilon_2, \quad Z_3(\mathbf{x}) \le \epsilon_3, \quad \mathbf{x} \in \mathcal{X}_{\text{feasible}}
+\end{align}
+Grid sweeps over achievable ranges of $\epsilon_2 \in [\theta, \max Z_2]$ and $\epsilon_3 \in [\min Z_3, \max Z_3]$ yield unsupported non-dominated frontiers.
+
+\section{Evolutionary Multi-Objective Optimizers}
+For large-scale combinatorial instances ($300 \times 150$ and $1000 \times 500$), MILP branch-and-cut becomes computationally intractable. We implement chromosome encodings for population-based evolutionary algorithms within the \texttt{pymoo} framework.
+
+\subsection{Chromosome Encoding and Decoding}
+Solutions are represented as integer vectors $\mathbf{g} \in \mathbb{Z}^{N \cdot K}$, where each chunk of $K$ genes represents the alumni indices assigned to student $i$:
+\begin{equation}
+    \mathbf{g} = \left[ g_{1,1}, \dots, g_{1,K}, \; g_{2,1}, \dots, g_{2,K}, \; \dots, \; g_{N,1}, \dots, g_{N,K} \right], \quad g_{i,k} \in \{0, \dots, M-1\}
+\end{equation}
+Decoding maps $\mathbf{g}$ to binary matrix $\mathbf{x} \in \{0, 1\}^{N \times M}$. Genetic operators utilize two-point crossover and random uniform integer mutations.
+
+\subsection{NSGA-II (Deb et al., 2002)}
+The Non-Dominated Sorting Genetic Algorithm II sorts the combined parent-offspring population ($R_t = P_t \cup Q_t$, size $2N_{\text{pop}}$) into non-dominated Pareto fronts $\mathcal{F}_1, \mathcal{F}_2, \dots$. Diversity is preserved along the front via crowding distance:
+\begin{equation}
+    d_I = \sum_{m=1}^3 \frac{f_m(I+1) - f_m(I-1)}{f_m^{\max} - f_m^{\min}}
+\end{equation}
+Constraint handling follows Deb's parameter-less feasibility-first tournament selection: feasible solutions strictly dominate infeasible ones; between two infeasible solutions, the one with lower constraint violation $\text{CV}(\mathbf{x})$ wins.
+
+\subsection{SPEA2 (Zitzler et al., 2001)}
+The Strength Pareto Evolutionary Algorithm 2 maintains an external archive $\overline{P}_t$. Each solution $i$ is assigned a strength value $S(i)$ equal to the number of solutions it dominates. Raw fitness $R(i)$ is the sum of strengths of all solutions dominating $i$:
+\begin{equation}
+    R(i) = \sum_{j \in P_t \cup \overline{P}_t : j \succ i} S(j), \quad D(i) = \frac{1}{\sigma_i^k + 2}, \quad F(i) = R(i) + D(i)
+\end{equation}
+where $D(i)$ is a $k$-nearest neighbor density estimator ($\sigma_i^k$ is distance to the $k$-th nearest neighbor).
+
+\subsection{MOEA/D (Zhang and Li, 2007)}
+Multiobjective Evolutionary Algorithm based on Decomposition decomposes the tri-objective problem into $N_{\text{pop}}$ scalar subproblems using a uniform spread of weight vectors $\boldsymbol{\lambda}^1, \dots, \boldsymbol{\lambda}^{N_{\text{pop}}}$ via Tchebycheff decomposition:
+\begin{equation}
+    g^{\text{te}}(\mathbf{x} \mid \boldsymbol{\lambda}, \mathbf{z}^*) = \max_{m \in \{1, 2, 3\}} \lambda_m \left| f_m(\mathbf{x}) - z_m^* \right|
+\end{equation}
+where $\mathbf{z}^* = (z_1^*, z_2^*, z_3^*)$ is the reference ideal point. Subproblems optimize collaboratively within defined neighborhood structures.
+
+\section{The Hybrid Seeded Memetic NSGA-II Algorithm}
+To transcend the performance limitations of standard genetic operators on tightly constrained bipartite matching manifolds, we engineered the \textbf{Hybrid Seeded Memetic NSGA-II}. The architecture combines three synergistic innovations:
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=1.8cm, auto,
+        stage/.style={rectangle, draw=navyBlue, fill=lightGray, text width=12cm, rounded corners, minimum height=1cm},
+        arrow/.style={thick, ->, >=stealth}]
+        
+        \node [stage] (s1) {\textbf{1. Multi-Heuristic Seed Injection}: Populate initial pool with Greedy, Rawlsian-priority, and Load-balanced heuristic chromosomes alongside random diversity.};
+        \node [stage, below=0.8cm of s1] (s2) {\textbf{2. Evolutionary Search (NSGA-II)}: Fast non-dominated sorting and crowding distance selection under uniform evaluation budget.};
+        \node [stage, below=0.8cm of s2] (s3) {\textbf{3. Targeted Local Search}: Lamarckian 2-opt pairwise swaps targeting $Z_1$ improvements, Rawlsian $Z_2$ elevation, and $Z_3$ peak load relief.};
+        \node [stage, below=0.8cm of s3] (s4) {\textbf{4. Elitist Archiving}: Merge evolved population with local-search-refined seeds and extract joint non-dominated Pareto front.};
+        
+        \draw [arrow] (s1) -- (s2);
+        \draw [arrow] (s2) -- (s3);
+        \draw [arrow] (s3) -- (s4);
+    \end{tikzpicture}
+    \caption{Architectural pipeline of the Hybrid Seeded Memetic NSGA-II solver.}
+    \label{fig:hybrid_pipeline}
+\end{figure}
+
+\subsection{Multi-Heuristic Population Seeding}
+Rather than initializing $P_0$ entirely at random (which yields 100\% infeasible chromosomes on constrained instances), the Hybrid injects four deterministic domain heuristics:
+\begin{enumerate}
+    \item \textbf{Greedy Quality Seed}: Maximizes $q_{ij}$ via greedy descending selection.
+    \item \textbf{Rawlsian Maximin Seed}: Prioritizes students whose maximum available compatibility is lowest, assigning their highest compatible mentor first.
+    \item \textbf{Workload-Balanced Seed}: Enforces a strict artificial capacity ceiling $C_j' = \lceil N \cdot K / M \rceil$, spreading student demand uniformly.
+    \item \textbf{Diversity-Preserving Seed}: Maximizes corporate dispersion across departments.
+\end{enumerate}
+The remainder of the population is filled with randomized feasible assignments, balancing exploitation with genetic exploration.
+
+\subsection{Lamarckian Targeted Local Search Operators}
+At each generation, elite individuals undergo targeted 2-opt local search with probability $p_{\text{ls}} = 0.35$. Three specialized local moves are applied:
+\begin{itemize}
+    \item \textbf{Tactic 1 (2-Opt Utilitarian Swap)}: Selects student pair $(i_1, i_2)$ assigned to mentors $(j_1, j_2)$ and evaluates swap $(i_1 \to j_2, i_2 \to j_1)$. The swap is accepted if $\Delta Z_1 = (q_{i_1 j_2} + q_{i_2 j_1}) - (q_{i_1 j_1} + q_{i_2 j_2}) > 0$, corporate diversity is preserved, and $Q_{i_1}, Q_{i_2} \ge \theta$.
+    \item \textbf{Tactic 2 (Rawlsian Elevation Move)}: Identifies the worst-off student $i^* = \arg\min_i Q_i$. Finds an under-utilized alumnus $j'$ with $q_{i^* j'} > \min_{j \in \mathcal{A}(i^*)} q_{i^* j}$. Replaces the lowest-quality mentor if capacity and diversity allow, strictly elevating $Z_2$.
+    \item \textbf{Tactic 3 (Workload Relief Move)}: Identifies peak-load alumnus $j^* = \arg\max_j L_j$. Locates an assignment $(i, j^*)$ and transfers student $i$ to an alternative mentor $j'$ where $L_{j'} \le L_{j^*} - 2$ and $q_{i j'} \ge q_{i j^*} - 0.05$.
+\end{itemize}
+
+\subsection{Elitist Joint Archiving}
+In the final generation, all refined heuristic seeds and evolved population vectors are pooled into a joint candidate archive $\mathcal{A}_{\text{joint}}$. A non-dominated filter removes all Pareto-dominated solutions, guaranteeing that the final output front is strictly equal to or superior to the Greedy baseline across all objectives.

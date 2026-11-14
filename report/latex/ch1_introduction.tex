@@ -1,0 +1,60 @@
+\chapter{Introduction and Problem Motivation}
+\label{ch:intro}
+
+\section{Institutional Context: VJTI Alumni Mentorship Ecosystem}
+Established in 1887, Veermata Jijabai Technological Institute (VJTI) in Matunga, Mumbai, stands as one of India's preeminent engineering colleges. Across eight specialized undergraduate and postgraduate academic departments—Computer Engineering (\texttt{CE}), Information Technology (\texttt{IT}), Electronics and Telecommunication Engineering (\texttt{EXTC}), Electrical Engineering (\texttt{EE}), Mechanical Engineering (\texttt{ME}), Civil and Environmental Engineering (\texttt{CEV}), Production Engineering (\texttt{PE}), and Textile Technology (\texttt{TT})—graduating cohorts seek industry exposure.
+
+Alumni mentorship programs provide undergraduate engineers with direct vocational advisory, technical portfolio reviews, career roadmap structuring, and professional networking. Modern career aspirations are inherently multidimensional, encompassing six broad industrial sectors:
+\begin{enumerate}
+    \item \textbf{Software \& Artificial Intelligence}: Core algorithm design, cloud computing, enterprise software architectures, and machine learning infrastructure.
+    \item \textbf{Data Science \& Advanced Analytics}: Quantitative modeling, statistical inference, data engineering pipelines, and business intelligence.
+    \item \textbf{Electronics \& Embedded Systems}: VLSI design, semiconductor manufacturing, IoT hardware engineering, and robotics control firmware.
+    \item \textbf{Core Engineering \& Manufacturing}: Automotive dynamics, heavy machinery, thermodynamics, structural engineering, and smart manufacturing.
+    \item \textbf{Finance \& Quantitative Trading}: Algorithmic execution, financial econometrics, risk modeling, and FinTech systems.
+    \item \textbf{Management Consulting \& Corporate Strategy}: Operational optimization, technical management consulting, supply chain analytics, and market assessment.
+\end{enumerate}
+
+\section{Operational Pathologies in Conventional Mentorship Systems}
+Despite the high stakes of mentor allocations, prevailing administrative paradigms in tertiary institutions frequently rely upon unconstrained self-selection, spreadsheet-driven manual pairing, or first-come-first-served greedy allocation algorithms. In practice, these legacy approaches suffer from three acute structural pathologies:
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[node distance=1.5cm, auto,
+        block/.style={rectangle, draw=navyBlue, fill=lightGray, text width=4.5cm, text centered, rounded corners, minimum height=1.2cm},
+        arrow/.style={thick, ->, >=stealth}]
+        
+        \node [block] (superstar) {\textbf{The Superstar Bottleneck}\\Top alumni overloaded with $L_j \gg C_j$; mentor burnout and attrition};
+        \node [block, right=1.5cm of superstar] (peripheral) {\textbf{Peripheral Neglect}\\Low-GPA or non-traditional students receive zero viable matches ($Q_i < \theta$)};
+        \node [block, right=1.5cm of peripheral] (parity) {\textbf{Inter-Branch Disparity}\\Software-centric branches dominate matches; core disciplines face structural neglect};
+        
+        \draw [thick, color=vjtiMaroon] ($(superstar.south west)+(-0.3,-0.4)$) rectangle ($(parity.north east)+(0.3,0.4)$);
+        \node [above=0.1cm of peripheral] {\textbf{\color{vjtiMaroon}Observed Pathologies in Unconstrained Matching}};
+    \end{tikzpicture}
+    \caption{Structural failure modes induced by unconstrained or purely utilitarian matching mechanisms.}
+    \label{fig:pathologies}
+\end{figure}
+
+\subsection{The ``Superstar Alumnus'' Bottleneck}
+Prominent alumni occupying leadership positions (e.g., Vice Presidents at global technology firms, partners in consulting partnerships, or prominent venture-backed founders) naturally exhibit broad appeal. When matching algorithms prioritize purely unconstrained preference maximization or utilitarian score sums, these ``superstar'' alumni are assigned disproportionately high volumes of students ($L_j \ge 8$). This over-allocation directly triggers cognitive fatigue, delayed feedback loops, superficial mentorship interactions, and eventual mentor attrition from future institutional programs.
+
+\subsection{Peripheral Student Neglect}
+Purely utilitarian objectives seek solely to maximize the cumulative sum of pairwise compatibility scores $\sum_{i,j} q_{ij} x_{ij}$. Under this paradigm, high-GPA students possessing stellar academic resumes receive multiple elite mentors. Conversely, students exhibiting average academic metrics, those exploring cross-departmental career shifts, or students from under-represented backgrounds are systematically relegated to residual, poorly aligned matches. In severe cases, realized match quality drops below viable thresholds ($Q_i < \theta$), leaving vulnerable students disenfranchised.
+
+\subsection{Inter-Departmental Parity Gaps}
+Because computing disciplines (\texttt{CE}, \texttt{IT}) boast significantly larger and more concentrated alumni cohorts across modern software and financial sectors, an unconstrained algorithm naturally funnels premium resources toward these groups. Conversely, students from vital traditional engineering disciplines (\texttt{PE}, \texttt{CEV}, \texttt{TT}, \texttt{ME}) experience diminished average mentorship quality. Without explicit branch-parity bounds, institutional inequity widens.
+
+\subsection{Corporate Homogeneity}
+Students assigned multiple mentors (e.g., $K=2$) risk receiving duplicate assignments from the same corporate employer (e.g., two mentors from the identical enterprise cloud corporation). This diminishes the breadth of student perspective and restricts exposure to contrasting organizational cultures, hiring practices, and career paths.
+
+\section{Research Objectives and Scope}
+To overcome these limitations, this research project formulates and solves the \textbf{Multi-Objective Capacitated Bipartite Assignment Problem (MO-CBAP)}. The primary objectives of this investigation are:
+\begin{enumerate}
+    \item \textbf{Mathematical Formalization}: Rigorously model student-alumni matching as a tri-objective constrained combinatorial optimization problem balancing Utilitarian Efficiency ($Z_1$), Rawlsian Fairness ($Z_2$), and Alumni Workload Balance ($Z_3$) under seven operational constraints.
+    \item \textbf{Algorithmic Portfolio Benchmark}: Develop and comparatively evaluate a diverse algorithmic suite including deterministic baselines (Random, Greedy, Min-Cost Flow), exact branch-and-cut MILP solvers, and modern multi-objective evolutionary algorithms (NSGA-II, SPEA2, MOEA/D).
+    \item \textbf{Hybrid Memetic Innovation}: Design a specialized domain-aware Memetic NSGA-II incorporating heuristic seeding, Rawlsian-targeted 2-opt local search swaps, workload relief moves, and elitist archiving.
+    \item \textbf{Multi-Seed Rigorous Statistics}: Execute 30 independent stochastic runs under unified, normalized shared Hypervolume references, applying non-parametric Wilcoxon signed-rank hypothesis tests with effect sizes ($r$).
+    \item \textbf{Parameter Calibration and Sensitivity Analysis}: Provide an empirical calibration framework for institutional parameters ($\theta$, $\delta$) derived from baseline data distributions.
+\end{enumerate}
+
+\section{Ethical Considerations and Synthetic Data Governance}
+In strict adherence to institutional data governance standards and ethical computational guidelines, \textbf{no personal identifiable information (PII) or real student academic records} were accessed or utilized. All experimental cohorts were synthesized using a reproducible parametric data generator incorporating realistic departmental distributions, domain affinity matrices, and log-normal capacity profiles. Synthetic profiles utilize pseudonymous identifiers (\texttt{S001}--\texttt{S1000}, \texttt{A001}--\texttt{A500}). The resulting optimization framework is inherently privacy-preserving and domain-agnostic.

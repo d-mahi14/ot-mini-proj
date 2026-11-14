@@ -1,0 +1,187 @@
+\chapter{Mathematical Formulation of the MO-CBAP}
+\label{ch:formulation}
+
+\section{System Notations and Parameter Definitions}
+Let the institutional matching environment be characterized by the following sets and parameters:
+\begin{itemize}
+    \item $\mathcal{S} = \{1, 2, \dots, N\}$: The finite set of graduating student candidates.
+    \item $\mathcal{A} = \{1, 2, \dots, M\}$: The finite set of registered alumni mentors.
+    \item $\mathcal{B} = \{\text{CE}, \text{IT}, \text{EXTC}, \text{EE}, \text{ME}, \text{CEV}, \text{PE}, \text{TT}\}$: The set of 8 academic departments.
+    \item $\mathcal{S}_b \subset \mathcal{S}$: The subset of students enrolled in department $b \in \mathcal{B}$, where $\bigcup_{b \in \mathcal{B}} \mathcal{S}_b = \mathcal{S}$ and $\mathcal{S}_b \cap \mathcal{S}_{b'} = \emptyset$ for $b \ne b'$.
+    \item $\mathcal{K} = \{1, 2, \dots, E\}$: The set of distinct employer corporations represented across the alumni network.
+    \item $\mathcal{A}_k \subset \mathcal{A}$: The subset of alumni employed by company $k \in \mathcal{K}$.
+    \item $K \in \mathbb{Z}^+$: The required degree of matches per student (configured as $K = 2$).
+    \item $C_j \in \mathbb{Z}^+$: The maximum mentorship capacity declared by alumnus $j \in \mathcal{A}$.
+    \item $c_j \in \{0, 1\}$: The binary opt-in consent flag for alumnus $j$ ($c_j = 1$ denotes active consent).
+    \item $q_{ij} \in [0.05, 0.98]$: The computed pairwise compatibility score between student $i$ and alumnus $j$.
+    \item $q_{\min} \in (0, 1)$: The minimum viable match quality threshold below which pairings are prohibited.
+    \item $\theta \in \mathbb{R}^+$: The minimum aggregate quality floor required for every individual student.
+    \item $\delta \in \mathbb{R}^+$: The maximum allowable disparity in average quality across any pair of academic departments.
+    \item $\text{cap}_{\text{comp}} \in \mathbb{Z}^+$: The maximum allowable number of mentors assigned to any single student from the same corporate employer ($\text{cap}_{\text{comp}} = 1$).
+\end{itemize}
+
+\section{Decision Variables}
+The optimization decision space is defined over binary assignment and activation indicators:
+\begin{align}
+    x_{ij} &\in \{0, 1\}, \quad \forall i \in \mathcal{S}, \; \forall j \in \mathcal{A} \label{eq:var_x} \\
+    y_j &\in \{0, 1\}, \quad \forall j \in \mathcal{A} \label{eq:var_y}
+\end{align}
+where $x_{ij} = 1$ if student $i$ is assigned to alumnus $j$, and 0 otherwise; $y_j = 1$ indicates that alumnus $j$ is actively utilized in the mentorship cohort ($y_j = 1 \iff \sum_{i=1}^N x_{ij} \ge 1$).
+
+\section{Realized Metrics: Quality and Workload}
+For any candidate assignment matrix $\mathbf{x} \in \{0, 1\}^{N \times M}$, we define:
+\begin{itemize}
+    \item \textbf{Individual Student Quality ($Q_i$)}:
+    \begin{equation}
+        Q_i = \sum_{j=1}^M q_{ij} x_{ij}, \quad \forall i \in \mathcal{S}
+        \label{eq:student_q}
+    \end{equation}
+    \item \textbf{Individual Alumni Workload ($L_j$)}:
+    \begin{equation}
+        L_j = \sum_{i=1}^N x_{ij}, \quad \forall j \in \mathcal{A}
+        \label{eq:alumni_load}
+    \end{equation}
+    \item \textbf{Departmental Average Quality ($\overline{Q}_b$)}:
+    \begin{equation}
+        \overline{Q}_b = \frac{1}{|\mathcal{S}_b|} \sum_{i \in \mathcal{S}_b} Q_i = \frac{1}{|\mathcal{S}_b|} \sum_{i \in \mathcal{S}_b} \sum_{j=1}^M q_{ij} x_{ij}, \quad \forall b \in \mathcal{B}
+        \label{eq:branch_avg_q}
+    \end{equation}
+\end{itemize}
+
+\section{Competing Objective Functions}
+The MO-CBAP is formulated as a tri-objective vector optimization problem. Under canonical evolutionary minimization formatting ($\min \mathbf{F}(\mathbf{x})$):
+\begin{equation}
+    \min_{\mathbf{x}, \mathbf{y}} \mathbf{F}(\mathbf{x}) = \begin{bmatrix}
+        f_1(\mathbf{x}) \\
+        f_2(\mathbf{x}) \\
+        f_3(\mathbf{x})
+    \end{bmatrix} = \begin{bmatrix}
+        -Z_1(\mathbf{x}) \\
+        -Z_2(\mathbf{x}) \\
+        +Z_3(\mathbf{x})
+    \end{bmatrix}
+    \label{eq:vector_obj}
+\end{equation}
+
+\subsection{Objective 1: Utilitarian Efficiency ($Z_1$)}
+The utilitarian objective maximizes the cumulative compatibility realized across the entire university cohort:
+\begin{equation}
+    Z_1(\mathbf{x}) = \sum_{i=1}^N Q_i = \sum_{i=1}^N \sum_{j=1}^M q_{ij} x_{ij}
+    \label{eq:z1}
+\end{equation}
+In minimization form: $f_1(\mathbf{x}) = -Z_1(\mathbf{x})$.
+
+\subsection{Objective 2: Rawlsian Egalitarian Fairness ($Z_2$)}
+Following John Rawls' Difference Principle and maximin theory of distributive justice, $Z_2$ maximizes the welfare of the least-advantaged student:
+\begin{equation}
+    Z_2(\mathbf{x}) = \min_{i \in \mathcal{S}} Q_i = \min_{i \in \mathcal{S}} \sum_{j=1}^M q_{ij} x_{ij}
+    \label{eq:z2}
+\end{equation}
+In minimization form: $f_2(\mathbf{x}) = -Z_2(\mathbf{x})$. In exact mathematical programming, this non-linear function is linearized by introducing an auxiliary continuous decision variable $W \in \mathbb{R}$:
+\begin{align}
+    \max \; & W \label{eq:milp_rawls} \\
+    \text{subject to } & W \le \sum_{j=1}^M q_{ij} x_{ij}, \quad \forall i \in \mathcal{S}
+\end{align}
+
+\subsection{Objective 3: Alumni Workload Balancing ($Z_3$)}
+The third objective minimizes the peak student mentorship burden assigned to any active alumnus:
+\begin{equation}
+    Z_3(\mathbf{x}) = \max_{j \in \mathcal{A}} L_j = \max_{j \in \mathcal{A}} \sum_{i=1}^N x_{ij}
+    \label{eq:z3}
+\end{equation}
+In minimization form: $f_3(\mathbf{x}) = Z_3(\mathbf{x})$. In exact mathematical programming, $Z_3$ is linearized via an auxiliary integer decision variable $U \in \mathbb{Z}^+$:
+\begin{align}
+    \min \; & U \label{eq:milp_load} \\
+    \text{subject to } & U \ge \sum_{i=1}^N x_{ij}, \quad \forall j \in \mathcal{A}
+\end{align}
+
+\section{Operational Constraints and Polyhedral Characterization}
+A valid assignment $\mathbf{x} \in \{0, 1\}^{N \times M}$ must strictly lie within the intersection of seven constraint sets:
+
+\subsection{C1: Exact Student Degree Requirement}
+Each student must receive exactly $K$ unique mentors:
+\begin{equation}
+    \sum_{j=1}^M x_{ij} = K, \quad \forall i \in \mathcal{S}
+    \label{eq:c1}
+\end{equation}
+Combined with $x_{ij} \in \{0, 1\}$, this ensures that no student receives duplicate assignments to the same mentor.
+
+\subsection{C2: Alumni Capacity and Activation Linkage}
+No alumnus may be assigned more students than their declared capacity $C_j$. Furthermore, assignments cannot be made to inactive alumni:
+\begin{align}
+    \sum_{i=1}^N x_{ij} &\le C_j y_j, \quad \forall j \in \mathcal{A} \label{eq:c2_cap} \\
+    x_{ij} &\le y_j, \quad \forall i \in \mathcal{S}, \; \forall j \in \mathcal{A} \label{eq:c2_link}
+\end{align}
+
+\subsection{C3: Opt-In Consent Verification}
+Assignments are strictly prohibited to alumni who have not explicitly provided opt-in consent:
+\begin{equation}
+    x_{ij} \le c_j, \quad \forall i \in \mathcal{S}, \; \forall j \in \mathcal{A}
+    \label{eq:c3}
+\end{equation}
+
+\subsection{C4: Compatibility Quality Threshold}
+Pairings with compatibility scores below the threshold $q_{\min}$ are infeasible:
+\begin{equation}
+    x_{ij} \cdot \mathbf{1}_{\{q_{ij} < q_{\min}\}} = 0, \quad \forall i \in \mathcal{S}, \; \forall j \in \mathcal{A}
+    \label{eq:c4}
+\end{equation}
+where $\mathbf{1}_{\{\cdot\}}$ is the indicator function.
+
+\subsection{C5: Minimum Student Quality Floor}
+To prevent peripheral neglect, each student's realized quality must satisfy a lower bound $\theta$:
+\begin{equation}
+    Q_i = \sum_{j=1}^M q_{ij} x_{ij} \ge \theta, \quad \forall i \in \mathcal{S}
+    \label{eq:c5}
+\end{equation}
+
+\subsection{C6: Cross-Departmental Branch Parity}
+To ensure equity across academic departments, the pairwise difference between departmental average qualities must not exceed $\delta$:
+\begin{equation}
+    |\overline{Q}_b - \overline{Q}_{b'}| \le \delta, \quad \forall b, b' \in \mathcal{B}
+    \label{eq:c6}
+\end{equation}
+This condition is equivalent to bounding the global inter-branch spread:
+\begin{equation}
+    \max_{b \in \mathcal{B}} \overline{Q}_b - \min_{b \in \mathcal{B}} \overline{Q}_b \le \delta
+    \label{eq:c6_spread}
+\end{equation}
+
+\subsection{C7: Corporate Employer Diversity Cap}
+A student may be matched with at most $\text{cap}_{\text{comp}} = 1$ alumnus from any given corporate employer:
+\begin{equation}
+    \sum_{j \in \mathcal{A}_k} x_{ij} \le \text{cap}_{\text{comp}}, \quad \forall i \in \mathcal{S}, \; \forall k \in \mathcal{K}
+    \label{eq:c7}
+\end{equation}
+
+\section{Feasibility Polytope and Aggregated Constraint Violations}
+In meta-heuristic evolutionary optimization, constraints are incorporated via aggregated penalty functions. Let the constraint violation components for a candidate assignment $\mathbf{x}$ be:
+\begin{align*}
+    v_{\text{cap}}(\mathbf{x}) &= \sum_{j=1}^M \max\left(0, L_j - C_j\right) \\
+    v_{\text{consent}}(\mathbf{x}) &= \sum_{i=1}^N \sum_{j: c_j=0} x_{ij} \\
+    v_{q_{\min}}(\mathbf{x}) &= \sum_{i=1}^N \sum_{j: q_{ij} < q_{\min}} x_{ij} \\
+    v_{\theta}(\mathbf{x}) &= \sum_{i=1}^N \max\left(0, \theta - Q_i\right) \\
+    v_{\delta}(\mathbf{x}) &= \max\left(0, \left(\max_b \overline{Q}_b - \min_b \overline{Q}_b\right) - \delta\right) \\
+    v_{\text{degree}}(\mathbf{x}) &= \sum_{i=1}^N \left| \sum_{j=1}^M x_{ij} - K \right| + \sum_{i=1}^N \sum_{j=1}^M \max(0, x_{ij} - 1) \\
+    v_{\text{div}}(\mathbf{x}) &= \sum_{i=1}^N \sum_{k \in \mathcal{K}} \max\left(0, \sum_{j \in \mathcal{A}_k} x_{ij} - \text{cap}_{\text{comp}}\right)
+\end{align*}
+A solution $\mathbf{x}$ is defined as strictly feasible if and only if:
+\begin{equation}
+    \text{CV}(\mathbf{x}) = v_{\text{cap}} + v_{\text{consent}} + v_{q_{\min}} + v_{\theta} + v_{\delta} + v_{\text{degree}} + v_{\text{div}} = 0
+    \label{eq:total_cv}
+\end{equation}
+
+\section{Polyhedral Properties and Unimodularity Breakdown}
+A crucial theoretical dimension of the MO-CBAP is the mathematical nature of its constraint matrix. In standard bipartite matching with linear costs and degree constraints:
+\begin{equation}
+    \min \sum_{i,j} c_{ij} x_{ij} \quad \text{s.t.} \quad \sum_j x_{ij} = K, \quad \sum_i x_{ij} \le C_j, \quad x_{ij} \ge 0
+\end{equation}
+the constraint matrix is totally unimodular (TUM), guaranteeing that all extreme points of the continuous linear relaxation polyhedron $\mathcal{P}_{\text{LP}}$ are integral ({ij} \in \{0, 1\}$).
+
+However, in the institutional VJTI MO-CBAP formulation, total unimodularity is destroyed by three non-classical constraint sets:
+\begin{enumerate}
+    \item \textbf{Corporate Diversity Caps (C7)}: Bounding assignments per company ($\sum_{j \in \mathcal{A}_k} x_{ij} \le 1$) introduces generalized upper-bound structures across subsets of incident arcs for each student node.
+    \item \textbf{Departmental Parity Disparity Bounds (C6)}: The inter-branch disparity constraint links decision variables across all departments $\mathcal{B}$ simultaneously through a dense, non-local linear combination.
+    \item \textbf{Rawlsian Maximin Floor (C5)}: Individual quality lower bounds ( \ge \theta$) form a knapsack-like constraint over continuous coefficients {ij}$.
+\end{enumerate}
+Because total unimodularity is absent, the linear programming relaxation exhibits fractional vertices. Consequently, the MO-CBAP is strictly $\mathcal{NP}$-hard, justifying both branch-and-cut exact algorithms for small instances and population-based memetic evolutionary heuristics for scalable institutional operation.

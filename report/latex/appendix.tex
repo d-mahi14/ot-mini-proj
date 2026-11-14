@@ -1,0 +1,68 @@
+\chapter{Supplementary Data and Implementation Details}
+\label{ch:appendix}
+
+\section{Pseudocode of the Hybrid Memetic NSGA-II Algorithm}
+Algorithm~\ref{alg:hybrid_memetic} formalizes the end-to-end execution workflow of the proposed Hybrid Seeded Memetic NSGA-II solver.
+
+\begin{algorithm}[htbp]
+\caption{Hybrid Seeded Memetic NSGA-II for MO-CBAP}
+\label{alg:hybrid_memetic}
+\begin{algorithmic}[1]
+\Require Problem instance $\mathcal{I} = (\mathcal{S}, \mathcal{A}, \mathbf{Q}, \mathbf{C}, \mathbf{c}, \theta, \delta, K)$, population size {\text{pop}}$, generation count {\text{gen}}$, local search probability {\text{ls}}$, maximum moves {\text{moves}}$.
+\Ensure Joint non-dominated Pareto front $\mathcal{F}^*$.
+\State $\mathbf{x}_{\text{greedy}} \gets \text{GreedyScoreFirst}(\mathcal{I})$
+\State $\mathbf{x}_{\text{rawls}} \gets \text{RawlsianMinMaxSeed}(\mathcal{I})$
+\State $\mathbf{x}_{\text{workload}} \gets \text{WorkloadBalancedSeed}(\mathcal{I})$
+\State $\mathbf{x}_{\text{div}} \gets \text{DiversitySeed}(\mathcal{I})$
+\State $\mathcal{P}_0 \gets \{\text{Encode}(\mathbf{x}_{\text{greedy}}), \text{Encode}(\mathbf{x}_{\text{rawls}}), \text{Encode}(\mathbf{x}_{\text{workload}}), \text{Encode}(\mathbf{x}_{\text{div}})\}$
+\While{$|\mathcal{P}_0| < N_{\text{pop}}$}
+    \State $\mathbf{x}_{\text{rand}} \gets \text{RandomFeasible}(\mathcal{I})$
+    \State $\mathcal{P}_0 \gets \mathcal{P}_0 \cup \{\text{Encode}(\mathbf{x}_{\text{rand}})\}$
+\EndWhile
+\For{ = 1$ to {\text{gen}}$}
+    \State $\mathcal{Q}_t \gets \text{Variation}(\mathcal{P}_{t-1})$ \Comment{Binary tournament, 2-point crossover, integer mutation}
+    \State $\mathcal{R}_t \gets \mathcal{P}_{t-1} \cup \mathcal{Q}_t$
+    \State  \gets \text{FastNonDominatedSort}(\mathcal{R}_t)$
+    \State $\mathcal{P}_t \gets \emptyset, \; i \gets 1$
+    \While{$|\mathcal{P}_t| + |\mathcal{F}_i| \le N_{\text{pop}}$}
+        \State $\text{CrowdingDistanceAssignment}(\mathcal{F}_i)$
+        \State $\mathcal{P}_t \gets \mathcal{P}_t \cup \mathcal{F}_i, \; i \gets i + 1$
+    \EndWhile
+    \State $\text{Sort}(\mathcal{F}_i, \prec_n)$
+    \State $\mathcal{P}_t \gets \mathcal{P}_t \cup \mathcal{F}_i[1 : (N_{\text{pop}} - |\mathcal{P}_t|)]$
+    \For{each individual $\mathbf{g} \in \mathcal{P}_t$}
+        \If{$\text{UniformRandom}(0, 1) < p_{\text{ls}}$}
+            \State $\mathbf{g} \gets \text{LamarckianTargetedLocalSearch}(\mathbf{g}, M_{\text{moves}})$
+        \EndIf
+    \EndFor
+\EndFor
+\State $\mathcal{A}_{\text{seeds}} \gets \{\mathbf{x}_{\text{greedy}}, \mathbf{x}_{\text{rawls}}, \mathbf{x}_{\text{workload}}, \mathbf{x}_{\text{div}}\}$
+\State $\mathcal{A}_{\text{joint}} \gets \mathcal{P}_{N_{\text{gen}}} \cup \mathcal{A}_{\text{seeds}}$
+\State $\mathcal{F}^* \gets \text{ExtractNonDominatedFront}(\mathcal{A}_{\text{joint}})$
+\State \Return $\mathcal{F}^*$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Departmental Affinities and Compatibility Matrices}
+The synthetic data generator models academic reality at VJTI through domain affinity mappings. Table~\ref{tab:domain_affinities} lists the career domains and the primary academic departments exhibiting high natural affinity.
+
+\begin{table}[htbp]
+\centering
+\caption{Career domain affinities mapped across the 8 academic departments of VJTI.}
+\label{tab:domain_affinities}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Career Domain} & \textbf{Affinity Academic Departments} \\
+\midrule
+Software \& AI & Computer Engineering (\texttt{CE}), Information Technology (\texttt{IT}), Electronics \& Telecomm. (\texttt{EXTC}) \\
+Data Science \& Analytics & \texttt{CE}, \texttt{IT}, \texttt{EXTC}, Electrical Engineering (\texttt{EE}) \\
+Electronics \& Embedded Systems & \texttt{EXTC}, \texttt{EE} \\
+Core Engineering \& Manufacturing & Mechanical (\texttt{ME}), Production (\texttt{PE}), Civil (\texttt{CEV}), Textile (\texttt{TT}), \texttt{EE} \\
+Finance \& Quantitative Analysis & \texttt{CE}, \texttt{IT}, \texttt{EXTC}, \texttt{ME}, \texttt{EE} \\
+Consulting \& Corporate Strategy & \texttt{CE}, \texttt{IT}, \texttt{ME}, \texttt{CEV}, \texttt{PE} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Corporate Employers and Industrial Distribution}
+The simulated ecosystem incorporates 12 synthetic corporate employers spanning high-technology multinational corporations, engineering conglomerates, and financial institutions: \texttt{AlphaTech}, \texttt{BharatDynamics}, \texttt{CoreEngineeringLabs}, \texttt{DataMindAnalytics}, \texttt{EquiFinance}, \texttt{FutureSystems}, \texttt{GlobalConsulting}, \texttt{HorizonRobotics}, \texttt{InfraBuildCorp}, \texttt{JupiterAI}, \texttt{KineticMotors}, and \texttt{LuminarySolutions}. The corporate diversity cap $\sum_{j \in \mathcal{A}_k} x_{ij} \le 1$ guarantees that student mentorship profiles reflect broad industrial breadth.

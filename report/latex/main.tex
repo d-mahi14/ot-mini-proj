@@ -1,0 +1,187 @@
+\documentclass[11pt,a4paper,oneside]{report}
+
+% ---------------------------------------------------------
+% Core Packages and Typography
+% ---------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,mathtools}
+\usepackage[margin=1in,headheight=14pt]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+
+% Define color palette
+\definecolor{vjtiMaroon}{RGB}{128, 0, 0}
+\definecolor{navyBlue}{RGB}{0, 32, 96}
+\definecolor{darkSlate}{RGB}{47, 79, 79}
+\definecolor{lightGray}{RGB}{245, 245, 245}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+
+\usepackage[
+    colorlinks=true,
+    linkcolor=navyBlue,
+    citecolor=vjtiMaroon,
+    urlcolor=darkSlate,
+    bookmarks=true,
+    bookmarksnumbered=true
+]{hyperref}
+
+% Page styling
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Section title formatting
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{vjtiMaroon}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{10pt}{25pt}
+
+\onehalfspacing
+
+% Code listing configuration
+\lstset{
+    backgroundcolor=\color{lightGray},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{navyBlue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stringstyle=\color{codepurple},
+    tabsize=2
+}
+
+\begin{document}
+
+% ---------------------------------------------------------
+% Title Page
+% ---------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+    
+    {\Huge \bfseries \color{vjtiMaroon} VEERMATA JIJABAI TECHNOLOGICAL INSTITUTE}\\[0.3cm]
+    {\Large \bfseries (VJTI Mumbai)}\\[0.2cm]
+    {\normalsize Central Technical Institute, Matunga, Mumbai, Maharashtra 400019}\\[1.2cm]
+    
+    \hrule height 1.5pt \vspace{0.4cm}
+    {\huge \bfseries Fair and Load-Balanced Multi-Objective Student-Alumni Matching}\\[0.4cm]
+    {\LARGE \bfseries Capacitated Bipartite Assignment with Rawlsian Egalitarianism and Departmental Parity}\\[0.4cm]
+    \hrule height 1.5pt \vspace{1.2cm}
+    
+    \begin{minipage}{0.48\textwidth}
+        \flushleft
+        \textbf{\large Course:} Optimization Techniques (OT)\\
+        \textbf{\large Program:} B.Tech / M.Tech Elective\\
+        \textbf{\large Academic Year:} 2026--2027
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \flushright
+        \textbf{\large Project Category:} Mini-Project Implementation\\
+        \textbf{\large Target Audience:} Academic Review Board\\
+        \textbf{\large Department:} Computer Engineering \& IT
+    \end{minipage}
+    
+    \vfill
+    
+    \begin{minipage}{0.9\textwidth}
+        \centering
+        \small
+        \textbf{Statutory Compliance and Privacy Notice:}\\
+        \textit{All student profiles, alumni profiles, departmental affinities, corporate associations, and compatibility matrices utilized throughout this report are strictly artificial and synthesized for scientific testing only. Pseudonymous identifiers (\texttt{S001}--\texttt{S1000}, \texttt{A001}--\texttt{A500}) are employed throughout. No real Personally Identifiable Information (PII) or institutional database records were queried or stored.}
+    \end{minipage}
+    
+    \vspace{1cm}
+    {\large \today}
+\end{titlepage}
+
+% ---------------------------------------------------------
+% Front Matter
+% ---------------------------------------------------------
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+
+% ---------------------------------------------------------
+% Executive Summary
+% ---------------------------------------------------------
+\chapter*{Executive Summary}
+\addcontentsline{toc}{chapter}{Executive Summary}
+
+Alumni mentorship programs within premier technological universities serve as foundational pillars bridging academic foundational coursework with contemporary industrial practice. At \textbf{Veermata Jijabai Technological Institute (VJTI), Mumbai}, matching students across eight specialized engineering departments with an expansive alumni network presents high-dimensional combinatorial challenges. Historically, institutional allocations have relied upon ad-hoc heuristic sorting or greedy score-first priority assignments. 
+
+In this comprehensive report, we model the institutional assignment challenge as a formal \textbf{Multi-Objective Capacitated Bipartite Assignment Problem (MO-CBAP)}. We formalize three fundamentally competing objectives:
+\begin{enumerate}
+    \item \textbf{Utilitarian Placement Efficiency ($Z_1$)}: Maximizing the aggregate pairwise compatibility across all student-alumni assignments.
+    \item \textbf{Rawlsian Egalitarian Fairness ($Z_2$)}: Maximizing the match quality of the most vulnerable, least-advantaged student ($\min_i Q_i$), safeguarding against peripheral neglect.
+    \item \textbf{Alumni Workload Balancing ($Z_3$)}: Minimizing the maximum mentorship burden assigned to any single alumnus ($\max_j L_j$), actively mitigating burnout in high-demand industry profiles.
+\end{enumerate}
+
+To enforce institutional policies, we impose seven operational constraints including individual capacities, opt-in consent compliance, student quality floors ($\theta$), cross-departmental branch parity caps ($\delta$), corporate diversity caps, and exact degree requirements.
+
+We evaluate an extensive algorithmic portfolio spanning:
+\begin{itemize}
+    \item \textbf{Deterministic and Stochastic Baselines}: Random Feasible, Greedy Score-First, and Single-Objective Min-Cost Flow (with both raw and repaired diversity variants).
+    \item \textbf{Exact Mathematical Solvers}: Mixed-Integer Linear Programming (MILP) solved via HiGHS using Weighted-Sum and $\epsilon$-Constraint sweeps to establish true Pareto optimality benchmarks on small cohorts.
+    \item \textbf{Evolutionary Multi-Objective Optimizers}: Standard NSGA-II, SPEA2, and MOEA/D under uniform evaluation budgets.
+    \item \textbf{Hybrid Memetic NSGA-II}: A specialized algorithm combining heuristic seed initialization (Greedy, Rawlsian-priority, and Workload-balanced) with Lamarckian 2-opt swaps and Pareto elitist archiving.
+\end{itemize}
+
+Empirical evaluations executed across 30 independent seeds under a unified, normalized shared Hypervolume reference frame establish that the \textbf{Hybrid Memetic NSGA-II} delivers statistically superior results ($p = 1.86 \times 10^{-9}$, effect size $r = 1.00$). On the $50 \times 30$ cohort, the Hybrid achieves a mean Hypervolume of \textbf{0.7650} (compared to \textbf{0.3648} for NSGA-II, \textbf{0.3739} for SPEA2, and \textbf{0.0932} for Greedy), simultaneously elevating worst-student satisfaction from 0.5468 to 1.1276 and suppressing peak alumni load from 8 to 5.53. Crucially, the Hybrid Pareto front dominates the single-point Greedy baseline in 100\% of trial runs. We conclude with comprehensive ablation analyses, threshold calibrations, sensitivity assessments, and concrete institutional deployment guidelines.
+
+\newpage
+\pagenumbering{arabic}
+
+% ---------------------------------------------------------
+% Main Chapters
+% ---------------------------------------------------------
+\include{ch1_introduction}
+\include{ch2_formulation}
+\include{ch3_algorithms}
+\include{ch4_experiments}
+\include{ch5_results}
+\include{ch6_ablation_sensitivity}
+\include{ch7_discussion_conclusion}
+\appendix
+\include{appendix}
+
+% ---------------------------------------------------------
+% References
+% ---------------------------------------------------------
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
