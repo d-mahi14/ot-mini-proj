@@ -36,7 +36,7 @@ def main() -> None:
 
     parser.add_argument(
         "--mode",
-        choices=["run", "baselines", "exact", "scalability", "ablation", "sensitivity", "interpretation", "data", "figures", "all"],
+        choices=["run", "baselines", "exact", "scalability", "ablation", "sensitivity", "interpretation", "data", "figures", "demo", "all"],
         default="run",
         help="Execution mode.",
     )
@@ -111,6 +111,10 @@ def main() -> None:
     elif args.mode == "figures":
         import generate_figures
         generate_figures.main()
+
+    elif args.mode == "demo":
+        import ui_demo
+        ui_demo.main()
 
     elif args.mode == "all":
         print(">>> Running Full Comprehensive Research Pipeline <<<\n")

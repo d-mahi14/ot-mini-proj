@@ -8,7 +8,7 @@ PIP ?= $(PYTHON) -m pip
 PYTEST ?= $(PYTHON) -m pytest
 SEEDS ?=
 
-.PHONY: all install test data baselines exact benchmark sensitivity interpret figures clean help
+.PHONY: all install test data baselines exact benchmark sensitivity interpret figures demo clean help
 
 # Default target
 all: data baselines test exact benchmark sensitivity interpret figures
@@ -56,6 +56,9 @@ interpret:
 
 figures:
 	$(PYTHON) generate_figures.py
+
+demo:
+	$(PYTHON) main.py --mode demo
 
 clean:
 	@$(PYTHON) -c "import shutil, pathlib; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('__pycache__')]; [shutil.rmtree(p, ignore_errors=True) for p in pathlib.Path('.').rglob('.pytest_cache')]; [p.unlink() for p in pathlib.Path('.').rglob('*.pyc')]; [p.unlink() for p in pathlib.Path('.').rglob('.coverage*')]; print('Build artifacts and caches cleaned.')"
