@@ -1,0 +1,32 @@
+{
+  "small_50x30": {
+    "instance_name": "small_50x30",
+    "theta": 0.86955,
+    "delta": 0.391008,
+    "greedy_z2": 1.023,
+    "greedy_spread": 0.32584,
+    "theta_fraction": 0.85,
+    "delta_fraction": 1.2,
+    "greedy_feasible_under_calibrated": true
+  },
+  "medium_300x150": {
+    "instance_name": "medium_300x150",
+    "theta": 0.88689,
+    "delta": 0.395345,
+    "greedy_z2": 1.0434,
+    "greedy_spread": 0.329454,
+    "theta_fraction": 0.85,
+    "delta_fraction": 1.2,
+    "greedy_feasible_under_calibrated": true
+  },
+  "large_1000x500": {
+    "instance_name": "large_1000x500",
+    "theta": 1.122935,
+    "delta": 0.286279,
+    "greedy_z2": 1.3211,
+    "greedy_spread": 0.238566,
+    "theta_fraction": 0.85,
+    "delta_fraction": 1.2,
+    "greedy_feasible_under_calibrated": true
+  }
+}
