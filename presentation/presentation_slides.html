@@ -112,9 +112,38 @@
         padding: 2px 4px;
         border-radius: 3px;
     }
+    @media print {
+        .no-print { display: none !important; }
+    }
+    .portal-back-btn {
+        position: fixed;
+        top: 14px;
+        right: 20px;
+        z-index: 10000;
+        background: rgba(11, 60, 109, 0.92);
+        color: #ffffff;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .portal-back-btn:hover {
+        background: #072647;
+        transform: translateY(-1px);
+        color: #ffffff;
+    }
     </style>
 </head>
 <body>
+    <a href="../index.html" class="portal-back-btn no-print">&larr; Back to Portal Hub</a>
     
         <div class="slide">
             <div class="slide-header">
