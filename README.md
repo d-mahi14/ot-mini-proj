@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Testing: Pytest](https://img.shields.io/badge/pytest-31%20passed-brightgreen.svg)](https://pytest.org/)
 [![Build: Windows & POSIX](https://img.shields.io/badge/Build-Makefile%20%7C%20run__all.bat-success.svg)](run_all.bat)
+[![Live Portal](https://img.shields.io/badge/Live%20Portal-GitHub%20Pages-brightgreen?logo=github)](https://d-mahi14.github.io/ot-mini-proj/)
 
 > **Academic Notice**: *ARTIFICIAL - FOR TESTING ONLY*. All profiles, compatibility scores, and identifiers generated in this repository are synthetic and utilize pseudonymous IDs only (`S001`, `A001`). No real personal identifiable information (PII) is utilized.
 
@@ -318,6 +319,18 @@ python main.py --mode interpretation --instance small_50x30
 # 9. Run full comprehensive pipeline
 python main.py --mode all
 ```
+
+### 8.4 Web Portal & Interactive Demonstration Dashboard
+- **Live Deployed Site (GitHub Pages)**: [https://d-mahi14.github.io/ot-mini-proj/](https://d-mahi14.github.io/ot-mini-proj/)
+- **Offline / Local Web Portal**:
+  ```bash
+  python ui_demo.py
+  ```
+  Launches the interactive HTTP decision-support hub with slide deck, academic report, and Pareto visualizer at `http://localhost:8000`.
+- **Interactive Streamlit Dashboard**:
+  ```bash
+  streamlit run ui_demo.py
+  ```
 
 ---
 

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VJTI Student-Alumni Matching | UI Demo & Web Portal</title>
+    <style>
+        :root {
+            --primary: #0b3c6d;
+            --primary-dark: #072647;
+            --secondary: #1a5276;
+            --accent: #2e86c1;
+            --success: #28a745;
+            --light-bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #6c757d;
+            --border: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 2.5rem 2rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            max-width: 850px;
+        }
+        nav.quick-nav {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-btn:hover {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .nav-btn.primary {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: white;
+        }
+        .nav-btn.primary:hover {
+            background: #d68910;
+            color: white;
+        }
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 3rem;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 5px solid var(--accent);
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+        .metric-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0.35rem 0 0.2rem;
+        }
+        .metric-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1.25rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .gallery-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        .gallery-img-wrap {
+            background: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 240px;
+        }
+        .gallery-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+        .gallery-info {
+            padding: 1rem 1.25rem;
+            background: #fafbfc;
+            border-top: 1px solid var(--border);
+            flex: 1;
+        }
+        .gallery-info h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+            color: var(--primary);
+        }
+        .gallery-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .roster-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        table.roster-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        table.roster-table th {
+            background: var(--primary);
+            color: white;
+            text-align: left;
+            padding: 10px 14px;
+            font-weight: 600;
+        }
+        table.roster-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        table.roster-table tr:hover {
+            background-color: #f8fafd;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: #e9ecef;
+            color: #495057;
+        }
+        .tag.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <span class="badge">Veermata Jijabai Technological Institute (VJTI)</span>
+            <h1>Fair and Load-Balanced Student-Alumni Matching</h1>
+            <p class="subtitle">Multi-Objective Capacitated Bipartite Assignment Optimization with Rawlsian Fairness & Departmental Parity</p>
+            <nav class="quick-nav">
+                <a href="presentation/presentation_slides.html" class="nav-btn primary" target="_blank">
+                    🖥️ Open Presentation Slides (15 Slides)
+                </a>
+                <a href="report/final_report.html" class="nav-btn" target="_blank">
+                    📑 Open Full Academic Report
+                </a>
+                <a href="figures/small_50x30_pareto_3d.png" class="nav-btn" target="_blank">
+                    📈 View 3D Pareto Front
+                </a>
+                <a href="results/matching_knee_small_50x30.csv" class="nav-btn" target="_blank">
+                    👥 Download Knee Roster (CSV)
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- KPI Metrics Bar -->
+        <div class="metrics-grid">
+            <div class="metric-card" style="border-left-color: #27ae60;">
+                <div class="metric-title">Utilitarian Quality ($Z_1$)</div>
+                <div class="metric-value">71.63</div>
+                <div class="metric-desc">98.6% of theoretical peak quality</div>
+            </div>
+            <div class="metric-card" style="border-left-color: #2980b9;">
+                <div class="metric-title">Rawlsian Fairness ($Z_2$)</div>
+                <div class="metric-value">1.09</div>
+                <div class="metric-desc">100.0% of peak egalitarian floor</div>
+            </div>
+            <div class="metric-card" style="border-left-color: #8e44ad;">
+                <div class="metric-title">Peak Mentor Load ($Z_3$)</div>
+                <div class="metric-value">6</div>
+                <div class="metric-desc">Students/mentor (strictly ≤ Capacity)</div>
+            </div>
+            <div class="metric-card" style="border-left-color: #d35400;">
+                <div class="metric-title">Active Alumni Ratio</div>
+                <div class="metric-value">93.3%</div>
+                <div class="metric-desc">28 of 30 alumni mentors mobilized</div>
+            </div>
+            <div class="metric-card" style="border-left-color: #16a085;">
+                <div class="metric-title">Constraint Violations</div>
+                <div class="metric-value">0.00</div>
+                <div class="metric-desc">100% hard operational feasibility</div>
+            </div>
+        </div>
+
+        <!-- Visual Analytics Gallery -->
+        <div class="section-header">
+            <h2>Optimization Visualizations & Trade-Offs</h2>
+            <span style="font-size: 0.9rem; color: var(--text-muted);">Publication-grade figures generated from benchmark results</span>
+        </div>
+
+        <div class="gallery-grid">
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/small_50x30_pareto_3d.png" alt="3D Pareto Frontier">
+                </div>
+                <div class="gallery-info">
+                    <h3>3D Multi-Objective Pareto Frontier</h3>
+                    <p>Simultaneous trade-off surface among Quality ($Z_1$), Egalitarian Fairness ($Z_2$), and Mentor Congestion ($Z_3$).</p>
+                </div>
+            </div>
+
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/small_50x30_tradeoffs_2d.png" alt="2D Trade-off Projections">
+                </div>
+                <div class="gallery-info">
+                    <h3>2D Pairwise Projections</h3>
+                    <p>Pairwise non-dominated frontiers showing Quality vs Fairness and Congestion vs Quality trade-off geometry.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/small_50x30_branch_parity.png" alt="Branch Quality Parity">
+                </div>
+                <div class="gallery-info">
+                    <h3>Departmental Equity Distribution</h3>
+                    <p>Guarantees all 8 academic departments satisfy the pairwise parity threshold $|\overline{Q}_b - \overline{Q}_{b'}| \le 0.35$.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/small_50x30_workload_distribution.png" alt="Mentor Workload Distribution">
+                </div>
+                <div class="gallery-info">
+                    <h3>Alumni Capacity Utilization</h3>
+                    <p>Eliminates superstar alumni burnout; enforces individual mentor capacities with zero overflow.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/exact_vs_metaheuristics.png" alt="Exact MILP vs Metaheuristics">
+                </div>
+                <div class="gallery-info">
+                    <h3>Exact HiGHS MILP Ground Truth</h3>
+                    <p>Theoretical optimality verification and secondary alumni cohort sizing via weighted-sum and ε-constraint sweeps.</p>
+                </div>
+            </div>
+
+            <div class="gallery-card">
+                <div class="gallery-img-wrap">
+                    <img src="figures/scalability_curve.png" alt="Empirical Scalability Curve">
+                </div>
+                <div class="gallery-info">
+                    <h3>Scalability Across Dimensions</h3>
+                    <p>Sub-minute polynomial runtime scaling from small ($50\times 30$) to enterprise ($1000\times 500$) cohorts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Matching Roster Table -->
+        <div class="section-header">
+            <h2>Pareto Knee Point Matching Roster (Sample Allocation)</h2>
+            <a href="results/matching_knee_small_50x30.csv" style="font-size: 0.9rem; color: var(--accent); font-weight: 600;" target="_blank">Export CSV</a>
+        </div>
+
+        <div class="roster-card">
+            <table class="roster-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Department</th>
+                        <th>Target Domain</th>
+                        <th>Mentor 1 ID & Firm</th>
+                        <th>Mentor 2 ID & Firm</th>
+                        <th>Student Quality ($Q_i$)</th>
+                        <th>Quality Floor</th>
+                        <th>Diversity Cap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>S001</strong></td>
+                        <td><span class="tag">CE</span></td>
+                        <td>Consulting & Strategy</td>
+                        <td>A019 (BharatDynamics)</td>
+                        <td>A020 (InfraBuildCorp)</td>
+                        <td>1.658</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>S002</strong></td>
+                        <td><span class="tag">CE</span></td>
+                        <td>Finance & Quantitative</td>
+                        <td>A002 (DataMindAnalytics)</td>
+                        <td>A010 (BharatDynamics)</td>
+                        <td>1.555</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>S003</strong></td>
+                        <td><span class="tag">CEV</span></td>
+                        <td>Consulting & Strategy</td>
+                        <td>A015 (LuminarySolutions)</td>
+                        <td>A018 (InfraBuildCorp)</td>
+                        <td>1.232</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>S004</strong></td>
+                        <td><span class="tag">PE</span></td>
+                        <td>Core Engineering & Mfg</td>
+                        <td>A025 (LuminarySolutions)</td>
+                        <td>A026 (DataMindAnalytics)</td>
+                        <td>1.781</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>S005</strong></td>
+                        <td><span class="tag">PE</span></td>
+                        <td>Consulting & Strategy</td>
+                        <td>A011 (FutureSystems)</td>
+                        <td>A022 (HorizonRobotics)</td>
+                        <td>1.162</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>S006</strong></td>
+                        <td><span class="tag">EE</span></td>
+                        <td>Data Science & Analytics</td>
+                        <td>A009 (KineticMotors)</td>
+                        <td>A024 (EquiFinance)</td>
+                        <td>1.759</td>
+                        <td><span class="tag success">✓ Satisfied</span></td>
+                        <td><span class="tag success">✓ Compliant</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>Veermata Jijabai Technological Institute (VJTI), Mumbai &bull; Optimization Techniques University Project</p>
+        <p>Synthetic Pseudonymous Benchmark Data (S001–S1000, A001–A500) &bull; Artificial for Testing Only</p>
+    </footer>
+</body>
+</html>
