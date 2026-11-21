@@ -36,12 +36,6 @@
 **Department**: Department of Production & Industrial Engineering / Department of Computer Engineering  
 **Group Identifier**: `[Group XX]`
 
-| # | Student Name | Roll Number | GitHub Username | Institutional Email |
-| :-: | :--- | :---: | :---: | :--- |
-| 1 | `[Member 1 Name]` | `[Roll No. 1]` | `[@username1]` | `[member1@vjti.ac.in]` |
-| 2 | `[Member 2 Name]` | `[Roll No. 2]` | `[@username2]` | `[member2@vjti.ac.in]` |
-| 3 | `[Member 3 Name]` | `[Roll No. 3]` | `[@username3]` | `[member3@vjti.ac.in]` |
-| 4 | `[Member 4 Name]` | `[Roll No. 4]` | `[@username4]` | `[member4@vjti.ac.in]` |
 
 ---
 
